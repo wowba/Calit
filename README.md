@@ -1,7 +1,7 @@
 # :calendar: Calit
 
 **세상에서 가장 간단한** 달력 기반 애자일 협업 툴  
-[사이트 링크](https://github.com/wowba/Calit)  
+[사이트 링크](https://calit-2f888.web.app)  
 [깃헙 링크](https://github.com/wowba/Calit)
 
 ## :clap: Contributors
