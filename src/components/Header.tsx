@@ -12,6 +12,7 @@ const HeaderBox = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 0rem 1rem 0rem 1rem;
+  border-bottom: 1px solid #000000;
 `;
 
 const HeaderIconBox = styled.div`
