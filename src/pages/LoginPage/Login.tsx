@@ -1,14 +1,16 @@
 import React from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useSetRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseSDK";
 import loginState from "../../recoil/atoms/login/loginState";
 import userState from "../../recoil/atoms/login/userState";
-import deepClone from "../../utils/deepClone";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const setLoginState = useSetRecoilState(loginState);
   const setUserState = useSetRecoilState(userState);
 
@@ -46,21 +48,22 @@ export default function Login() {
         const userSnap = await getDoc(userRef);
         setLoginState(true);
         setUserState({
-          userCredential: deepClone(user),
+          userCredential: JSON.parse(JSON.stringify(user)),
           userData: userSnap.data(),
         });
+        navigate("/");
       })
       .catch((error) => {
         // Handle Errors here.
         // const errorCode = error.code;
-        // const errorMessage = error.message;
+        const errorMessage = error.message;
         // The email of the user's account used.
-        const { email } = error.customData;
+        // const { email } = error.customData;
         // The AuthCredential type that was used.
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
         // eslint-disable-next-line no-console
-        console.log(email, credential);
+        console.log(errorMessage, credential);
       });
   };
 
