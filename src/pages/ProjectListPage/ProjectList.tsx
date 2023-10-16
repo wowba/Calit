@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmBtn from "../../components/layout/ConfirmBtnLayout";
 
@@ -6,6 +6,7 @@ export default function ProjectList() {
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
   const handleClick = () => {
     if (
       isClicked &&
@@ -20,6 +21,13 @@ export default function ProjectList() {
     setInputValue("");
     setIsClicked(!isClicked);
   };
+
+  const handleEnterPress = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
   return (
     <div>
       <h1>ProjectList</h1>
@@ -33,6 +41,7 @@ export default function ProjectList() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="링크를 입력해주세요"
+            onKeyDown={handleEnterPress}
           />
         ) : null}
       </div>
