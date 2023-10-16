@@ -15,6 +15,17 @@ const HeaderBox = styled.div`
   border-bottom: 1px solid #000000;
 `;
 
+const HeaderLogoBox = styled.div`
+  display: flex;
+  align-items: center;
+
+  @import url("https://fonts.googleapis.com/css2?family=Shrikhand&family=Ubuntu&display=swap");
+  font-family: "Shrikhand", serif;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 2rem;
+`;
+
 const HeaderIconBox = styled.div`
   display: flex;
   align-items: center;
@@ -35,7 +46,7 @@ const icons = [
 export default function Header() {
   return (
     <HeaderBox>
-      <div> logo </div>
+      <HeaderLogoBox>Calit!</HeaderLogoBox>
       <HeaderIconBox>
         {icons.map((icon) => (
           <img src={icon.logo} alt={icon.name} />
