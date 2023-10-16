@@ -1,6 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useSearchParams } from "react-router-dom";
 
 const Btn = styled.button`
   margin: 10px;
@@ -9,25 +9,43 @@ const Btn = styled.button`
 `;
 
 export default function Project() {
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleCanbanCLick = (url: string) => {
-    window.history.pushState(null, "", location.pathname + url);
+  let isCanbanShow;
+  let isTodoShow;
+
+  const handleCalClick = () => {
+    setSearchParams();
   };
 
-  const handleTodoCLick = (url: string) => {
-    window.history.pushState(null, "", location.pathname + url);
+  const handleCanbanCLick = () => {
+    setSearchParams({ canbanID: "1234" });
   };
+
+  const handleTodoCLick = () => {
+    setSearchParams({
+      canbanID: searchParams.get("canbanID")!,
+      todoID: "5678",
+    });
+  };
+
+  if (searchParams.has("canbanID")) isCanbanShow = true;
+  if (searchParams.has("todoID")) isTodoShow = true;
 
   return (
     <>
       <div>Project</div>
-      <Btn type="button" onClick={() => handleCanbanCLick("/canbanID")}>
+      <Btn type="button" onClick={() => handleCalClick()}>
+        calender
+      </Btn>
+      <Btn type="button" onClick={() => handleCanbanCLick()}>
         canban
       </Btn>
-      <Btn type="button" onClick={() => handleTodoCLick("/todoID")}>
+      <Btn type="button" onClick={() => handleTodoCLick()}>
         todo
       </Btn>
+      {isCanbanShow ? <div>Canban</div> : null}
+      {isTodoShow ? <div>Todo</div> : null}
     </>
   );
 }
