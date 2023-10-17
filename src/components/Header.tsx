@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "styled-components";
+import { useLocation } from "react-router-dom";
 import member from "../assets/icons/headerMemberIcon.svg";
 import bookmark from "../assets/icons/headerBookmarkIcon.svg";
 import info from "../assets/icons/headerInfoIcon.svg";
@@ -36,22 +37,44 @@ const HeaderIconBox = styled.div`
 `;
 
 const icons = [
-  { name: "member", logo: member },
-  { name: "bookmark", logo: bookmark },
-  { name: "info", logo: info },
-  { name: "bell", logo: bell },
-  { name: "profile", logo: profile },
+  { name: "member", type: "project", logo: member },
+  { name: "bookmark", type: "project", logo: bookmark },
+  { name: "info", type: "list", logo: info },
+  { name: "bell", type: "project", logo: bell },
+  { name: "profile", type: "list", logo: profile },
 ];
 
 export default function Header() {
+  const [isModalClicked, setModalClicked] = useState(false);
+  const location = useLocation()
+  console.log(location)
+  let pageType = "list"
+  if (location.pathname !== '/') {
+    pageType = "project";
+  }
+
+  const handleClick = () => {
+    setModalClicked(!isModalClicked)
+  }
+  
   return (
     <HeaderBox>
       <HeaderLogoBox>Calit!</HeaderLogoBox>
-      <HeaderIconBox>
-        {icons.map((icon) => (
-          <img src={icon.logo} alt={icon.name} />
-        ))}
-      </HeaderIconBox>
+
+      {pageType === "list" ?       
+        (<HeaderIconBox onClick={handleClick}>
+          {icons
+          .filter((icon) => icon.type === "list")
+          .map((icon) => (
+            <img src={icon.logo} alt={icon.name}/>
+          ))}
+        </HeaderIconBox>) :
+        (<HeaderIconBox onClick={handleClick}>
+          {icons.map((icon) => (
+            <img src={icon.logo} alt={icon.name}/>
+          ))}
+        </HeaderIconBox>)
+      }
     </HeaderBox>
   );
 }
