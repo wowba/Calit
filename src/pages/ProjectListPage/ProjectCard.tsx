@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import rectangle from "../../assets/Rectangle.svg";
+import rectangle from "../../assets/images/Rectangle.svg";
 
 interface Props {
   $dynamic_url?: string;
