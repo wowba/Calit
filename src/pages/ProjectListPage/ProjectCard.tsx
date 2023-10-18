@@ -6,17 +6,19 @@ interface Props {
   dynamic_url?: string;
 }
 
-const ProjectCardContainer = styled.div.attrs<Props>((props) => ({
+const ProjectCardUnit = styled.div.attrs<Props>((props) => ({
   style: {
     backgroundImage: props.dynamic_url ? `url(${props.dynamic_url})` : "none",
   },
 }))<Props>`
+  display: inline;
   width: 400px;
   height: 226px;
   border-radius: 13px;
   position: relative;
   background-repeat: no-repeat;
   background-size: 100%;
+  margin: 20px;
 `;
 const ProjectCardInfo = styled.div`
   width: 400px;
@@ -40,16 +42,24 @@ const ProjectCardTag = styled.img`
   left: 10px;
 `;
 
-export default function ProjectCard({ projectImgUrl }: any) {
+const ProjectCardName = styled.p`
+  position: absolute;
+  top: -30px;
+  z-index: 1;
+  left: 30px;
+`;
+
+export default function ProjectCard({ projectImgUrl, projectName }: any) {
   return (
-    <ProjectCardContainer dynamic_url={projectImgUrl}>
+    <ProjectCardUnit dynamic_url={projectImgUrl}>
       <ProjectCardInfo className="project-card-info">
+        <ProjectCardName>{projectName}</ProjectCardName>
         <ProjectCardTag
           className="project-card-tag"
           src={rectangle}
           alt={rectangle}
         />
       </ProjectCardInfo>
-    </ProjectCardContainer>
+    </ProjectCardUnit>
   );
 }

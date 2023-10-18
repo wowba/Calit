@@ -16,7 +16,11 @@ export default function ProjectList() {
         const docRef = doc(db, "project", projectId);
         const docSnap: any = await getDoc(docRef);
 
-        return { id: projectId, imgUrl: docSnap.data().project_img_URL };
+        return {
+          id: projectId,
+          name: docSnap.data().name,
+          imgUrl: docSnap.data().project_img_URL,
+        };
       }),
     );
     setProjectData(projects.filter((project: any) => project !== null));
@@ -27,13 +31,24 @@ export default function ProjectList() {
     fetchProjectData();
   }, []);
 
+  const containerStyle = {
+    display: "flex",
+    justifyContent: "center",
+  };
+
   return (
     <div>
       <h1>ProjectList</h1>
       <InvitationBtn />
-      {projectData.map((project: any) => (
-        <ProjectCard key={project.id} projectImgUrl={project.imgUrl} />
-      ))}
+      <div className="ProjectListContainer" style={containerStyle}>
+        {projectData.map((project: any) => (
+          <ProjectCard
+            key={project.id}
+            projectImgUrl={project.imgUrl}
+            projectName={project.name}
+          />
+        ))}
+      </div>
     </div>
   );
 }
