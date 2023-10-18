@@ -65,11 +65,11 @@ export default function Sidebar() {
     <SidebarLayout>
       <ProjectInfoBox>
         <ProjectTitleParagraph>프로젝트 이름</ProjectTitleParagraph>
-        <ProjectProfileImg src={sidebarTestImg} alt="" />
+        <ProjectProfileImg src={sidebarTestImg} alt="Project Profile Img" />
       </ProjectInfoBox>
 
       <TrashBox>
-        <TrashBoxImg src={trashIcon} alt="" />
+        <TrashBoxImg src={trashIcon} alt="TrashIcon" />
       </TrashBox>
     </SidebarLayout>
   );
