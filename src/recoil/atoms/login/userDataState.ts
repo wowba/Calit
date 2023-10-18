@@ -2,12 +2,10 @@ import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 interface UserStateDefault {
-  userInfo: unknown;
   userData: unknown;
 }
 
 const defaultValue: UserStateDefault = {
-  userInfo: null,
   userData: null,
 };
 

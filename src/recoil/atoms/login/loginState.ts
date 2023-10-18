@@ -6,9 +6,19 @@ const { persistAtom } = recoilPersist({
   storage: localStorage,
 });
 
+interface LoginStateDefault {
+  isLogin: boolean;
+  userCredential: unknown;
+}
+
+const defaultValue: LoginStateDefault = {
+  isLogin: false,
+  userCredential: null,
+};
+
 const loginState = atom({
   key: "isLogin",
-  default: false,
+  default: defaultValue,
   effects_UNSTABLE: [persistAtom],
 });
 

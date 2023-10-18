@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseSDK";
 import loginState from "../../recoil/atoms/login/loginState";
-import userState from "../../recoil/atoms/login/userState";
 import ShrikhandRegular from "../../assets/fonts/Shrikhand-Regular.ttf";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import loginBackground from "../../assets/images/loginBackground.svg";
@@ -83,7 +82,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   const setLoginState = useSetRecoilState(loginState);
-  const setUserState = useSetRecoilState(userState);
 
   const provider = new GoogleAuthProvider();
 
@@ -113,14 +111,12 @@ export default function Login() {
           });
         }
 
-        return { user, userRef };
+        return { user };
       })
-      .then(async ({ user, userRef }) => {
-        const userSnap = await getDoc(userRef);
-        setLoginState(true);
-        setUserState({
+      .then(async ({ user }) => {
+        setLoginState({
+          isLogin: true,
           userCredential: JSON.parse(JSON.stringify(user)),
-          userData: userSnap.data(),
         });
         navigate("/");
       })
