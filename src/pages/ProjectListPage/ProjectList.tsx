@@ -10,17 +10,6 @@ export default function ProjectList() {
   const [projectData, setProjectData] = useState([]);
   const userData = useRecoilValue(userState);
 
-  // useEffect(() => {
-  //   const projectRefs = query(collection(db, "project"));
-  //   const unsub = onSnapshot(projectRefs, (querySnapshot) => {
-  //     querySnapshot.forEach((project) => {
-  //       console.log(project.data().name);
-  //     });
-  //   });
-
-  //   return () => unsub();
-  // }, [userData]);
-
   const fetchProjectData = async () => {
     const projects: any = await Promise.all(
       userData.userData.project_list.map(async (projectId: string) => {
