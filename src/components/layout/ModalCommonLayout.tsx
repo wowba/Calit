@@ -1,9 +1,25 @@
+import React from "react";
 import styled from "styled-components";
 
-const ModalCommon = styled.div`
-  height: 5rem;
-  width: 5rem;
-  border-radius: 7px;
+const ModalBox = styled.div`
+  img {
+    padding-left: 1rem;
+  }
+  img:hover {
+    cursor: pointer;
+  }
 `;
 
-export default ModalCommon;
+interface ModalInfo {
+  modalName: string;
+  modalIcon: string;
+}
+
+export default function ModalCommon(name: ModalInfo) {
+  const { modalName, modalIcon } = name;
+  return (
+    <ModalBox>
+      <img key={modalName} src={modalIcon} alt={modalName} />
+    </ModalBox>
+  );
+}
