@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
+import styled from "styled-components";
 import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
+
+const ProjectListContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 export default function ProjectList() {
   const [projectData, setProjectData] = useState([]);
@@ -31,16 +37,11 @@ export default function ProjectList() {
     fetchProjectData();
   }, [userData]);
 
-  const containerStyle = {
-    display: "flex",
-    justifyContent: "center",
-  };
-
   return (
     <div>
       <h1>ProjectList</h1>
       <InvitationBtn />
-      <div className="ProjectListContainer" style={containerStyle}>
+      <ProjectListContainer>
         {projectData.map((project: any) => (
           <ProjectCard
             key={project.id}
@@ -50,7 +51,7 @@ export default function ProjectList() {
             projectIntro={project.projectIntro}
           />
         ))}
-      </div>
+      </ProjectListContainer>
     </div>
   );
 }
