@@ -6,11 +6,9 @@ interface Props {
   $dynamic_url?: string;
 }
 
-const ProjectCardUnit = styled.a.attrs<Props>((props) => ({
-  style: {
-    backgroundImage: props.$dynamic_url ? `url(${props.$dynamic_url})` : "none",
-  },
-}))<Props>`
+const ProjectCardUnit = styled.a<Props>`
+  background-image: url(${(props) =>
+    props.$dynamic_url ? props.$dynamic_url : "none"});
   display: inline;
   width: 400px;
   min-width: 230px;
