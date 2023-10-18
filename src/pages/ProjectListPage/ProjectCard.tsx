@@ -13,6 +13,7 @@ const ProjectCardUnit = styled.a.attrs<Props>((props) => ({
 }))<Props>`
   display: inline;
   width: 400px;
+  min-width: 230px;
   height: 226px;
   border-radius: 13px;
   position: relative;
@@ -24,7 +25,7 @@ const ProjectCardUnit = styled.a.attrs<Props>((props) => ({
 const ProjectCardInfo = styled.div`
   width: 400px;
   height: 0px;
-  background-color: #f5f5f5;
+  background-color: #ededed;
   border-radius: 3px 3px 13px 13px;
   position: absolute;
   bottom: 0px;
@@ -39,19 +40,20 @@ const ProjectCardInfo = styled.div`
 
 const ProjectCardTag = styled.img`
   position: relative;
-  top: -32px;
+  top: -31px;
   left: 10px;
 `;
 
 const ProjectCardName = styled.p`
   position: absolute;
-  top: -30px;
+  top: -28px;
   z-index: 1;
   left: 30px;
   width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 700;
 `;
 
 const ProjectCardIntro = styled.p`
