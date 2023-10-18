@@ -3,12 +3,12 @@ import styled from "styled-components";
 import rectangle from "../../assets/Rectangle.svg";
 
 interface Props {
-  dynamic_url?: string;
+  $dynamic_url?: string;
 }
 
 const ProjectCardUnit = styled.a.attrs<Props>((props) => ({
   style: {
-    backgroundImage: props.dynamic_url ? `url(${props.dynamic_url})` : "none",
+    backgroundImage: props.$dynamic_url ? `url(${props.$dynamic_url})` : "none",
   },
 }))<Props>`
   display: inline;
@@ -72,7 +72,7 @@ export default function ProjectCard({
   projectIntro,
 }: any) {
   return (
-    <ProjectCardUnit dynamic_url={projectImgUrl} href={projectId}>
+    <ProjectCardUnit $dynamic_url={projectImgUrl} href={projectId}>
       <ProjectCardInfo className="project-card-info">
         <ProjectCardName>
           {projectName || "제목을 입력해주세요"}
