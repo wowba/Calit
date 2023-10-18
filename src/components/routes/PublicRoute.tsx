@@ -7,13 +7,13 @@ import loginState from "../../recoil/atoms/login/loginState";
 export default function PublicRoute() {
   const navigate = useNavigate();
 
-  const loginStateValue = useRecoilValue(loginState);
+  const { isLogin } = useRecoilValue(loginState);
 
   useEffect(() => {
-    if (loginStateValue) {
+    if (isLogin) {
       navigate("/");
     }
   }, []);
 
-  return loginStateValue === true ? null : <Outlet />;
+  return isLogin === true ? null : <Outlet />;
 }
