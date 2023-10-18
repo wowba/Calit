@@ -6,7 +6,7 @@ interface Props {
   dynamic_url?: string;
 }
 
-const ProjectCardUnit = styled.div.attrs<Props>((props) => ({
+const ProjectCardUnit = styled.a.attrs<Props>((props) => ({
   style: {
     backgroundImage: props.dynamic_url ? `url(${props.dynamic_url})` : "none",
   },
@@ -48,11 +48,10 @@ const ProjectCardName = styled.p`
   top: -30px;
   z-index: 1;
   left: 30px;
+  width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
 `;
 
 const ProjectCardIntro = styled.p`
@@ -65,12 +64,13 @@ const ProjectCardIntro = styled.p`
 `;
 
 export default function ProjectCard({
+  projectId,
   projectImgUrl,
   projectName,
   projectIntro,
 }: any) {
   return (
-    <ProjectCardUnit dynamic_url={projectImgUrl}>
+    <ProjectCardUnit dynamic_url={projectImgUrl} href={projectId}>
       <ProjectCardInfo className="project-card-info">
         <ProjectCardName>
           {projectName || "제목을 입력해주세요"}
