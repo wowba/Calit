@@ -19,6 +19,7 @@ const ProjectCardUnit = styled.div.attrs<Props>((props) => ({
   background-repeat: no-repeat;
   background-size: 100%;
   margin: 20px;
+  overflow: hidden;
 `;
 const ProjectCardInfo = styled.div`
   width: 400px;
@@ -47,18 +48,41 @@ const ProjectCardName = styled.p`
   top: -30px;
   z-index: 1;
   left: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;
 
-export default function ProjectCard({ projectImgUrl, projectName }: any) {
+const ProjectCardIntro = styled.p`
+  margin: -20px 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+`;
+
+export default function ProjectCard({
+  projectImgUrl,
+  projectName,
+  projectIntro,
+}: any) {
   return (
     <ProjectCardUnit dynamic_url={projectImgUrl}>
       <ProjectCardInfo className="project-card-info">
-        <ProjectCardName>{projectName}</ProjectCardName>
+        <ProjectCardName>
+          {projectName || "제목을 입력해주세요"}
+        </ProjectCardName>
         <ProjectCardTag
           className="project-card-tag"
           src={rectangle}
           alt={rectangle}
         />
+        <ProjectCardIntro>
+          {projectIntro || "프로젝트 소개를 입력해주세요"}
+        </ProjectCardIntro>
       </ProjectCardInfo>
     </ProjectCardUnit>
   );

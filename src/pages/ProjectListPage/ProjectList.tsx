@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { db } from "../../firebaseSDK";
-import userState from "../../recoil/atoms/login/userState";
+import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
 
@@ -20,16 +20,14 @@ export default function ProjectList() {
           id: projectId,
           name: docSnap.data().name,
           imgUrl: docSnap.data().project_img_URL,
+          projectIntro: docSnap.data().project_intro,
         };
       }),
     );
     setProjectData(projects.filter((project: any) => project !== null));
-    console.log(...projectData);
   };
 
-  useEffect(() => {
-    fetchProjectData();
-  }, []);
+  fetchProjectData();
 
   const containerStyle = {
     display: "flex",
@@ -46,6 +44,7 @@ export default function ProjectList() {
             key={project.id}
             projectImgUrl={project.imgUrl}
             projectName={project.name}
+            projectIntro={project.projectIntro}
           />
         ))}
       </div>
