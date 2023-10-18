@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { db } from "../../firebaseSDK";
@@ -27,7 +27,9 @@ export default function ProjectList() {
     setProjectData(projects.filter((project: any) => project !== null));
   };
 
-  fetchProjectData();
+  useEffect(() => {
+    fetchProjectData();
+  }, [userData]);
 
   const containerStyle = {
     display: "flex",
