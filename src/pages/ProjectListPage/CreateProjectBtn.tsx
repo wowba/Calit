@@ -13,6 +13,7 @@ import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import icon_plus_circle from "../../assets/icons/icon_plus_circle.svg";
 import loginState from "../../recoil/atoms/login/loginState";
+import { createKanban } from "../../api/CreateCollection";
 
 const CreateBtn = styled.button`
   display: inline;
@@ -59,7 +60,11 @@ export default function CreateProjectBtn() {
     };
 
     const docRef = await addDoc(collection(db, "project"), projectData);
-
+    // onSnapshot 감시를 위한 dummy kanban
+    createKanban(docRef.id, {
+      name: "dummyKanban",
+      is_deleted: true,
+    });
     // 유저의 project_list 업데이트
     const userRef = doc(db, "user", userCredential.uid);
     await updateDoc(userRef, {
