@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import ShrikhandRegular from "../assets/fonts/Shrikhand-Regular.ttf";
-import member from "../assets/icons/headerMemberIcon.svg";
-import bookmark from "../assets/icons/headerBookmarkIcon.svg";
-import info from "../assets/icons/headerInfoIcon.svg";
-import bell from "../assets/icons/headerBellIcon.svg";
-// 20231016 남현준
-// 유저 프로필 아이콘 들어올 자리 - 현재는 샘플 이미지 넣음, 프로필 컴포넌트 구현시 유저 이미지 적용 예정
-import profile from "../assets/icons/headerProfileSampleIcon.svg";
+
+// 모달
+import ProjectMember from "./modal/ProjectMemberModal";
+import BookMark from "./modal/BookMarkModal";
+import Tutorial from "./modal/TutorialModal";
+import Log from "./modal/LogModal";
+import UserProfile from "./modal/UserProfileModal";
+
+// 모달 공통 컴포넌트
 import ModalCommon from "./layout/ModalCommonLayout";
 
 const HeaderLayout = styled.div`
+  height: 9vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,96 +37,89 @@ const HeaderIconBox = styled.div`
   display: flex;
   align-items: center;
 
-  button > img:not(:last-of-type) {
-    padding-right: 1rem;
+  div:not(:last-of-type) {
+    margin-right: 1rem;
   }
   img:hover {
     cursor: pointer;
   }
 `;
 
-const icons = [
-  {
-    name: "member",
-    type: "project",
-    route: member,
-  },
-  {
-    name: "bookmark",
-    type: "project",
-    route: bookmark,
-  },
-  {
-    name: "info",
-    type: "list",
-    route: info,
-  },
-  {
-    name: "bell",
-    type: "project",
-    route: bell,
-  },
-  {
-    name: "profile",
-    type: "list",
-    route: profile,
-  },
+const modals = [
+  <ProjectMember />,
+  <BookMark />,
+  <Tutorial />,
+  <Log />,
+  <UserProfile />,
 ];
 
 export default function Header() {
   const location = useLocation();
-  const [selectedIcon, setSelectedIcon] = useState("");
+  // const [selectedIcon, setSelectedIcon] = useState("");
+  // const [selectedModal, setSelectedModal] = useState<number>();
   let pageType = "list";
   if (location.pathname !== "/") {
     pageType = "project";
   }
 
-  const handleClick = (data: any) => {
-    const modalData = data;
-    setSelectedIcon(modalData.name);
-  };
+  // const handleClick = (data: any) => {
+  //   const modalData = data;
+  //   setSelectedIcon(modalData.name);
+  // };
+
+  // const handleModal = (idx: number) => {
+  //   console.log("input", idx);
+  //   console.log("before", selectedModal);
+  //   setSelectedModal(idx);
+  //   console.log("after", selectedModal);
+  // };
 
   return (
     <HeaderLayout>
       <HeaderLogoParagraph>Calit!</HeaderLogoParagraph>
       <HeaderIconBox>
-        {pageType === "list"
-          ? icons
-              .filter((icon) => icon.type.includes(pageType))
-              .map((icon, index) => (
-                <ModalCommon
-                  key={icon.name}
-                  modalIndex={index}
-                  modalName={icon.name}
-                  modalIcon={icon.route}
-                  modalSelected={selectedIcon}
-                >
-                  <button
-                    type="button"
-                    key={icon.name}
-                    onClick={() => handleClick(icon)}
-                  >
-                    <img src={icon.route} alt={icon.name} />
-                  </button>
-                </ModalCommon>
-              ))
-          : icons.map((icon, index) => (
-              <ModalCommon
-                key={icon.name}
-                modalIndex={index}
-                modalName={icon.name}
-                modalIcon={icon.route}
-                modalSelected={selectedIcon}
-              >
-                <button
-                  type="button"
-                  key={icon.name}
-                  onClick={() => handleClick(icon)}
-                >
-                  <img src={icon.route} alt={icon.name} />
-                </button>
-              </ModalCommon>
-            ))}
+        {pageType === "list" ? (
+          <div>1</div>
+        ) : (
+          // ? icons
+          //     .filter((icon) => icon.type.includes(pageType))
+          //     .map((icon, index) => (
+          //       <ModalCommon
+          //         key={icon.name}
+          //         modalIndex={index}
+          //         modalName={icon.name}
+          //         modalIcon={icon.route}
+          //         modalSelected={selectedIcon}
+          //       >
+          //         <button
+          //           type="button"
+          //           key={icon.name}
+          //           onClick={() => handleClick(icon)}
+          //         >
+          //           <img src={icon.route} alt={icon.name} />
+          //         </button>
+          //       </ModalCommon>
+          //     ))
+          modals.map((modal) => (
+            <ModalCommon>{modal}</ModalCommon>
+
+            // <ModalCommon
+            //   key={modal.name}
+            //   modalIndex={index}
+            //   modalName={modal.name}
+            //   modalmodal={modal.route}
+            //   modalSelected={selectedIcon}
+            // >
+            //   <button
+            //     type="button"
+            //     key={icon.name}
+            //     onClick={() => handleClick(icon)}
+            //   >
+            //     <img src={icon.route} alt={icon.name} />
+            //   </button>
+            // </ModalCommon>
+          ))
+        )}
       </HeaderIconBox>
     </HeaderLayout>
   );

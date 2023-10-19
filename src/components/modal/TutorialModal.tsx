@@ -1,5 +1,6 @@
 import React from "react";
+import tutorialIcon from "../../assets/icons/headerInfoIcon.svg";
 
 export default function Tutorial() {
-  return <div>TutorialModal</div>;
+  return <img src={tutorialIcon} alt="tutorial" />;
 }

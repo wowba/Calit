@@ -1,5 +1,6 @@
 import React from "react";
+import bookmarkIcon from "../../assets/icons/headerBookmarkIcon.svg";
 
 export default function Bookmark() {
-  return <div>BookmarkModal</div>;
+  return <img src={bookmarkIcon} alt="bookMark" />;
 }

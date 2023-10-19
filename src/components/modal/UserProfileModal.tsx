@@ -1,5 +1,6 @@
 import React from "react";
+import profileIcon from "../../assets/icons/headerProfileSampleIcon.svg";
 
 export default function UserProfile() {
-  return <div>UserProfileModal</div>;
+  return <img src={profileIcon} alt="userProfile" />;
 }

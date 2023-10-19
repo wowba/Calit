@@ -1,4 +1,4 @@
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { styled } from "styled-components";
 
 const ModalLayout = styled.div`
@@ -14,65 +14,80 @@ const ModalBox = styled.div`
   }
 `;
 
-const ModalArea = styled.div`
-  width: 20rem;
-  height: 20rem;
-  z-index: 999;
-  position: absolute;
-  top: 4rem;
-  right: 0;
-  border-radius: 7px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
+// const ModalArea = styled.div`
+//   width: 20rem;
+//   height: 20rem;
+//   z-index: 999;
+//   position: absolute;
+//   top: 4rem;
+//   right: 0;
+//   border-radius: 7px;
+//   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
 
-  &.isHide {
-    display: none;
-  }
+//   &.isHide {
+//     display: none;
+//   }
 
-  &.isShow {
-    display: block;
-  }
-`;
+//   &.isShow {
+//     display: block;
+//   }
+// `;
 
 interface ModalInfo {
-  modalIndex: number;
-  modalName: string;
-  modalIcon: string;
-  modalSelected: string;
+  key?: number;
+  // onClick: void;
+  // modalIndex: number;
+  // modalName: string;
+  // modalIcon: string;
+  // modalSelected: string;
   children?: ReactNode;
 }
 
 export default function ModalCommon(name: ModalInfo) {
-  const { modalIndex, modalName, children, modalSelected } = name;
-  // const [isModalClicked, setModalClicked] = useState(false);
-  const [activeIndex, setActiveIndex] = useState<number>();
-  const [isModalSelected, setModalSelected] = useState(false);
+  const { key, children } = name;
+  console.log(key, children);
 
-  const handleModal = (index: number) => {
-    setActiveIndex(index);
+  const handleClick = (child: any) => {
+    const xxx = child;
+    console.log(xxx);
   };
-  const handleModalClick = () => {
-    // setModalClicked(!isModalClicked);
-    handleModal(modalIndex);
-  };
-
-  useEffect(() => {
-    if (modalSelected !== modalName) {
-      setModalSelected(true);
-    } else {
-      setModalSelected(false);
-    }
-  }, [modalSelected]);
 
   return (
     <ModalLayout>
-      <ModalBox onClick={handleModalClick}>
-        {children}
-        {activeIndex === modalIndex ? (
-          <ModalArea className={isModalSelected ? "isHide" : "isShow"}>
-            {modalName}
-          </ModalArea>
-        ) : null}
-      </ModalBox>
+      <ModalBox onClick={() => handleClick(children)}>{children}</ModalBox>
     </ModalLayout>
   );
+  // const { modalIndex, modalName, children, modalSelected } = name;
+  // const [isModalClicked, setModalClicked] = useState(false);
+  // const [activeIndex, setActiveIndex] = useState<number>();
+  // const [isModalSelected, setModalSelected] = useState(false);
+
+  // const handleModal = (index: number) => {
+  //   setActiveIndex(index);
+  // };
+  // const handleModalClick = () => {
+  //   // setModalClicked(!isModalClicked);
+  //   handleModal(modalIndex);
+  // };
+
+  // useEffect(() => {
+  //   if (modalSelected !== modalName) {
+  //     setModalSelected(true);
+  //   } else {
+  //     setModalSelected(false);
+  //   }
+  // }, [modalSelected]);
+
+  // return (
+  //   <ModalLayout>
+  //     <ModalBox onClick={handleModalClick}>
+  //       {children}
+  //       {activeIndex === modalIndex ? (
+  //         <ModalArea className={isModalSelected ? "isHide" : "isShow"}>
+  //           {modalName}
+  //         </ModalArea>
+  //       ) : null}
+  //     </ModalBox>
+  //   </ModalLayout>
+  // );
 }
