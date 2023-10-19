@@ -6,7 +6,7 @@ interface Props {
   $dynamic_url?: string;
 }
 
-const ProjectCardUnit = styled.a<Props>`
+export const ProjectCardUnit = styled.a<Props>`
   background-image: url(${(props) =>
     props.$dynamic_url ? props.$dynamic_url : "none"});
   display: inline;
@@ -17,7 +17,7 @@ const ProjectCardUnit = styled.a<Props>`
   position: relative;
   background-repeat: no-repeat;
   background-size: 100%;
-  margin: 20px;
+  margin: 0px 20px;
   overflow: hidden;
 `;
 const ProjectCardInfo = styled.div`
