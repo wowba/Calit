@@ -1,6 +1,6 @@
 import React, { useState, KeyboardEvent } from "react";
 import styled from "styled-components";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../firebaseSDK";
 import rectangle from "../../assets/images/Rectangle.svg";
 
@@ -64,6 +64,7 @@ const ProjectCardName = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 700;
+  cursor: pointer;
 `;
 const ProjectCardNameInput = styled.input`
   position: absolute;
@@ -89,6 +90,16 @@ const ProjectCardIntro = styled.p`
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  cursor: pointer;
+`;
+
+const ProjectCardIntroInput = styled.input`
+  margin: -20px 20px;
+  width: 100%;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `;
 
 export default function ProjectCard({
@@ -97,19 +108,31 @@ export default function ProjectCard({
   projectName,
   projectIntro,
 }: any) {
-  const [isChangeable, setIsChangeable] = useState(false);
-  const [inputValue, setInputValue] = useState(projectName);
+  const [isNameChangeable, setIsNameChangeable] = useState(false);
+  const [isIntroChangeable, setIsIntroChangeable] = useState(false);
+  const [inputNameValue, setInputNameValue] = useState(projectName);
+  const [inputIntroValue, setInputIntroValue] = useState(projectIntro);
 
-  const handleChangeable = () => {
-    setIsChangeable(!isChangeable);
+  const handleNameChangeable = () => {
+    setIsNameChangeable(!isNameChangeable);
   };
+  const handleInputChangeable = () => {
+    setIsIntroChangeable(!isIntroChangeable);
+  };
+
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const docRef = doc(db, "project", projectId);
       await updateDoc(docRef, {
-        name: inputValue,
+        name: inputNameValue,
+        project_intro: inputIntroValue,
+        modified_date: serverTimestamp(),
       });
-      handleChangeable();
+      if (isNameChangeable) {
+        handleNameChangeable();
+      } else if (isIntroChangeable) {
+        handleInputChangeable();
+      }
     }
   };
 
@@ -119,15 +142,15 @@ export default function ProjectCard({
         {}
       </ProjectCardBgImg>
       <ProjectCardInfo className="project-card-info">
-        {isChangeable ? (
+        {isNameChangeable ? (
           <ProjectCardNameInput
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={inputNameValue}
+            onChange={(e) => setInputNameValue(e.target.value)}
             onKeyDown={handleEnterPress}
           />
         ) : (
-          <ProjectCardName onClick={handleChangeable}>
-            {inputValue || "제목을 입력해주세요"}
+          <ProjectCardName onClick={handleNameChangeable}>
+            {inputNameValue || "제목을 입력해주세요"}
           </ProjectCardName>
         )}
         <ProjectCardTag
@@ -135,9 +158,17 @@ export default function ProjectCard({
           src={rectangle}
           alt={rectangle}
         />
-        <ProjectCardIntro>
-          {projectIntro || "프로젝트 소개를 입력해주세요"}
-        </ProjectCardIntro>
+        {isIntroChangeable ? (
+          <ProjectCardIntroInput
+            value={inputIntroValue}
+            onChange={(e) => setInputIntroValue(e.target.value)}
+            onKeyDown={handleEnterPress}
+          />
+        ) : (
+          <ProjectCardIntro onClick={handleInputChangeable}>
+            {inputIntroValue || "프로젝트 소개를 입력해주세요"}
+          </ProjectCardIntro>
+        )}
       </ProjectCardInfo>
     </ProjectCardUnit>
   );
