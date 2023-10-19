@@ -91,15 +91,24 @@ const ProjectCardIntro = styled.p`
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   cursor: pointer;
+  position: relative;
+  top: 10px;
 `;
 
 const ProjectCardIntroInput = styled.input`
-  margin: -20px 20px;
-  width: 100%;
+  width: 99%;
+  height: 70px;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  border: none;
+  -webkit-border-radius: 4px;
+  padding: 0 8px;
+  background: #fafafa;
+  margin: 2px;
+  position: relative;
+  top: -20px;
 `;
 
 export default function ProjectCard({
