@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import ShrikhandRegular from "../assets/fonts/Shrikhand-Regular.ttf";
 
 const HeaderLayout = styled.div`
-  height: 9vh;
+  height: 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
