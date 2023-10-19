@@ -6,6 +6,7 @@ import Sidebar from "../Sidebar";
 
 const ProjectLayout = styled.div`
   display: flex;
+  height: calc(100% - 4rem);
 `;
 
 export default function ProjectCheckRoute() {
