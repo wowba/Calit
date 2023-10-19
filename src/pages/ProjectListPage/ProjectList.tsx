@@ -9,7 +9,8 @@ import ProjectCard from "./ProjectCard";
 import CreateProjectBtn from "./CreateProjectBtn";
 
 const ProjectListContainer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   justify-content: center;
   margin: 20px;
 `;
