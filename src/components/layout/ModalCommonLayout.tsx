@@ -48,7 +48,7 @@ export default function ModalCommon(name: ModalInfo) {
   const [isModalSelected, setModalSelected] = useState(false);
 
   const handleModal = (index: number) => {
-    setActiveIndex((prev) => (prev === index ? -1 : index));
+    setActiveIndex(index);
   };
   const handleModalClick = () => {
     // setModalClicked(!isModalClicked);
