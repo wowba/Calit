@@ -10,10 +10,8 @@ const SidebarLayout = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  width: 11.5rem;
-  /* 이후 Header 높이를 가져와서 높이 할당 예정 */
-  /* height: calc(100vh - HeaderHeight) */
-  height: calc(95vh);
+  width: 14rem;
+  height: 100%;
 
   padding: 1.25rem 1.25rem 1.25rem 1.25rem;
 `;
