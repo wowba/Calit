@@ -62,6 +62,12 @@ export default function CreateProjectBtn() {
     const docRef = await addDoc(collection(db, "project"), projectData);
     // onSnapshot 감시를 위한 dummy kanban
     createKanban(docRef.id, {
+      user_list: [],
+      stage_list: [],
+      start_date: new Date(),
+      end_date: new Date(),
+      created_date: serverTimestamp(),
+      modified_date: serverTimestamp(),
       name: "dummyKanban",
       is_deleted: true,
     });
@@ -71,7 +77,7 @@ export default function CreateProjectBtn() {
       project_list: arrayUnion(docRef.id),
     });
 
-    alert("프로젝트가 생성되었습니다!");
+    // alert("프로젝트가 생성되었습니다!");
   };
 
   return (
