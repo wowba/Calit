@@ -22,7 +22,7 @@ const CreateBtn = styled.button`
   height: 226px;
   border-radius: 13px;
   background-color: #ededed;
-  margin: 0 20px;
+  margin: 20px;
 `;
 
 const PlusIcon = styled.img`

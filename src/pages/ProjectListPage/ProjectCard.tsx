@@ -17,12 +17,14 @@ export const ProjectCardUnit = styled.div`
   position: relative;
   background-repeat: no-repeat;
   background-size: 100%;
-  margin: 0px 20px;
+  margin: 20px;
   overflow: hidden;
 `;
 const ProjectCardBgImg = styled.a<Props>`
   background-image: url(${(props) =>
-    props.$dynamic_url ? props.$dynamic_url : "none"});
+    props.$dynamic_url
+      ? props.$dynamic_url
+      : "https://i.pinimg.com/564x/ad/36/d7/ad36d788f88de7de91122c7317449371.jpg"});
   display: inline-block;
   width: 400px;
   min-width: 230px;
