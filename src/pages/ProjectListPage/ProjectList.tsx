@@ -6,10 +6,13 @@ import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
+import CreateProjectBtn from "./CreateProjectBtn";
 
 const ProjectListContainer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   justify-content: center;
+  margin: 20px;
 `;
 
 export default function ProjectList() {
@@ -42,6 +45,7 @@ export default function ProjectList() {
       <h1>ProjectList</h1>
       <InvitationBtn />
       <ProjectListContainer>
+        <CreateProjectBtn />
         {projectData.map((project: any) => (
           <ProjectCard
             key={project.id}
