@@ -8,7 +8,6 @@ import {
   ProjectModalTabText,
   ProjectModalTabBox,
   ProjectModalContentBox,
-  ProjectModalFooter,
   ProjectModalContent,
 } from "../../components/layout/ProjectModalLayout";
 import KanbanModal from "./KanbanModal/KanbanModal";
@@ -22,7 +21,21 @@ const ProjectLayout = styled.div`
   padding: 1rem 1.75rem 0 0.5rem;
 `;
 
-const Btn = styled.button`
+const ProjectLayoutFooter = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: calc(100% - 0.6rem);
+
+  /* 사이드바 width 변경시 수정 필요. */
+  width: calc(100% - 14rem);
+  height: 0.6rem;
+
+  border-radius: 0 0.6rem 0 0;
+  background-color: #ffea7a;
+  box-shadow: -2px 4px 20px 0px rgba(0, 0, 0, 0.6);
+`;
+
+const TestBtn = styled.button`
   margin: 10px;
   border: 1px solid black;
   background-color: beige;
@@ -35,8 +48,8 @@ export default function Project() {
   let kanbanTabColor = "#ffea7a";
   let todoTabColor = "#ffea7a";
 
-  let iskanbanShow;
-  let isTodoShow;
+  let iskanbanShow = false;
+  let isTodoShow = false;
 
   const handleCalClick = () => {
     setSearchParams();
@@ -67,31 +80,36 @@ export default function Project() {
   return (
     <ProjectLayout>
       {/* 캘린더 */}
-      <ProjectModalLayout>
-        <ProjectModalTabBox>
+      <ProjectModalLayout $isShow>
+        <ProjectModalTabBox $marginLeft={2}>
           <ProjectModalTabBackground $color={calendarTabColor} />
           <ProjectModalTabText $top={0.4} $left={2.5}>
             Calender
           </ProjectModalTabText>
         </ProjectModalTabBox>
-        <ProjectModalContentBox $isShadowExist>
+        <ProjectModalContentBox>
           <ProjectModalContent>
-            <Btn type="button" onClick={() => handleCalClick()}>
+            <TestBtn type="button" onClick={() => handleCalClick()}>
               calender
-            </Btn>
-            <Btn type="button" onClick={() => handlekanbanCLick()}>
+            </TestBtn>
+            <TestBtn type="button" onClick={() => handlekanbanCLick()}>
               kanban
-            </Btn>
-            <Btn type="button" onClick={() => handleTodoCLick()}>
+            </TestBtn>
+            <TestBtn type="button" onClick={() => handleTodoCLick()}>
               todo
-            </Btn>
+            </TestBtn>
             <div>calender</div>
           </ProjectModalContent>
-          <ProjectModalFooter $isShadowExist />
         </ProjectModalContentBox>
       </ProjectModalLayout>
-      {iskanbanShow ? <KanbanModal kanbanTabColor={kanbanTabColor} /> : null}
-      {isTodoShow ? <TodoModal todoTabColor={todoTabColor} /> : null}
+      {/* 칸반 */}
+      <KanbanModal
+        kanbanTabColor={kanbanTabColor}
+        isKanbanShow={iskanbanShow}
+      />
+      {/* 투두 */}
+      <TodoModal todoTabColor={todoTabColor} isTodoShow={isTodoShow} />
+      <ProjectLayoutFooter />
     </ProjectLayout>
   );
 }
