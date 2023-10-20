@@ -11,6 +11,17 @@ interface KanbanData {
   modified_date: FieldValue;
   is_deleted: boolean;
 }
+interface TodoData {
+  update_list: Array<Object>;
+  user_list: Array<string>;
+  name: string;
+  order: number;
+  created_date: FieldValue;
+  modified_date: FieldValue;
+  is_deleted: boolean;
+  stageID: string;
+  deadline: Date;
+}
 
 export const createKanban = async (
   documentId: string,
@@ -25,7 +36,7 @@ export const createKanban = async (
     // alert("칸반을 생성했습니다");
     return newKanbanId;
   } catch (error) {
-    console.error("칸반을 생성하는 데 오류가 발생했습니다.", error);
+    // console.error("칸반을 생성하는 데 오류가 발생했습니다.", error);
     throw error;
   }
 };
@@ -33,16 +44,16 @@ export const createKanban = async (
 export const createTodo = async (
   documentId: string,
   kanbanId: string,
-  data: any,
+  data: TodoData,
 ): Promise<void> => {
   try {
     await addDoc(
       collection(db, "project", documentId, "kanban", kanbanId, "todo"),
       data,
     );
-    alert("투두를 생성했습니다");
+    // alert("투두를 생성했습니다");
   } catch (error) {
-    console.error("투두를 생성하는 데 오류가 발생했습니다.", error);
+    // console.error("투두를 생성하는 데 오류가 발생했습니다.", error);
     throw error;
   }
 };
