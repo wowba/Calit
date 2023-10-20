@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import ShrikhandRegular from "../assets/fonts/Shrikhand-Regular.ttf";
@@ -56,11 +56,23 @@ const modals = [
 export default function Header() {
   const location = useLocation();
   // const [selectedIcon, setSelectedIcon] = useState("");
-  // const [selectedModal, setSelectedModal] = useState<number>();
+  const [selectedModal, setSelectedModal] = useState<number>();
   let pageType = "list";
   if (location.pathname !== "/") {
     pageType = "project";
   }
+
+  const clickModal = (idx: number) => {
+    setSelectedModal(idx);
+    console.log(idx, selectedModal);
+  };
+
+  // const selectModal = (idx: number) => idx;
+
+  // const selectModal = (idx: number) => {
+  //   setSelectedModal(idx);
+  //   return selectedModal;
+  // };
 
   // const handleClick = (data: any) => {
   //   const modalData = data;
@@ -100,8 +112,12 @@ export default function Header() {
           //         </button>
           //       </ModalCommon>
           //     ))
-          modals.map((modal) => (
-            <ModalCommon>{modal}</ModalCommon>
+          modals.map((modal, index) => (
+            <ModalCommon modalSelected={selectedModal} modalIndex={index}>
+              <div onClick={() => clickModal(index)} aria-hidden="true">
+                {modal}
+              </div>
+            </ModalCommon>
 
             // <ModalCommon
             //   key={modal.name}

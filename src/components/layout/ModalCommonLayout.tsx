@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactElement, useState } from "react";
 import { styled } from "styled-components";
 
 const ModalLayout = styled.div`
@@ -14,47 +14,79 @@ const ModalBox = styled.div`
   }
 `;
 
-// const ModalArea = styled.div`
-//   width: 20rem;
-//   height: 20rem;
-//   z-index: 999;
-//   position: absolute;
-//   top: 4rem;
-//   right: 0;
-//   border-radius: 7px;
-//   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
+const ModalArea = styled.div`
+  width: 20rem;
+  height: 20rem;
+  z-index: 999;
+  position: absolute;
+  top: 4rem;
+  right: 0;
+  border-radius: 7px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
 
-//   &.isHide {
-//     display: none;
-//   }
+  &.isHide {
+    display: none;
+  }
 
-//   &.isShow {
-//     display: block;
-//   }
-// `;
+  &.isShow {
+    display: block;
+  }
+`;
 
 interface ModalInfo {
-  key?: number;
   // onClick: void;
   // modalIndex: number;
-  // modalName: string;
+  // onClick: React.MouseEventHandler<HTMLButtonElement>;
+  // onClick: (n: number) => number;
+  // onClick: (n: number) => void;
   // modalIcon: string;
-  // modalSelected: string;
-  children?: ReactNode;
+  modalSelected?: number;
+  modalIndex: number;
+  children?: ReactElement;
 }
 
 export default function ModalCommon(name: ModalInfo) {
-  const { key, children } = name;
-  console.log(key, children);
+  const { modalIndex, modalSelected, children } = name;
+  const [isModalClicked, setModalClicked] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number>();
+  // const idxValue = onClick(modalIndex);
+  // console.log(idxValue);
 
-  const handleClick = (child: any) => {
-    const xxx = child;
-    console.log(xxx);
+  // console.log("now", modalIndex);
+
+  // const handleModal = (index: number) => {
+  //   // setActiveIndex((prev) => (prev === index ? -1 : index));
+  //   setActiveIndex(index);
+  //   console.log("index: ", activeIndex);
+  // };
+
+  const handleClick = () => {
+    console.log("before", activeIndex);
+    setModalClicked(!isModalClicked);
+    // handleModal(modalSelected);
+    setActiveIndex(modalSelected);
+    console.log("after", activeIndex);
+    // const idxValue = onClick(modalIndex);
+    // console.log(idxValue, modalIndex);
+    // if (idxValue === modalIndex) {
+    //   console.log(true);
+    // } else {
+    //   console.log(false);
+    // }
+
+    // console.log(onClick(modalIndex));
   };
 
   return (
     <ModalLayout>
-      <ModalBox onClick={() => handleClick(children)}>{children}</ModalBox>
+      <ModalBox key={modalIndex} onClick={handleClick}>
+        {children}
+        {isModalClicked === true ? (
+          <ModalArea
+            className={activeIndex === modalIndex ? "isShow" : "isHide"}
+          />
+        ) : null}
+      </ModalBox>
     </ModalLayout>
   );
   // const { modalIndex, modalName, children, modalSelected } = name;
