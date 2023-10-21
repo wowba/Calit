@@ -8,7 +8,6 @@ import {
   ProjectModalTabText,
   ProjectModalTabBox,
   ProjectModalContentBox,
-  ProjectModalContent,
 } from "../../../components/layout/ProjectModalLayout";
 
 type Props = {
@@ -49,18 +48,16 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
         </ProjectModalTabText>
       </ProjectModalTabBox>
       <ProjectModalContentBox>
-        <ProjectModalContent>
-          <TestBtn type="button" onClick={() => handleCalClick()}>
-            calender
-          </TestBtn>
-          <TestBtn type="button" onClick={() => handlekanbanCLick()}>
-            kanban
-          </TestBtn>
-          <TestBtn type="button" onClick={() => handleTodoCLick()}>
-            todo
-          </TestBtn>
-          <div>kanban</div>
-        </ProjectModalContent>
+        <TestBtn type="button" onClick={() => handleCalClick()}>
+          calender
+        </TestBtn>
+        <TestBtn type="button" onClick={() => handlekanbanCLick()}>
+          kanban
+        </TestBtn>
+        <TestBtn type="button" onClick={() => handleTodoCLick()}>
+          todo
+        </TestBtn>
+        <div>kanban</div>
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );

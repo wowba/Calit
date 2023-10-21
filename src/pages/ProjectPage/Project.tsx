@@ -8,7 +8,6 @@ import {
   ProjectModalTabText,
   ProjectModalTabBox,
   ProjectModalContentBox,
-  ProjectModalContent,
 } from "../../components/layout/ProjectModalLayout";
 import KanbanModal from "./KanbanModal/KanbanModal";
 import TodoModal from "./TodoModal/TodoModal";
@@ -88,18 +87,15 @@ export default function Project() {
           </ProjectModalTabText>
         </ProjectModalTabBox>
         <ProjectModalContentBox>
-          <ProjectModalContent>
-            <TestBtn type="button" onClick={() => handleCalClick()}>
-              calender
-            </TestBtn>
-            <TestBtn type="button" onClick={() => handlekanbanCLick()}>
-              kanban
-            </TestBtn>
-            <TestBtn type="button" onClick={() => handleTodoCLick()}>
-              todo
-            </TestBtn>
-            <div>calender</div>
-          </ProjectModalContent>
+          <TestBtn type="button" onClick={() => handleCalClick()}>
+            calender
+          </TestBtn>
+          <TestBtn type="button" onClick={() => handlekanbanCLick()}>
+            kanban
+          </TestBtn>
+          <TestBtn type="button" onClick={() => handleTodoCLick()}>
+            todo
+          </TestBtn>
         </ProjectModalContentBox>
       </ProjectModalLayout>
       {/* 칸반 */}
