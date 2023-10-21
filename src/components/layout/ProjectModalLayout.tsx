@@ -49,6 +49,7 @@ const ProjectModalTabText = styled.span<{ $top: number; $left: number }>`
 const ProjectModalContentBox = styled.div`
   height: 100%;
 
+  background-color: white;
   border-radius: 0.6rem 0.6rem 0 0;
   box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
 
@@ -58,7 +59,6 @@ const ProjectModalContentBox = styled.div`
 `;
 
 const ProjectModalContent = styled.div`
-  background-color: white;
   border-radius: 0.6rem 0.6rem 0 0;
 
   overflow: scroll;
