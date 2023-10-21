@@ -53,14 +53,6 @@ const ProjectModalContentBox = styled.div`
   border-radius: 0.6rem 0.6rem 0 0;
   box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const ProjectModalContent = styled.div`
-  border-radius: 0.6rem 0.6rem 0 0;
-
   overflow: scroll;
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
@@ -74,5 +66,4 @@ export {
   ProjectModalTabText,
   ProjectModalTabBackground,
   ProjectModalContentBox,
-  ProjectModalContent,
 };
