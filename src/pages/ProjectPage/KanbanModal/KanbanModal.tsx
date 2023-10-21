@@ -8,18 +8,18 @@ import {
   ProjectModalTabText,
   ProjectModalTabBox,
   ProjectModalContentBox,
-  ProjectModalFooter,
   ProjectModalContent,
 } from "../../../components/layout/ProjectModalLayout";
 
 type Props = {
   kanbanTabColor: string;
+  isKanbanShow: boolean;
 };
 
-export default function KanbanModal({ kanbanTabColor }: Props) {
+export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const Btn = styled.button`
+  const TestBtn = styled.button`
     margin: 10px;
     border: 1px solid black;
     background-color: beige;
@@ -41,27 +41,26 @@ export default function KanbanModal({ kanbanTabColor }: Props) {
   };
 
   return (
-    <ProjectModalLayout>
-      <ProjectModalTabBox style={{ marginLeft: "9rem" }}>
+    <ProjectModalLayout $isShow={isKanbanShow}>
+      <ProjectModalTabBox $marginLeft={10.75}>
         <ProjectModalTabBackground $color={kanbanTabColor} />
         <ProjectModalTabText $top={0.4} $left={2.8}>
           Kanban
         </ProjectModalTabText>
       </ProjectModalTabBox>
-      <ProjectModalContentBox $isShadowExist>
+      <ProjectModalContentBox>
         <ProjectModalContent>
-          <Btn type="button" onClick={() => handleCalClick()}>
+          <TestBtn type="button" onClick={() => handleCalClick()}>
             calender
-          </Btn>
-          <Btn type="button" onClick={() => handlekanbanCLick()}>
+          </TestBtn>
+          <TestBtn type="button" onClick={() => handlekanbanCLick()}>
             kanban
-          </Btn>
-          <Btn type="button" onClick={() => handleTodoCLick()}>
+          </TestBtn>
+          <TestBtn type="button" onClick={() => handleTodoCLick()}>
             todo
-          </Btn>
+          </TestBtn>
           <div>kanban</div>
         </ProjectModalContent>
-        <ProjectModalFooter $isShadowExist />
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );
