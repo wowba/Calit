@@ -115,11 +115,23 @@ export default function ProjectIconContainer({ projectId }: any) {
   const handleOpen = () => {
     setOpenModal(true);
   };
+  const handleCopyClipBoard = async (id: string) => {
+    try {
+      //   await navigator.clipboard.writeText(`calit-2f888.web.app/${id}`);
+      await navigator.clipboard.writeText(`localhost:3000/${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
       <Container>
-        <LinkIcon src={linkIcon} alt="공유" />
+        <LinkIcon
+          src={linkIcon}
+          alt="공유"
+          onClick={() => handleCopyClipBoard(projectId)}
+        />
         {isQualifed && (
           <SettingIcon src={settingIcon} alt="설정" onClick={handleClick} />
         )}
