@@ -115,9 +115,6 @@ export default function ProjectIconContainer({ projectId }: any) {
   const handleOpen = () => {
     setOpenModal(true);
   };
-  //   const handleCloseBtn = () => {
-  //     setOpenModal(false);
-  //   };
 
   return (
     <>

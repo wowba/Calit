@@ -13,6 +13,7 @@ import { useRecoilValue } from "recoil";
 import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import loginState from "../../recoil/atoms/login/loginState";
+import ConfirmBtn from "../../components/layout/ConfirmBtnLayout";
 
 // 모달
 const ModalContainer = styled.div`
@@ -30,10 +31,24 @@ const ModalContent = styled.div`
   width: 300px;
   padding: 20px;
   border-radius: 10px;
+  text-align: center;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+`;
+
+const CancelBtn = styled.button`
+  height: 38px;
+  width: 3rem;
+  border-radius: 7px;
+  border: 1px solid #ee6a6a;
+  margin: 0.5rem;
+  &:hover {
+    transition: all 0.5s;
+    background-color: #d05f5f;
+    color: white;
+  }
 `;
 
 export default function DeleteModal({
@@ -103,12 +118,15 @@ export default function DeleteModal({
       <ModalContainer>
         <ModalContent>
           <p>삭제하시겠습니까?</p>
-          <button type="button" onClick={handleDelete}>
+          <ConfirmBtn
+            dynamicWidth="3rem"
+            dynamicMargin="0.5rem"
+            onClick={handleDelete}
+          >
             삭제
-          </button>
-          <button type="button" onClick={handleCloseBtn}>
-            취소
-          </button>
+          </ConfirmBtn>
+
+          <CancelBtn onClick={handleCloseBtn}>취소</CancelBtn>
         </ModalContent>
       </ModalContainer>
       )
