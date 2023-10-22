@@ -154,7 +154,7 @@ export default function ProjectCard({
       <ProjectCardBgImg $dynamic_url={projectImgUrl} href={projectId}>
         {}
       </ProjectCardBgImg>
-      <ProjectIconContainer />
+      <ProjectIconContainer projectId={projectId} />
       <ProjectCardInfo className="project-card-info">
         {isNameChangeable ? (
           <ProjectCardNameInput
