@@ -3,6 +3,13 @@ import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 import ShrikhandRegular from "../assets/fonts/Shrikhand-Regular.ttf";
 
+// 모달 아이콘
+import memberIcon from "../assets/icons/headerMemberIcon.svg";
+import bookmarkIcon from "../assets/icons/headerBookmarkIcon.svg";
+import tutorialIcon from "../assets/icons/headerInfoIcon.svg";
+import logIcon from "../assets/icons/headerBellIcon.svg";
+import profileIcon from "../assets/icons/headerProfileSampleIcon.svg";
+
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
 import BookMark from "./modal/BookMarkModal";
@@ -36,6 +43,7 @@ const HeaderLogoParagraph = styled.p`
 const HeaderIconBox = styled.div`
   display: flex;
   align-items: center;
+  height: 100%;
 
   div:not(:last-of-type) {
     margin-right: 1rem;
@@ -45,97 +53,65 @@ const HeaderIconBox = styled.div`
   }
 `;
 
+const HeaderModalBox = styled.div`
+  height: 100%;
+`;
+
 const modals = [
-  <ProjectMember />,
-  <BookMark />,
-  <Tutorial />,
-  <Log />,
-  <UserProfile />,
+  {
+    icon: memberIcon,
+    type: "project",
+    content: <ProjectMember />,
+  },
+  {
+    icon: bookmarkIcon,
+    type: "project",
+    content: <BookMark />,
+  },
+  {
+    icon: tutorialIcon,
+    type: "list",
+    content: <Tutorial />,
+  },
+  {
+    icon: logIcon,
+    type: "project",
+    content: <Log />,
+  },
+  {
+    icon: profileIcon,
+    type: "list",
+    content: <UserProfile />,
+  },
 ];
 
 export default function Header() {
   const location = useLocation();
-  // const [selectedIcon, setSelectedIcon] = useState("");
-  const [selectedModal, setSelectedModal] = useState<number>();
+  const [selectedModal, setSelectedModal] = useState(-1);
   let pageType = "list";
   if (location.pathname !== "/") {
     pageType = "project";
   }
+  const listPageModals = modals.filter((modal) => modal.type === pageType);
 
-  const clickModal = (idx: number) => {
+  const handleClick = (idx: number) => {
     setSelectedModal(idx);
-    console.log(idx, selectedModal);
   };
-
-  // const selectModal = (idx: number) => idx;
-
-  // const selectModal = (idx: number) => {
-  //   setSelectedModal(idx);
-  //   return selectedModal;
-  // };
-
-  // const handleClick = (data: any) => {
-  //   const modalData = data;
-  //   setSelectedIcon(modalData.name);
-  // };
-
-  // const handleModal = (idx: number) => {
-  //   console.log("input", idx);
-  //   console.log("before", selectedModal);
-  //   setSelectedModal(idx);
-  //   console.log("after", selectedModal);
-  // };
 
   return (
     <HeaderLayout>
       <HeaderLogoParagraph>Calit!</HeaderLogoParagraph>
       <HeaderIconBox>
-        {pageType === "list" ? (
-          <div>1</div>
-        ) : (
-          // ? icons
-          //     .filter((icon) => icon.type.includes(pageType))
-          //     .map((icon, index) => (
-          //       <ModalCommon
-          //         key={icon.name}
-          //         modalIndex={index}
-          //         modalName={icon.name}
-          //         modalIcon={icon.route}
-          //         modalSelected={selectedIcon}
-          //       >
-          //         <button
-          //           type="button"
-          //           key={icon.name}
-          //           onClick={() => handleClick(icon)}
-          //         >
-          //           <img src={icon.route} alt={icon.name} />
-          //         </button>
-          //       </ModalCommon>
-          //     ))
-          modals.map((modal, index) => (
+        {(pageType === "list" ? listPageModals : modals).map((modal, index) => (
+          <HeaderModalBox key={modal.icon} onClick={() => handleClick(index)}>
             <ModalCommon modalSelected={selectedModal} modalIndex={index}>
-              <div onClick={() => clickModal(index)} aria-hidden="true">
-                {modal}
-              </div>
+              <>
+                {modal.icon}
+                {modal.content}
+              </>
             </ModalCommon>
-
-            // <ModalCommon
-            //   key={modal.name}
-            //   modalIndex={index}
-            //   modalName={modal.name}
-            //   modalmodal={modal.route}
-            //   modalSelected={selectedIcon}
-            // >
-            //   <button
-            //     type="button"
-            //     key={icon.name}
-            //     onClick={() => handleClick(icon)}
-            //   >
-            //     <img src={icon.route} alt={icon.name} />
-            //   </button>
-            // </ModalCommon>
-          ))
-        )}
+          </HeaderModalBox>
+        ))}
       </HeaderIconBox>
     </HeaderLayout>
   );

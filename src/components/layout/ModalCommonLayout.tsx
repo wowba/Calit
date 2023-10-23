@@ -1,17 +1,15 @@
-import React, { ReactElement, useState } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import { styled } from "styled-components";
 
 const ModalLayout = styled.div`
-  // position: relative;
+  height: 100%;
 `;
 
 const ModalBox = styled.div`
+  height: 100%;
   display: flex;
+  align-items: center;
   position: relative;
-
-  button {
-    margin-right: 1rem;
-  }
 `;
 
 const ModalArea = styled.div`
@@ -19,8 +17,8 @@ const ModalArea = styled.div`
   height: 20rem;
   z-index: 999;
   position: absolute;
-  top: 4rem;
   right: 0;
+  top: 4rem;
   border-radius: 7px;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
 
@@ -34,92 +32,39 @@ const ModalArea = styled.div`
 `;
 
 interface ModalInfo {
-  // onClick: void;
-  // modalIndex: number;
-  // onClick: React.MouseEventHandler<HTMLButtonElement>;
-  // onClick: (n: number) => number;
-  // onClick: (n: number) => void;
-  // modalIcon: string;
-  modalSelected?: number;
+  modalSelected: number;
   modalIndex: number;
-  children?: ReactElement;
+  children: ReactElement;
 }
 
 export default function ModalCommon(name: ModalInfo) {
   const { modalIndex, modalSelected, children } = name;
-  const [isModalClicked, setModalClicked] = useState(false);
+  const [isClick, setIsClick] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number>();
-  // const idxValue = onClick(modalIndex);
-  // console.log(idxValue);
-
-  // console.log("now", modalIndex);
-
-  // const handleModal = (index: number) => {
-  //   // setActiveIndex((prev) => (prev === index ? -1 : index));
-  //   setActiveIndex(index);
-  //   console.log("index: ", activeIndex);
-  // };
 
   const handleClick = () => {
-    console.log("before", activeIndex);
-    setModalClicked(!isModalClicked);
-    // handleModal(modalSelected);
-    setActiveIndex(modalSelected);
-    console.log("after", activeIndex);
-    // const idxValue = onClick(modalIndex);
-    // console.log(idxValue, modalIndex);
-    // if (idxValue === modalIndex) {
-    //   console.log(true);
-    // } else {
-    //   console.log(false);
-    // }
-
-    // console.log(onClick(modalIndex));
+    setIsClick(!isClick);
   };
 
+  useEffect(() => {
+    if (modalSelected !== modalIndex && isClick === true) {
+      setIsClick(false);
+    }
+    setActiveIndex(modalSelected);
+  }, [modalSelected]);
+
   return (
-    <ModalLayout>
-      <ModalBox key={modalIndex} onClick={handleClick}>
-        {children}
-        {isModalClicked === true ? (
-          <ModalArea
-            className={activeIndex === modalIndex ? "isShow" : "isHide"}
-          />
-        ) : null}
+    <ModalLayout className="outerbox">
+      <ModalBox className="innerbox" onClick={() => handleClick()}>
+        <>
+          <img src={children.props.children[0]} alt="Icon" />
+          {activeIndex === modalIndex ? (
+            <ModalArea className={isClick === true ? "isShow" : "isHide"}>
+              {children.props.children[1]}
+            </ModalArea>
+          ) : null}
+        </>
       </ModalBox>
     </ModalLayout>
   );
-  // const { modalIndex, modalName, children, modalSelected } = name;
-  // const [isModalClicked, setModalClicked] = useState(false);
-  // const [activeIndex, setActiveIndex] = useState<number>();
-  // const [isModalSelected, setModalSelected] = useState(false);
-
-  // const handleModal = (index: number) => {
-  //   setActiveIndex(index);
-  // };
-  // const handleModalClick = () => {
-  //   // setModalClicked(!isModalClicked);
-  //   handleModal(modalIndex);
-  // };
-
-  // useEffect(() => {
-  //   if (modalSelected !== modalName) {
-  //     setModalSelected(true);
-  //   } else {
-  //     setModalSelected(false);
-  //   }
-  // }, [modalSelected]);
-
-  // return (
-  //   <ModalLayout>
-  //     <ModalBox onClick={handleModalClick}>
-  //       {children}
-  //       {activeIndex === modalIndex ? (
-  //         <ModalArea className={isModalSelected ? "isHide" : "isShow"}>
-  //           {modalName}
-  //         </ModalArea>
-  //       ) : null}
-  //     </ModalBox>
-  //   </ModalLayout>
-  // );
 }
