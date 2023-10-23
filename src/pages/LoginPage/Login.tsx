@@ -11,6 +11,7 @@ import ShrikhandRegular from "../../assets/fonts/Shrikhand-Regular.ttf";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import loginBackground from "../../assets/images/loginBackground.svg";
 import googleLoginIcon from "../../assets/icons/googleLoginIcon.svg";
+import userDataState from "../../recoil/atoms/login/userDataState";
 
 const LoginLayout = styled.div`
   height: 100vh;
@@ -82,6 +83,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const setLoginState = useSetRecoilState(loginState);
+  const setUserDataState = useSetRecoilState(userDataState);
 
   const provider = new GoogleAuthProvider();
 
@@ -97,11 +99,11 @@ export default function Login() {
         // IdP data available using getAdditionalUserInfo(result)
         // ...
 
-        const userRef = doc(db, "user", user.uid);
+        const userRef = doc(db, "user", user.email as string);
         const userSnap = await getDoc(userRef);
 
         if (!userSnap.exists()) {
-          await setDoc(doc(db, "user", user.uid), {
+          await setDoc(doc(db, "user", user.email as string), {
             project_list: [],
             profile_img_URL: user.photoURL,
             name: user.displayName,
@@ -117,6 +119,11 @@ export default function Login() {
         setLoginState({
           isLogin: true,
           userCredential: JSON.parse(JSON.stringify(user)),
+        });
+        const userRef = doc(db, "user", user.email as string);
+        const userSnap = await getDoc(userRef);
+        setUserDataState({
+          userData: userSnap.data(),
         });
         navigate("/");
       })
