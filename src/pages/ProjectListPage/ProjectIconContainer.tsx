@@ -7,12 +7,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useRecoilValue } from "recoil";
 import { db, storage } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
@@ -22,6 +17,7 @@ import pictureIcon from "../../assets/icons/pictureIcon.svg";
 import trashIcon from "../../assets/icons/trashIcon.svg";
 import Arrow from "../../assets/images/Arrow.svg";
 import DeleteModal from "./DeleteModal";
+import deleteStorageImg from "../../utils/deleteStorageImg";
 
 const Container = styled.div`
   display: flex;
@@ -119,19 +115,7 @@ export default function ProjectIconContainer({
     );
     await uploadBytes(storageRef, imgFile);
     // storage 기존 이미지 삭제
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const currentUrl = docSnap.data().project_img_URL;
-      console.log(currentUrl);
-      const startIndex = currentUrl.lastIndexOf("%2F") + 3;
-      const fileName = currentUrl.substring(
-        startIndex,
-        currentUrl.indexOf("?alt=media"),
-      );
-      console.log(fileName);
-      const curStorageRef = ref(storage, `projectBgImg/${fileName}`);
-      deleteObject(curStorageRef);
-    }
+    deleteStorageImg(docRef);
 
     // firestore 새 이미지 주소 업데이트
     const url = await getDownloadURL(storageRef);

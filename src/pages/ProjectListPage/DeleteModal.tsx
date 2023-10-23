@@ -9,10 +9,10 @@ import {
 } from "firebase/firestore";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-
 import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import loginState from "../../recoil/atoms/login/loginState";
+import deleteStorageImg from "../../utils/deleteStorageImg";
 import ConfirmBtn from "../../components/layout/ConfirmBtnLayout";
 
 // 모달
@@ -71,6 +71,8 @@ export default function DeleteModal({
     await updateDoc(userRef, {
       project_list: filteredList,
     });
+    // storage 프로젝트 카드 이미지 삭제
+    deleteStorageImg(docRef);
     // 프로젝트 삭제
     const kanbanQuery = query(collection(db, "project", projectId, "kanban"));
     const querySnapshot = await getDocs(kanbanQuery);
