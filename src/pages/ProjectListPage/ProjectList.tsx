@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
@@ -25,12 +27,17 @@ export default function ProjectList() {
         const docRef = doc(db, "project", projectId);
         const docSnap: any = await getDoc(docRef);
 
-        return {
-          id: projectId,
-          name: docSnap.data().name,
-          imgUrl: docSnap.data().project_img_URL,
-          projectIntro: docSnap.data().project_intro,
-        };
+        if (docSnap.exists()) {
+          if (docSnap.data().is_deleted === false) {
+            return {
+              id: projectId,
+              name: docSnap.data().name,
+              imgUrl: docSnap.data().project_img_URL,
+              projectIntro: docSnap.data().project_intro,
+            };
+          }
+        }
+        return null;
       }),
     );
     setProjectData(projects.filter((project: any) => project !== null));

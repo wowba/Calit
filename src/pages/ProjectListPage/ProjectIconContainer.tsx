@@ -119,7 +119,6 @@ export default function ProjectIconContainer({
 
     // firestore 새 이미지 주소 업데이트
     const url = await getDownloadURL(storageRef);
-    console.log(url);
     await updateDoc(docRef, {
       project_img_URL: url,
       modified_date: serverTimestamp(),
@@ -174,6 +173,7 @@ export default function ProjectIconContainer({
           projectId={projectId}
           openModal={openModal}
           setOpenModal={setOpenModal}
+          fetchProjectData={fetchProjectData}
         />
       )}
     </>
