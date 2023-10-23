@@ -22,7 +22,7 @@ export default function PrivateRoute() {
   if (isLogin) {
     useEffect(() => {
       // 1. onSnapShot 메서드로 문서 (유저 정보) 구독
-      const userRef = doc(db, "user", userCredential.uid);
+      const userRef = doc(db, "user", userCredential.email);
       const unsub = onSnapshot(userRef, (userDoc) => {
         // 2. 변경시마다 useSetRecoilState를 이용해서 atom 업데이트
         setUserDataState({
