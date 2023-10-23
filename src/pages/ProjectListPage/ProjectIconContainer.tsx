@@ -104,28 +104,38 @@ export default function ProjectIconContainer({
   const handleBgImg = async (e: any) => {
     // storage 새 이미지 업로드
     const imgFile = e.target.files[0];
+    if (imgFile) {
+      const maxSize = 5 * 1024 * 1024; // 5MB 제한
+      const fileSize = imgFile.size;
+      if (fileSize > maxSize) {
+        // eslint-disable-next-line
+        alert("5mb 이하의 이미지만 업로드 가능합니다.");
+        return;
+      }
+    }
     const storageRef = ref(
       storage,
-      `projectBgImg/${Timestamp.fromDate(new Date()).toMillis()}_${
-        imgFile.name
-      }`,
+      `projectBgImg/${Timestamp.fromDate(new Date()).toMillis()}_${projectId}`,
     );
     await uploadBytes(storageRef, imgFile);
     // storage 기존 이미지 삭제
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const currentUrl = docSnap.data().project_img_URL;
+      console.log(currentUrl);
       const startIndex = currentUrl.lastIndexOf("%2F") + 3;
       const fileName = currentUrl.substring(
         startIndex,
         currentUrl.indexOf("?alt=media"),
       );
+      console.log(fileName);
       const curStorageRef = ref(storage, `projectBgImg/${fileName}`);
       deleteObject(curStorageRef);
     }
 
     // firestore 새 이미지 주소 업데이트
     const url = await getDownloadURL(storageRef);
+    console.log(url);
     await updateDoc(docRef, {
       project_img_URL: url,
       modified_date: serverTimestamp(),
