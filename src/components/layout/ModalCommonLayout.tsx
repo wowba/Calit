@@ -45,6 +45,8 @@ export default function ModalCommon(name: ModalInfo) {
     if (activeIndex === modalIndex) {
       // 같은 모달 아이콘 클릭시 기본 값 -1 부여를 통한 모달 닫힘 처리
       setActiveIndex(-1);
+    } else {
+      setActiveIndex(modalSelected);
     }
   };
 
