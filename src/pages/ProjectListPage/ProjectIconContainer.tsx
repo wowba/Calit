@@ -7,7 +7,12 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { useRecoilValue } from "recoil";
 import { db, storage } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
@@ -97,6 +102,7 @@ export default function ProjectIconContainer({
 
   // 이미지 수정 버튼 클릭 시 동작
   const handleBgImg = async (e: any) => {
+    // storage 새 이미지 업로드
     const imgFile = e.target.files[0];
     const storageRef = ref(
       storage,
@@ -105,6 +111,20 @@ export default function ProjectIconContainer({
       }`,
     );
     await uploadBytes(storageRef, imgFile);
+    // storage 기존 이미지 삭제
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const currentUrl = docSnap.data().project_img_URL;
+      const startIndex = currentUrl.lastIndexOf("%2F") + 3;
+      const fileName = currentUrl.substring(
+        startIndex,
+        currentUrl.indexOf("?alt=media"),
+      );
+      const curStorageRef = ref(storage, `projectBgImg/${fileName}`);
+      deleteObject(curStorageRef);
+    }
+
+    // firestore 새 이미지 주소 업데이트
     const url = await getDownloadURL(storageRef);
     await updateDoc(docRef, {
       project_img_URL: url,
