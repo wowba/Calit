@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../firebaseSDK";
 import rectangle from "../../assets/images/Rectangle.svg";
+import ProjectIconContainer from "./ProjectIconContainer";
 
 interface Props {
   $dynamic_url?: string;
@@ -34,6 +35,7 @@ const ProjectCardBgImg = styled.a<Props>`
   background-size: cover;
   overflow: hidden;
 `;
+
 const ProjectCardInfo = styled.div`
   width: 400px;
   height: 0px;
@@ -118,6 +120,7 @@ export default function ProjectCard({
   projectImgUrl,
   projectName,
   projectIntro,
+  fetchProjectData,
 }: any) {
   const [isNameChangeable, setIsNameChangeable] = useState(false);
   const [isIntroChangeable, setIsIntroChangeable] = useState(false);
@@ -152,6 +155,10 @@ export default function ProjectCard({
       <ProjectCardBgImg $dynamic_url={projectImgUrl} href={projectId}>
         {}
       </ProjectCardBgImg>
+      <ProjectIconContainer
+        projectId={projectId}
+        fetchProjectData={fetchProjectData}
+      />
       <ProjectCardInfo className="project-card-info">
         {isNameChangeable ? (
           <ProjectCardNameInput

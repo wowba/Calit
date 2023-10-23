@@ -72,10 +72,12 @@ export default function CreateProjectBtn() {
       is_deleted: true,
     });
     // 유저의 project_list 업데이트
-    const userRef = doc(db, "user", userCredential.uid);
-    await updateDoc(userRef, {
-      project_list: arrayUnion(docRef.id),
-    });
+    if (userCredential) {
+      const userRef = doc(db, "user", userCredential.email);
+      await updateDoc(userRef, {
+        project_list: arrayUnion(docRef.id),
+      });
+    }
 
     // alert("프로젝트가 생성되었습니다!");
   };
