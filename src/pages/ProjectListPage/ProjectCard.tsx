@@ -120,6 +120,7 @@ export default function ProjectCard({
   projectImgUrl,
   projectName,
   projectIntro,
+  fetchProjectData,
 }: any) {
   const [isNameChangeable, setIsNameChangeable] = useState(false);
   const [isIntroChangeable, setIsIntroChangeable] = useState(false);
@@ -154,7 +155,10 @@ export default function ProjectCard({
       <ProjectCardBgImg $dynamic_url={projectImgUrl} href={projectId}>
         {}
       </ProjectCardBgImg>
-      <ProjectIconContainer projectId={projectId} />
+      <ProjectIconContainer
+        projectId={projectId}
+        fetchProjectData={fetchProjectData}
+      />
       <ProjectCardInfo className="project-card-info">
         {isNameChangeable ? (
           <ProjectCardNameInput

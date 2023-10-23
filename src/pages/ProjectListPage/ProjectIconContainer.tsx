@@ -68,9 +68,11 @@ const DeleteIcon = styled.img`
   margin: 0 0 0 0.2rem;
 `;
 
-export default function ProjectIconContainer({ projectId }: any) {
+export default function ProjectIconContainer({
+  projectId,
+  fetchProjectData,
+}: any) {
   const [isOpened, setIsOpened] = useState(false);
-  const [isChanged, setIsChanged] = useState(false);
   const { email } = useRecoilValue(userState).userData;
   const [isQualifed, setIsQualifed] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -108,13 +110,14 @@ export default function ProjectIconContainer({ projectId }: any) {
       project_img_URL: url,
       modified_date: serverTimestamp(),
     });
-    setIsChanged(true);
+    fetchProjectData();
   };
-  console.log(isChanged);
 
   const handleOpen = () => {
     setOpenModal(true);
   };
+
+  // 링크 복사 기능
   const handleCopyClipBoard = async (id: string) => {
     try {
       //   await navigator.clipboard.writeText(`calit-2f888.web.app/${id}`);

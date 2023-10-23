@@ -53,6 +53,7 @@ export default function ProjectList() {
             projectImgUrl={project.imgUrl}
             projectName={project.name}
             projectIntro={project.projectIntro}
+            fetchProjectData={fetchProjectData}
           />
         ))}
       </ProjectListContainer>
