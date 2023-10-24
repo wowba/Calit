@@ -21,7 +21,7 @@ import UserProfile from "./modal/UserProfileModal";
 import ModalCommon from "./layout/ModalCommonLayout";
 
 const HeaderLayout = styled.div`
-  height: 9vh;
+  height: 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
