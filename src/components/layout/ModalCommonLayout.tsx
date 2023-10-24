@@ -21,14 +21,6 @@ export const ModalArea = styled.div`
   top: 4rem;
   border-radius: 7px;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
-
-  &.isHide {
-    display: none;
-  }
-
-  &.isShow {
-    display: block;
-  }
 `;
 
 interface ModalInfo {
