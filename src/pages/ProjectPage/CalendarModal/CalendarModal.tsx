@@ -68,6 +68,10 @@ const CalendarBox = styled.div`
   .fc-button {
     &:active {
       margin: 0;
+      box-shadow: none !important;
+    }
+    &:focus {
+      box-shadow: none !important;
     }
   }
   // 오늘 button
@@ -80,7 +84,7 @@ const CalendarBox = styled.div`
     color: white !important;
     border-radius: 7px;
     &:active {
-      background-color: #ee6a6a !important;
+      background-color: #f69c9c !important;
     }
   }
   // 튜토리얼 버튼
@@ -94,6 +98,7 @@ const CalendarBox = styled.div`
     border-radius: 50%;
 
     line-height: 1.1;
+    font-family: sans-serif;
     font-weight: 900;
   }
   // prev, next button
