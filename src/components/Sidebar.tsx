@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
 
 import RobotoRegular from "../assets/fonts/Roboto-Regular.ttf";
 import trashIcon from "../assets/icons/trashIcon.svg";
 import sidebarTestImg from "../assets/images/sidebarTestImg.png";
+import projectState from "../recoil/atoms/project/projectState";
 
 const SidebarLayout = styled.div`
   display: flex;
@@ -59,10 +61,11 @@ const TrashBoxImg = styled.img`
 `;
 
 export default function Sidebar() {
+  const { projectData } = useRecoilValue(projectState);
   return (
     <SidebarLayout>
       <ProjectInfoBox>
-        <ProjectTitleParagraph>프로젝트 이름</ProjectTitleParagraph>
+        <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
         <ProjectProfileImg src={sidebarTestImg} alt="Project Profile Img" />
       </ProjectInfoBox>
 
