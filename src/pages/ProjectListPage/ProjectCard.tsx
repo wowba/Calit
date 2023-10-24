@@ -4,6 +4,7 @@ import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../firebaseSDK";
 import rectangle from "../../assets/images/Rectangle.svg";
 import ProjectIconContainer from "./ProjectIconContainer";
+import InputCommon from "../../components/layout/InputCommonLayout";
 
 interface Props {
   $dynamic_url?: string;
@@ -70,21 +71,16 @@ const ProjectCardName = styled.p`
   font-weight: 700;
   cursor: pointer;
 `;
-const ProjectCardNameInput = styled.input`
+const ProjectCardNameInput = styled(InputCommon)<{ $dynamicWidth: string }>`
+  width: ${(props) => props.$dynamicWidth};
   position: absolute;
   top: -28px;
   z-index: 1;
   left: 30px;
-  width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 700;
-  border: none;
-  -webkit-border-radius: 4px;
-  padding: 0 8px;
-  background: #fafafa;
-  margin: 2px;
 `;
 
 const ProjectCardIntro = styled.p`
@@ -99,18 +95,13 @@ const ProjectCardIntro = styled.p`
   top: 10px;
 `;
 
-const ProjectCardIntroInput = styled.input`
-  width: 99%;
+const ProjectCardIntroInput = styled(InputCommon)<{ $dynamicWidth: string }>`
+  width: ${(props) => props.$dynamicWidth};
   height: 70px;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  border: none;
-  -webkit-border-radius: 4px;
-  padding: 0 8px;
-  background: #fafafa;
-  margin: 2px;
   position: relative;
   top: -20px;
 `;
@@ -162,6 +153,7 @@ export default function ProjectCard({
       <ProjectCardInfo className="project-card-info">
         {isNameChangeable ? (
           <ProjectCardNameInput
+            $dynamicWidth="160px"
             value={inputNameValue}
             onChange={(e) => setInputNameValue(e.target.value)}
             onKeyDown={handleEnterPress}
@@ -178,6 +170,7 @@ export default function ProjectCard({
         />
         {isIntroChangeable ? (
           <ProjectCardIntroInput
+            $dynamicWidth="99%"
             value={inputIntroValue}
             onChange={(e) => setInputIntroValue(e.target.value)}
             onKeyDown={handleEnterPress}
