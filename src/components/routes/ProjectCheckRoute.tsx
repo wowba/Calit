@@ -22,7 +22,7 @@ export default function ProjectCheckRoute() {
   useEffect(() => {
     const projectRef = doc(db, "project", pathname);
     const unsub = onSnapshot(projectRef, (projectDoc) => {
-      if (projectDoc.exists()) {
+      if (projectDoc.exists() && !projectDoc.data().is_deleted) {
         setIsLoaded(true);
         setProjectDataState({
           projectData: projectDoc.data(),
