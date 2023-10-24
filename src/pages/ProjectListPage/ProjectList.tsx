@@ -19,11 +19,12 @@ const ProjectListContainer = styled.div`
 
 export default function ProjectList() {
   const [projectData, setProjectData] = useState([]);
-  const userData = useRecoilValue(userState);
+  const { project_list, name, project_img_URL, project_intro }: any =
+    useRecoilValue(userState).userData;
 
   const fetchProjectData = async () => {
     const projects: any = await Promise.all(
-      userData.userData.project_list.map(async (projectId: string) => {
+      project_list.map(async (projectId: string) => {
         const docRef = doc(db, "project", projectId);
         const docSnap: any = await getDoc(docRef);
 
@@ -40,12 +41,13 @@ export default function ProjectList() {
         return null;
       }),
     );
+
     setProjectData(projects.filter((project: any) => project !== null));
   };
 
   useEffect(() => {
     fetchProjectData();
-  }, [userData]);
+  }, [name, project_img_URL, project_intro]);
 
   return (
     <div>
