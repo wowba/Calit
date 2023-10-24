@@ -12,24 +12,6 @@ const ModalBox = styled.div`
   position: relative;
 `;
 
-const ModalArea = styled.div`
-  width: 20rem;
-  height: 20rem;
-  z-index: 999;
-  position: absolute;
-  right: 0;
-  top: 4rem;
-  border-radius: 7px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
-
-  &.isHide {
-    display: none;
-  }
-
-  &.isShow {
-    display: block;
-  }
-`;
 
 interface ModalInfo {
   modalSelected: number;
@@ -58,11 +40,7 @@ export default function ModalCommon(name: ModalInfo) {
     <ModalLayout>
       <ModalBox onClick={() => handleClick()}>
         <img src={children.props.children[0]} alt="modalIcon" />
-        {activeIndex === modalIndex ? (
-          <ModalArea className="isShow">
-            {children.props.children[1]}
-          </ModalArea>
-        ) : null}
+        {activeIndex === modalIndex ? children.props.children[1] : null}
       </ModalBox>
     </ModalLayout>
   );
