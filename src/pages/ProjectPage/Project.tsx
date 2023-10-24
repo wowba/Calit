@@ -2,13 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 
-import {
-  ProjectModalLayout,
-  ProjectModalTabBackground,
-  ProjectModalTabText,
-  ProjectModalTabBox,
-  ProjectModalContentBox,
-} from "../../components/layout/ProjectModalLayout";
+import CalendarModal from "./CalendarModal/CalendarModal";
 import KanbanModal from "./KanbanModal/KanbanModal";
 import TodoModal from "./TodoModal/TodoModal";
 
@@ -34,14 +28,8 @@ const ProjectLayoutFooter = styled.div`
   box-shadow: -2px 4px 20px 0px rgba(0, 0, 0, 0.6);
 `;
 
-const TestBtn = styled.button`
-  margin: 10px;
-  border: 1px solid black;
-  background-color: beige;
-`;
-
 export default function Project() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   let calendarTabColor = "#FFD43B";
   let kanbanTabColor = "#ffea7a";
@@ -49,21 +37,6 @@ export default function Project() {
 
   let iskanbanShow = false;
   let isTodoShow = false;
-
-  const handleCalClick = () => {
-    setSearchParams();
-  };
-
-  const handlekanbanCLick = () => {
-    setSearchParams({ kanbanID: "1234" });
-  };
-
-  const handleTodoCLick = () => {
-    setSearchParams({
-      kanbanID: searchParams.get("kanbanID")!,
-      todoID: "5678",
-    });
-  };
 
   if (searchParams.has("kanbanID")) {
     calendarTabColor = "#ffea7a";
@@ -79,25 +52,7 @@ export default function Project() {
   return (
     <ProjectLayout>
       {/* 캘린더 */}
-      <ProjectModalLayout $isShow>
-        <ProjectModalTabBox $marginLeft={2}>
-          <ProjectModalTabBackground $color={calendarTabColor} />
-          <ProjectModalTabText $top={0.4} $left={2.5}>
-            Calender
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
-        <ProjectModalContentBox>
-          <TestBtn type="button" onClick={() => handleCalClick()}>
-            calender
-          </TestBtn>
-          <TestBtn type="button" onClick={() => handlekanbanCLick()}>
-            kanban
-          </TestBtn>
-          <TestBtn type="button" onClick={() => handleTodoCLick()}>
-            todo
-          </TestBtn>
-        </ProjectModalContentBox>
-      </ProjectModalLayout>
+      <CalendarModal calendarTabColor={calendarTabColor} />
       {/* 칸반 */}
       <KanbanModal
         kanbanTabColor={kanbanTabColor}
