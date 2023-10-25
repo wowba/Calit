@@ -10,6 +10,7 @@ import rightArrow from "../../assets/icons/rightArrow.svg";
 import InputCommon from "../layout/InputCommonLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import projectState from "../../recoil/atoms/project/projectState";
+import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -77,8 +78,9 @@ const WaitingName = styled.span`
 `;
 
 export default function ProjectMember() {
-  const { projectData } = useRecoilValue(projectState);
-  const userList = projectData.user_list;
+  const { user_list: userList, invited_list: invitedList } =
+    useRecoilValue(projectState).projectData;
+  // const userList = projectData.user_list;
   const [userData, setUserData] = useState<any[]>([]);
 
   const [inputEmailValue, setInputEmailValue] = useState("");
@@ -109,20 +111,16 @@ export default function ProjectMember() {
     fetchData();
   }, [userList]);
 
-  // url에서 project id 가져오기
+  // url에서 project id 가져오기 (링크 복사 기능)
   const { pathname } = useLocation();
-  // 링크 복사
-  const handleCopyClipBoard = async (id: string) => {
-    //   await navigator.clipboard.writeText(`calit-2f888.web.app/${id}`);
-    await navigator.clipboard.writeText(`localhost:3000${id}`);
-  };
+  const projectId = pathname.substring(1);
 
   // 이메일 입력 후 Enter 누를 시 동작
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputEmailValue.includes("@gmail.com")) {
         const docRef = doc(db, "project", pathname);
-        const curInvitedList = [...projectData.invited_list];
+        const curInvitedList = [...invitedList];
         curInvitedList.push(inputEmailValue);
         await updateDoc(docRef, {
           invited_list: curInvitedList,
@@ -172,13 +170,13 @@ export default function ProjectMember() {
           초대 대기열
         </div>
         <WaitingList>
-          {projectData.invited_list.map((email: string) => (
+          {invitedList.map((email: string) => (
             <WaitingName key={email}>{email.split("@")[0]}</WaitingName>
           ))}
         </WaitingList>
         <button
           type="button"
-          onClick={() => handleCopyClipBoard(pathname)}
+          onClick={() => handleCopyClipBoard(projectId)}
           style={{ fontWeight: 700 }}
         >
           🔗Copy Link
