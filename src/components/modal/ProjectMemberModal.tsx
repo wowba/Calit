@@ -11,6 +11,7 @@ import InputCommon from "../layout/InputCommonLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import projectState from "../../recoil/atoms/project/projectState";
 import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
+import closeIcon from "../../assets/icons/closeIcon.svg";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -71,10 +72,14 @@ const GetOutContainer = styled.div`
 const WaitingList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column-reverse;
   margin: 0 0 0.9rem;
 `;
+const WaitingContainer = styled.div`
+  display: flex;
+`;
 const WaitingName = styled.span`
-  width: 50%;
+  margin: 0 0.3rem 0.3rem;
 `;
 
 export default function ProjectMemberModal() {
@@ -114,11 +119,11 @@ export default function ProjectMemberModal() {
   const { pathname } = useLocation();
   const projectId = pathname.substring(1);
 
+  const docRef = doc(db, "project", pathname);
   // 이메일 입력 후 Enter 누를 시 동작
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputEmailValue.includes("@gmail.com")) {
-        const docRef = doc(db, "project", pathname);
         const curInvitedList = [...invitedList];
         curInvitedList.push(inputEmailValue);
         await updateDoc(docRef, {
@@ -132,6 +137,17 @@ export default function ProjectMemberModal() {
         alert("Gmail 주소를 입력해주세요");
       }
     }
+  };
+
+  // 삭제 버튼
+  const handleDelete = async (email: string) => {
+    const updateInvitedList = invitedList.filter(
+      (curEmail: string) => curEmail !== email,
+    );
+    await updateDoc(docRef, {
+      invited_list: updateInvitedList,
+      modified_date: serverTimestamp(),
+    });
   };
 
   return (
@@ -171,7 +187,13 @@ export default function ProjectMemberModal() {
         </div>
         <WaitingList>
           {invitedList.map((email: string) => (
-            <WaitingName key={email}>{email.split("@")[0]}</WaitingName>
+            <WaitingContainer key={email}>
+              {" "}
+              <WaitingName>{email.split("@")[0]}</WaitingName>
+              <button type="button" onClick={() => handleDelete(email)}>
+                <img src={closeIcon} alt="삭제" />
+              </button>
+            </WaitingContainer>
           ))}
         </WaitingList>
         <button
@@ -179,7 +201,7 @@ export default function ProjectMemberModal() {
           onClick={() => handleCopyClipBoard(projectId)}
           style={{ fontWeight: 700 }}
         >
-          🔗Copy Link
+          🔗 Copy Link
         </button>
       </InviteContainer>
       <GetOutContainer>
