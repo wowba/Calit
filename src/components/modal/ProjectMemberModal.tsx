@@ -40,9 +40,9 @@ const ModalMemberContainer = styled.div`
 `;
 
 const UserImage = styled.img`
-border-radius: 50%;
-width:80%
-height:80%
+  border-radius: 50%;
+  width:80%
+  height:80%
 `;
 
 const UserName = styled.div`
@@ -80,7 +80,6 @@ const WaitingName = styled.span`
 export default function ProjectMember() {
   const { user_list: userList, invited_list: invitedList } =
     useRecoilValue(projectState).projectData;
-  // const userList = projectData.user_list;
   const [userData, setUserData] = useState<any[]>([]);
 
   const [inputEmailValue, setInputEmailValue] = useState("");
@@ -128,6 +127,7 @@ export default function ProjectMember() {
         });
         setInputEmailValue("");
       } else {
+        setInputEmailValue("");
         // eslint-disable-next-line no-alert
         alert("Gmail 주소를 입력해주세요");
       }
@@ -186,7 +186,11 @@ export default function ProjectMember() {
         <div style={{ margin: "1rem 0" }}>
           <select style={{ height: "100%" }}>
             <option value="">이메일을 선택해주세요</option>
-            <option value="1">ovo10203@gmail.com</option>
+            {userList.map((email: string, index: number) => (
+              <option key={email} value={index + 1}>
+                {email}
+              </option>
+            ))}
           </select>
           <ConfirmBtn $dynamicWidth="4rem">확인</ConfirmBtn>
         </div>
