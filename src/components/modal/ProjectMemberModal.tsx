@@ -11,6 +11,7 @@ import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import projectState from "../../recoil/atoms/project/projectState";
 import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
 import closeIcon from "../../assets/icons/closeIcon.svg";
+import userState from "../../recoil/atoms/login/userDataState";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -41,8 +42,8 @@ const ModalMemberContainer = styled.div`
 
 const UserImage = styled.img`
   border-radius: 50%;
-  width:80%
-  height:80%
+  width: 80%;
+  height: 80%;
 `;
 
 const UserName = styled.div`
@@ -59,15 +60,23 @@ const InviteBtn = styled.button`
 `;
 const GetOutBtn = styled.button`
   display: flex;
-  margin: 1rem 0 0 0;
+  margin: 1rem 0 0;
+`;
+const SelectInput = styled.select`
+  background: #fafafa;
+  border: 0.2px solid #ededed;
+  -webkit-border-radius: 4px;
 `;
 
-const BtnActionContainer = styled.div``;
+const BtnActionContainer = styled.div`
+  padding: 1.5rem 0 1rem;
+`;
 const InviteContainer = styled.div``;
 const GetOutContainer = styled.div`
   display: flex;
   justify-content: space-around;
 `;
+
 const WaitingList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -82,13 +91,18 @@ const WaitingName = styled.span`
 `;
 
 export default function ProjectMemberModal() {
-  const { user_list: userList, invited_list: invitedList } =
-    useRecoilValue(projectState).projectData;
+  const {
+    user_list: userList,
+    invited_list: invitedList,
+    creater,
+  } = useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
   const [inputEmailValue, setInputEmailValue] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
 
   const [modalIndex, setModalIndex] = useState(0);
+
+  const { email: userId } = useRecoilValue(userState).userData;
 
   // 모달 열고 닫기
   const handleInviteClick = () => {
@@ -110,8 +124,8 @@ export default function ProjectMemberModal() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await Promise.all(
-        userList.map(async (userId: string) => {
-          const userRef = doc(db, "user", userId);
+        userList.map(async (id: string) => {
+          const userRef = doc(db, "user", id);
           const userSnap: any = await getDoc(userRef);
           return {
             userImage: userSnap.data().profile_img_URL,
@@ -206,16 +220,18 @@ export default function ProjectMemberModal() {
           초대하기
           <img src={rightArrow} alt="열기" />
         </InviteBtn>
-        <GetOutBtn type="button" onClick={handleGetOutClick}>
-          내보내기
-          <img src={rightArrow} alt="열기" />
-        </GetOutBtn>
+        {creater === userId && (
+          <GetOutBtn type="button" onClick={handleGetOutClick}>
+            내보내기
+            <img src={rightArrow} alt="열기" />
+          </GetOutBtn>
+        )}
       </BtnBox>
       <BtnActionContainer>
         {modalIndex === 1 && (
           <InviteContainer>
             <InputCommon
-              style={{ margin: "1rem 0 0" }}
+              style={{ height: "2rem" }}
               $dynamicWidth="100%"
               placeholder="팀원의 Gmail을 입력해주세요"
               value={inputEmailValue}
@@ -247,20 +263,27 @@ export default function ProjectMemberModal() {
         )}
         {modalIndex === 2 && (
           <GetOutContainer>
-            <div style={{ margin: "1rem 0" }}>
-              <select
+            <div>
+              <SelectInput
                 style={{ height: "100%" }}
                 onChange={(e) => setSelectedUser(e.target.value)}
                 value={selectedUser}
               >
                 <option value="">이메일을 선택해주세요</option>
-                {userList.map((email: string) => (
-                  <option key={email} value={email}>
-                    {email}
-                  </option>
-                ))}
-              </select>
-              <ConfirmBtn $dynamicWidth="4rem" onClick={handleUserList}>
+                {userList.map(
+                  (email: string) =>
+                    email !== userId && (
+                      <option key={email} value={email}>
+                        {email}
+                      </option>
+                    ),
+                )}
+              </SelectInput>
+              <ConfirmBtn
+                $dynamicWidth="4rem"
+                $dynamicHeight="2rem"
+                onClick={handleUserList}
+              >
                 확인
               </ConfirmBtn>
             </div>
