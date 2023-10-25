@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, KeyboardEvent } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -11,6 +10,7 @@ import InputCommon from "../layout/InputCommonLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import projectState from "../../recoil/atoms/project/projectState";
 import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
+import closeIcon from "../../assets/icons/closeIcon.svg";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -71,25 +71,40 @@ const GetOutContainer = styled.div`
 const WaitingList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column-reverse;
   margin: 0 0 0.9rem;
 `;
+const WaitingContainer = styled.div`
+  display: flex;
+`;
 const WaitingName = styled.span`
-  width: 50%;
+  margin: 0 0.3rem 0.3rem;
 `;
 
 export default function ProjectMemberModal() {
   const { user_list: userList, invited_list: invitedList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
-
   const [inputEmailValue, setInputEmailValue] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
 
-  const [isOpened, setIsOpened] = useState(false);
-  const [modalIndex, setModalIndex] = useState();
+  const [modalIndex, setModalIndex] = useState(0);
 
   // 모달 열고 닫기
-  const handleInviteClick = () => {};
-  const handleGetOutClick = () => {};
+  const handleInviteClick = () => {
+    if (modalIndex === 1) {
+      setModalIndex(0);
+    } else {
+      setModalIndex(1);
+    }
+  };
+  const handleGetOutClick = () => {
+    if (modalIndex === 2) {
+      setModalIndex(0);
+    } else {
+      setModalIndex(2);
+    }
+  };
 
   // user_list 통해 user 데이터 가져오기
   useEffect(() => {
@@ -114,11 +129,11 @@ export default function ProjectMemberModal() {
   const { pathname } = useLocation();
   const projectId = pathname.substring(1);
 
+  const docRef = doc(db, "project", pathname);
   // 이메일 입력 후 Enter 누를 시 동작
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputEmailValue.includes("@gmail.com")) {
-        const docRef = doc(db, "project", pathname);
         const curInvitedList = [...invitedList];
         curInvitedList.push(inputEmailValue);
         await updateDoc(docRef, {
@@ -131,6 +146,45 @@ export default function ProjectMemberModal() {
         // eslint-disable-next-line no-alert
         alert("Gmail 주소를 입력해주세요");
       }
+    }
+  };
+
+  // 삭제 버튼
+  const handleDelete = async (email: string) => {
+    const updateInvitedList = invitedList.filter(
+      (curEmail: string) => curEmail !== email,
+    );
+    await updateDoc(docRef, {
+      invited_list: updateInvitedList,
+      modified_date: serverTimestamp(),
+    });
+  };
+
+  // 내보내기
+  const handleUserList = async () => {
+    if (selectedUser) {
+      // 유저의 project_list에서 프로젝트 삭제
+      const userRef = doc(db, "user", selectedUser);
+      const userSnap: any = await getDoc(userRef);
+      const projectList = userSnap.data().project_list;
+      if (projectList.includes(projectId)) {
+        const updateProjectList = projectList.filter(
+          (project: string) => project !== projectId,
+        );
+        await updateDoc(userRef, {
+          project_list: updateProjectList,
+        });
+      }
+
+      // 프로젝트의 user_list에서 유저 삭제
+      const updateUserList = userList.filter(
+        (curUser: string) => curUser !== selectedUser,
+      );
+      await updateDoc(docRef, {
+        user_list: updateUserList,
+        modified_date: serverTimestamp(),
+      });
+      setSelectedUser("");
     }
   };
 
@@ -157,44 +211,62 @@ export default function ProjectMemberModal() {
           <img src={rightArrow} alt="열기" />
         </GetOutBtn>
       </BtnBox>
-      <InviteContainer>
-        <InputCommon
-          style={{ margin: "1rem 0 0" }}
-          $dynamicWidth="100%"
-          placeholder="팀원의 Gmail을 입력해주세요"
-          value={inputEmailValue}
-          onChange={(e) => setInputEmailValue(e.target.value)}
-          onKeyDown={handleEnterPress}
-        />
-        <div style={{ fontWeight: 700, margin: "1.5rem 0 0.3rem" }}>
-          초대 대기열
-        </div>
-        <WaitingList>
-          {invitedList.map((email: string) => (
-            <WaitingName key={email}>{email.split("@")[0]}</WaitingName>
-          ))}
-        </WaitingList>
-        <button
-          type="button"
-          onClick={() => handleCopyClipBoard(projectId)}
-          style={{ fontWeight: 700 }}
-        >
-          🔗Copy Link
-        </button>
-      </InviteContainer>
-      <GetOutContainer>
-        <div style={{ margin: "1rem 0" }}>
-          <select style={{ height: "100%" }}>
-            <option value="">이메일을 선택해주세요</option>
-            {userList.map((email: string, index: number) => (
-              <option key={email} value={index + 1}>
-                {email}
-              </option>
-            ))}
-          </select>
-          <ConfirmBtn $dynamicWidth="4rem">확인</ConfirmBtn>
-        </div>
-      </GetOutContainer>
+      <BtnActionContainer>
+        {modalIndex === 1 && (
+          <InviteContainer>
+            <InputCommon
+              style={{ margin: "1rem 0 0" }}
+              $dynamicWidth="100%"
+              placeholder="팀원의 Gmail을 입력해주세요"
+              value={inputEmailValue}
+              onChange={(e) => setInputEmailValue(e.target.value)}
+              onKeyDown={handleEnterPress}
+            />
+            <div style={{ fontWeight: 700, margin: "1.5rem 0 0.3rem" }}>
+              초대 대기열
+            </div>
+            <WaitingList>
+              {invitedList.map((email: string) => (
+                <WaitingContainer key={email}>
+                  {" "}
+                  <WaitingName>{email.split("@")[0]}</WaitingName>
+                  <button type="button" onClick={() => handleDelete(email)}>
+                    <img src={closeIcon} alt="삭제" />
+                  </button>
+                </WaitingContainer>
+              ))}
+            </WaitingList>
+            <button
+              type="button"
+              onClick={() => handleCopyClipBoard(projectId)}
+              style={{ fontWeight: 700 }}
+            >
+              🔗 Copy Link
+            </button>
+          </InviteContainer>
+        )}
+        {modalIndex === 2 && (
+          <GetOutContainer>
+            <div style={{ margin: "1rem 0" }}>
+              <select
+                style={{ height: "100%" }}
+                onChange={(e) => setSelectedUser(e.target.value)}
+                value={selectedUser}
+              >
+                <option value="">이메일을 선택해주세요</option>
+                {userList.map((email: string) => (
+                  <option key={email} value={email}>
+                    {email}
+                  </option>
+                ))}
+              </select>
+              <ConfirmBtn $dynamicWidth="4rem" onClick={handleUserList}>
+                확인
+              </ConfirmBtn>
+            </div>
+          </GetOutContainer>
+        )}
+      </BtnActionContainer>
     </ModalArea>
   );
 }

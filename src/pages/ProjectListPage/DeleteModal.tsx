@@ -62,56 +62,6 @@ export default function DeleteModal({
       is_deleted: true,
     });
     fetchProjectData();
-    // // @@ 유저의 프로젝트 리스트 변경
-    // // 프로젝트에 있는 user_list 불러오기 -> user_list 순회 -> 각각의 project_list 순회 -> filter -> update 로 수정하는 방식?
-    // // const docSnap: any = await getDoc(docRef);
-    // // const userList = docSnap.data().user_list;
-    // // userList.map((user: string) => console.log(user));
-    // const filteredList = projectList.filter(
-    //   (item: any) => !(item === projectId),
-    // );
-    // if (userCredential) {
-    //   const userRef = doc(db, "user", userCredential.email);
-
-    //   await updateDoc(userRef, {
-    //     project_list: filteredList,
-    //   });
-    // }
-    // // storage 프로젝트 카드 이미지 삭제
-    // deleteStorageImg(docRef);
-    // // @@ 프로젝트 삭제 : project의 is_deleted:true로, user의 project_list와 project의 user_list는 유지.
-    // const kanbanQuery = query(collection(db, "project", projectId, "kanban"));
-    // const querySnapshot = await getDocs(kanbanQuery);
-    // querySnapshot.forEach(async (kanbanDoc) => {
-    //   const kanbanDocRef = doc(
-    //     db,
-    //     "project",
-    //     projectId,
-    //     "kanban",
-    //     kanbanDoc.id,
-    //   );
-
-    //   const todoQuery = query(
-    //     collection(db, "project", projectId, "kanban", kanbanDoc.id, "todo"),
-    //   );
-    //   const todoQuerySnapshot = await getDocs(todoQuery);
-    //   todoQuerySnapshot.forEach(async (todoDoc) => {
-    //     const todoDocRef = doc(
-    //       db,
-    //       "project",
-    //       projectId,
-    //       "kanban",
-    //       kanbanDoc.id,
-    //       "todo",
-    //       todoDoc.id,
-    //     );
-    //     await deleteDoc(todoDocRef);
-    //   });
-    //   await deleteDoc(kanbanDocRef);
-    // });
-    // // 로그 기능 구현 시 여기에 삭제 알람 동작 구현
-    // await deleteDoc(docRef);
-    // });
   };
 
   const handleCloseBtn = () => {
