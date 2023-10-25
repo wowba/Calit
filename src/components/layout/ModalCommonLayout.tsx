@@ -32,6 +32,13 @@ export const ModalArea = styled.div<Props>`
   top: 4rem;
   border-radius: 7px;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
+  background-color: white;
+  padding: 20px 28px;
+`;
+export const ModalTitle = styled.div`
+  font-weight: 900;
+  font-size: 1.2rem;
+  margin: 0 0 0.8rem 0;
 `;
 
 export default function ModalCommon(name: ModalInfo) {
@@ -40,7 +47,7 @@ export default function ModalCommon(name: ModalInfo) {
 
   const handleClick = () => {
     if (activeIndex === modalIndex) {
-    // 같은 모달 아이콘 클릭시 기본 값 -1 부여를 통한 모달 닫힘 처리
+      // 같은 모달 아이콘 클릭시 기본 값 -1 부여를 통한 모달 닫힘 처리
       setActiveIndex(-1);
     } else {
       setActiveIndex(modalSelected);
