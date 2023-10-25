@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, KeyboardEvent } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
@@ -255,7 +254,7 @@ export default function ProjectMemberModal() {
                 value={selectedUser}
               >
                 <option value="">이메일을 선택해주세요</option>
-                {userList.map((email: string, index: number) => (
+                {userList.map((email: string) => (
                   <option key={email} value={email}>
                     {email}
                   </option>
