@@ -1,7 +1,10 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState } from "react";
+import { DateSelectArg } from "@fullcalendar/core";
 import styled from "styled-components";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 import {
   ProjectModalLayout,
@@ -10,6 +13,7 @@ import {
   ProjectModalTabBox,
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
+import CreateKanbanModal from "./CreateKanbanModal";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -194,8 +198,28 @@ type Props = {
 };
 
 export default function CalendarModal({ calendarTabColor }: Props) {
-  const setting = {
-    plugins: [dayGridPlugin],
+  const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const handleSelect = (info: DateSelectArg) => {
+    const calendarApi = info.view.calendar;
+    setStartDate(info.startStr);
+    setEndDate(info.endStr);
+    setIsShowCreateKanbanModal(true);
+    // calendarApi.addEvent({
+    //   id: "1",
+    //   title: "칸반",
+    //   start: info.startStr,
+    //   end: info.endStr,
+    //   allDay: info.allDay,
+    // });
+    calendarApi.unselect();
+  };
+
+  const fullCalendarSetting = {
+    plugins: [dayGridPlugin, interactionPlugin],
+    selectable: true,
     headerToolbar: {
       left: "today",
       center: "prev title next",
@@ -212,6 +236,7 @@ export default function CalendarModal({ calendarTabColor }: Props) {
       // 버튼 텍스트 변환
       today: "오늘",
     },
+    select: handleSelect,
   };
 
   return (
@@ -226,9 +251,15 @@ export default function CalendarModal({ calendarTabColor }: Props) {
         <CalendarBox>
           <FullCalendar
             // eslint-disable-next-line react/jsx-props-no-spreading
-            {...setting}
+            {...fullCalendarSetting}
           />
         </CalendarBox>
+        <CreateKanbanModal
+          isShow={isShowCreateKanbanModal}
+          setIsShow={setIsShowCreateKanbanModal}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );
