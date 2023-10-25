@@ -86,8 +86,8 @@ export default function ProjectMemberModal() {
   const { user_list: userList, invited_list: invitedList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
-
   const [inputEmailValue, setInputEmailValue] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
 
   const [isOpened, setIsOpened] = useState(false);
   const [modalIndex, setModalIndex] = useState();
@@ -150,6 +150,34 @@ export default function ProjectMemberModal() {
     });
   };
 
+  // 내보내기
+  const handleUserList = async () => {
+    if (selectedUser) {
+      // 유저의 project_list에서 프로젝트 삭제
+      const userRef = doc(db, "user", selectedUser);
+      const userSnap: any = await getDoc(userRef);
+      const projectList = userSnap.data().project_list;
+      if (projectList.includes(projectId)) {
+        const updateProjectList = projectList.filter(
+          (project: string) => project !== projectId,
+        );
+        await updateDoc(userRef, {
+          project_list: updateProjectList,
+        });
+      }
+
+      // 프로젝트의 user_list에서 유저 삭제
+      const updateUserList = userList.filter(
+        (curUser: string) => curUser !== selectedUser,
+      );
+      await updateDoc(docRef, {
+        user_list: updateUserList,
+        modified_date: serverTimestamp(),
+      });
+      setSelectedUser("");
+    }
+  };
+
   return (
     <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
       <ModalTitle>ProjectMember</ModalTitle>
@@ -206,15 +234,21 @@ export default function ProjectMemberModal() {
       </InviteContainer>
       <GetOutContainer>
         <div style={{ margin: "1rem 0" }}>
-          <select style={{ height: "100%" }}>
+          <select
+            style={{ height: "100%" }}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            value={selectedUser}
+          >
             <option value="">이메일을 선택해주세요</option>
             {userList.map((email: string, index: number) => (
-              <option key={email} value={index + 1}>
+              <option key={email} value={email}>
                 {email}
               </option>
             ))}
           </select>
-          <ConfirmBtn $dynamicWidth="4rem">확인</ConfirmBtn>
+          <ConfirmBtn $dynamicWidth="4rem" onClick={handleUserList}>
+            확인
+          </ConfirmBtn>
         </div>
       </GetOutContainer>
     </ModalArea>
