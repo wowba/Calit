@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, KeyboardEvent } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { db } from "../../firebaseSDK";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
@@ -80,6 +80,9 @@ export default function ProjectMember() {
   const { projectData } = useRecoilValue(projectState);
   const userList = projectData.user_list;
   const [userData, setUserData] = useState<any[]>([]);
+
+  const [inputEmailValue, setInputEmailValue] = useState("");
+
   const [isOpened, setIsOpened] = useState(false);
   const [modalIndex, setModalIndex] = useState();
 
@@ -106,12 +109,31 @@ export default function ProjectMember() {
     fetchData();
   }, [userList]);
 
-  // url에서 프로젝트 아이디 가져오기
+  // url에서 project id 가져오기
   const { pathname } = useLocation();
   // 링크 복사
   const handleCopyClipBoard = async (id: string) => {
     //   await navigator.clipboard.writeText(`calit-2f888.web.app/${id}`);
     await navigator.clipboard.writeText(`localhost:3000${id}`);
+  };
+
+  // 이메일 입력 후 Enter 누를 시 동작
+  const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (inputEmailValue.includes("@gmail.com")) {
+        const docRef = doc(db, "project", pathname);
+        const curInvitedList = [...projectData.invited_list];
+        curInvitedList.push(inputEmailValue);
+        await updateDoc(docRef, {
+          invited_list: curInvitedList,
+          modified_date: serverTimestamp(),
+        });
+        setInputEmailValue("");
+      } else {
+        // eslint-disable-next-line no-alert
+        alert("Gmail 주소를 입력해주세요");
+      }
+    }
   };
 
   return (
@@ -120,9 +142,9 @@ export default function ProjectMember() {
       <ModalScrollContainer>
         <ModalTeamMembers>
           {userData.map((user: any) => (
-            <ModalMemberContainer>
-              <UserImage src={user.userImage} alt="사진" />
-              <UserName>{user.userName}</UserName>
+            <ModalMemberContainer key={user.userImage}>
+              <UserImage key={user.userImage} src={user.userImage} alt="사진" />
+              <UserName key={user.userName}>{user.userName}</UserName>
             </ModalMemberContainer>
           ))}
         </ModalTeamMembers>
@@ -142,14 +164,17 @@ export default function ProjectMember() {
           style={{ margin: "1rem 0 0" }}
           $dynamicWidth="100%"
           placeholder="팀원의 Gmail을 입력해주세요"
+          value={inputEmailValue}
+          onChange={(e) => setInputEmailValue(e.target.value)}
+          onKeyDown={handleEnterPress}
         />
         <div style={{ fontWeight: 700, margin: "1.5rem 0 0.3rem" }}>
           초대 대기열
         </div>
         <WaitingList>
-          <WaitingName>ovo10203</WaitingName>
-          <WaitingName>ovo10203</WaitingName>
-          <WaitingName>ovo10203</WaitingName>
+          {projectData.invited_list.map((email: string) => (
+            <WaitingName key={email}>{email.split("@")[0]}</WaitingName>
+          ))}
         </WaitingList>
         <button
           type="button"
