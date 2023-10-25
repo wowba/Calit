@@ -42,7 +42,7 @@ interface ProjectData {
 }
 
 export default function CreateProjectBtn() {
-  const { name, email } = useRecoilValue(userState).userData;
+  const { email } = useRecoilValue(userState).userData;
   const { userCredential } = useRecoilValue(loginState);
 
   const handleClick = async () => {
@@ -55,7 +55,7 @@ export default function CreateProjectBtn() {
       project_img_URL: "",
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
-      creater: name,
+      creater: email,
       is_deleted: false,
     };
 
