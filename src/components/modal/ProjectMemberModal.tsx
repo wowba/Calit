@@ -77,7 +77,7 @@ const WaitingName = styled.span`
   width: 50%;
 `;
 
-export default function ProjectMember() {
+export default function ProjectMemberModal() {
   const { user_list: userList, invited_list: invitedList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
