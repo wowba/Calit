@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DateSelectArg } from "@fullcalendar/core";
 import styled from "styled-components";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { useRecoilValue } from "recoil";
 
 import {
   ProjectModalLayout,
@@ -14,6 +14,8 @@ import {
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
 import CreateKanbanModal from "./CreateKanbanModal";
+import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -198,22 +200,29 @@ type Props = {
 };
 
 export default function CalendarModal({ calendarTabColor }: Props) {
+  const kanbanDataState = useRecoilValue(kanbanState);
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+
+  const [kanbanEvents, setKanbanEvents] = useState(Array<any>);
+
+  useEffect(() => {
+    const data = [...kanbanDataState];
+    const result = data.map((item) => ({
+      id: item[0],
+      start: yearMonthDayFormat(item[1].start_date.seconds),
+      end: yearMonthDayFormat(item[1].end_date.seconds),
+      title: item[1].name,
+    }));
+    setKanbanEvents(result);
+  }, [kanbanDataState]);
 
   const handleSelect = (info: DateSelectArg) => {
     const calendarApi = info.view.calendar;
     setStartDate(info.startStr);
     setEndDate(info.endStr);
     setIsShowCreateKanbanModal(true);
-    // calendarApi.addEvent({
-    //   id: "1",
-    //   title: "칸반",
-    //   start: info.startStr,
-    //   end: info.endStr,
-    //   allDay: info.allDay,
-    // });
     calendarApi.unselect();
   };
 
@@ -236,6 +245,7 @@ export default function CalendarModal({ calendarTabColor }: Props) {
       // 버튼 텍스트 변환
       today: "오늘",
     },
+    events: kanbanEvents,
     select: handleSelect,
   };
 
