@@ -21,6 +21,7 @@ interface TodoData {
   is_deleted: boolean;
   stageID: string;
   deadline: Date;
+  info: string;
 }
 
 export const createKanban = async (

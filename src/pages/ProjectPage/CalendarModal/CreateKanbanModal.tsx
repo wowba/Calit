@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 import { useLocation } from "react-router-dom";
 import { serverTimestamp } from "firebase/firestore";
-import { createKanban } from "../../../api/CreateCollection";
+import { createKanban, createTodo } from "../../../api/CreateCollection";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
 const CreateKanbanModalLayout = styled.div<{ $isShow: boolean }>`
@@ -96,7 +96,7 @@ export default function CreateKanbanModal(props: Props) {
   };
 
   const handleCreateBtnClick = async () => {
-    await createKanban(location.pathname, {
+    const kanbanID = await createKanban(location.pathname, {
       user_list: [],
       stage_list: [],
       name: "테스트칸반",
@@ -105,6 +105,18 @@ export default function CreateKanbanModal(props: Props) {
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
       is_deleted: false,
+    });
+    await createTodo(location.pathname, kanbanID, {
+      update_list: [],
+      user_list: [],
+      name: "dummyTodo",
+      order: -1,
+      created_date: serverTimestamp(),
+      modified_date: serverTimestamp(),
+      is_deleted: true,
+      stageID: "dummyTodo",
+      deadline: new Date(),
+      info: "dummy",
     });
     setIsShow(false);
   };

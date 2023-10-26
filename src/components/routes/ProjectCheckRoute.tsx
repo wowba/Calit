@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
+  collection,
   doc,
   getDoc,
   onSnapshot,
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -14,6 +17,7 @@ import Sidebar from "../Sidebar";
 import { db } from "../../firebaseSDK";
 import projectState from "../../recoil/atoms/project/projectState";
 import userState from "../../recoil/atoms/login/userDataState";
+import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 
 const ProjectLayout = styled.div`
   display: flex;
@@ -23,14 +27,17 @@ const ProjectLayout = styled.div`
 export default function ProjectCheckRoute() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isProjectLoaded, setIsProjectLoaded] = useState(false);
+  const [isKanbanLoaded, setIsKanbanLoaded] = useState(false);
   const setProjectDataState = useSetRecoilState(projectState);
+  const setKanbanDataState = useSetRecoilState(kanbanState);
   const { email } = useRecoilValue(userState).userData;
 
   useEffect(() => {
+    // 프로젝트 문서 onSnapshot
     let passed = false;
     const projectRef = doc(db, "project", pathname);
-    const unsub = onSnapshot(projectRef, async (projectDoc) => {
+    const unsubProject = onSnapshot(projectRef, async (projectDoc) => {
       // 초대 리스트에 있을경우 동작하는 로직
       if (
         projectDoc.exists() &&
@@ -65,19 +72,62 @@ export default function ProjectCheckRoute() {
         !projectDoc.data().is_deleted &&
         (projectDoc.data().user_list.includes(email) || passed)
       ) {
-        setIsLoaded(true);
+        setIsProjectLoaded(true);
         setProjectDataState({
           projectData: projectDoc.data(),
         });
       } else {
-        unsub();
+        unsubProject();
         navigate("/");
       }
     });
-    return () => unsub();
+    // 칸반 컬렉션 onSnapshot
+    const kanbanQuery = query(
+      collection(db, "project", pathname, "kanban"),
+      where("is_deleted", "==", false),
+    );
+    const unsubKanban = onSnapshot(kanbanQuery, (kanbanSnapshot) => {
+      const addedMap = new Map();
+      kanbanSnapshot.docChanges().forEach((change) => {
+        // 최초 Snapshot 생성 혹은 사용자가 직접 칸반을 추가했을 때
+        if (change.type === "added") {
+          addedMap.set(change.doc.id, change.doc.data());
+        }
+        // 칸반을 수정할 경우
+        if (change.type === "modified") {
+          setKanbanDataState((prev) => {
+            prev.set(change.doc.id, change.doc.data());
+            return new Map([...prev]);
+          });
+        }
+        // 칸반이 삭제된 경우 (is_deleted 수정 시 쿼리 결과 변경)
+        if (change.type === "removed") {
+          setKanbanDataState((prev) => {
+            prev.delete(change.doc.id);
+            return new Map([...prev]);
+          });
+        }
+      });
+      if (addedMap.size > 0) {
+        setKanbanDataState((prev) => new Map([...prev, ...addedMap]));
+      }
+      setIsKanbanLoaded(true);
+    });
+    // 클린업 함수. 칸반 데이터 초기화 및 실시간 연결 해제
+    return () => {
+      setKanbanDataState((prev) => {
+        prev.clear();
+        return prev;
+      });
+      setProjectDataState({
+        projectData: null,
+      });
+      unsubProject();
+      unsubKanban();
+    };
   }, [pathname]);
 
-  return isLoaded === true ? (
+  return isProjectLoaded && isKanbanLoaded ? (
     <ProjectLayout>
       <Sidebar />
       <Outlet />
