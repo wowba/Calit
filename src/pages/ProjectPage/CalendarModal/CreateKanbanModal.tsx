@@ -184,6 +184,7 @@ export default function CreateKanbanModal(props: Props) {
           <CommonSelectMemberLayout
             userList={userList}
             setUserList={setUserList}
+            // eslint-disable-next-line no-console
             onBlur={() => console.log(userList)}
           />
         </CreateKanbanModalInfoBox>
