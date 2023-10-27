@@ -6,7 +6,7 @@ import styled, { css } from "styled-components";
 
 interface Props {
   date: Date;
-  setDate: React.Dispatch<React.SetStateAction<Date>>;
+  onChange: any;
   $width: string;
   $height: string;
   $isHover: boolean;
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function DatePicker(props: Props) {
-  const { date, setDate, $width, $height, $isHover, $padding, $fontsize } =
+  const { date, onChange, $width, $height, $isHover, $padding, $fontsize } =
     props;
 
   const StyledReactDatePicker = styled(ReactDatePicker)`
@@ -48,7 +48,7 @@ export default function DatePicker(props: Props) {
       locale={ko}
       dateFormat="yyyy.MM.dd"
       selected={date}
-      onChange={(selectedDate: Date) => setDate(selectedDate)}
+      onChange={(selectedDate: Date) => onChange(selectedDate)}
     />
   );
 }
