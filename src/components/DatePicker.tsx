@@ -32,13 +32,13 @@ export default function DatePicker(props: Props) {
     outline: none;
 
     &:focus {
-      border-color: black;
+      border-color: #adadad;
     }
 
     ${$isHover &&
     css`
       &:hover {
-        border-color: black;
+        border-color: #adadad;
       }
     `}
   `;

@@ -17,7 +17,7 @@ const CommonTextArea = styled.textarea<Props>`
   resize: none;
   transition: all 0.3s ease-in-out;
   &:focus {
-    border-color: black;
+    border-color: #adadad;
   }
 `;
 
