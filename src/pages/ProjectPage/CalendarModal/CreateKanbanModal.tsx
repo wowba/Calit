@@ -6,6 +6,7 @@ import { serverTimestamp } from "firebase/firestore";
 import { createKanban, createTodo } from "../../../api/CreateCollection";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
+import DatePicker from "../../../components/DatePicker";
 
 const CreateKanbanModalLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
@@ -86,13 +87,16 @@ const CreateKanbanModalBackground = styled.button<{ $isShow: boolean }>`
 interface Props {
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
+  setStartDate: React.Dispatch<React.SetStateAction<Date>>;
+  setEndDate: React.Dispatch<React.SetStateAction<Date>>;
 }
 
 export default function CreateKanbanModal(props: Props) {
   const location = useLocation();
-  const { isShow, setIsShow, startDate, endDate } = props;
+  const { isShow, setIsShow, startDate, endDate, setStartDate, setEndDate } =
+    props;
   const [kanbanName, setKanbanName] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,8 +108,8 @@ export default function CreateKanbanModal(props: Props) {
       user_list: [],
       stage_list: [],
       name: kanbanName,
-      start_date: new Date(startDate),
-      end_date: new Date(endDate),
+      start_date: startDate,
+      end_date: endDate,
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
       is_deleted: false,
@@ -140,19 +144,36 @@ export default function CreateKanbanModal(props: Props) {
           <CommonInputLayout
             type="text"
             placeholder="이름을 작성하세요"
-            $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
-            $dynamicWidth="20rem"
             onChange={handleInputChange}
             value={kanbanName}
+            $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
+            $dynamicWidth="20rem"
+            $isHover
           />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalInfoBox>
           <p>시작일</p>
-          <span>{startDate}</span>
+          <DatePicker
+            date={startDate}
+            setDate={setStartDate}
+            $width="10rem"
+            $height="1.5rem"
+            $padding="0.25rem 0.25rem 0.25rem 0.25rem"
+            $isHover
+            $fontsize="1.125rem"
+          />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalInfoBox>
           <p>종료일</p>
-          <span>{endDate}</span>
+          <DatePicker
+            date={endDate}
+            setDate={setEndDate}
+            $width="10rem"
+            $height="1.5rem"
+            $padding="0.25rem 0.25rem 0.25rem 0.25rem"
+            $isHover
+            $fontsize="1.125rem"
+          />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalInfoBox>
           <p>담당자</p>
