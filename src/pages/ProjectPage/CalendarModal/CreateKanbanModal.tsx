@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 
 import { useLocation } from "react-router-dom";
 import { serverTimestamp } from "firebase/firestore";
 import { createKanban, createTodo } from "../../../api/CreateCollection";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
+import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 
 const CreateKanbanModalLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
@@ -36,6 +37,7 @@ const CreateKanbanModalTitleParagraph = styled.p`
 
 const CreateKanbanModalInfoBox = styled.div`
   display: flex;
+  align-items: center;
   gap: 2rem;
 
   margin-top: 1.5rem;
@@ -47,6 +49,8 @@ const CreateKanbanModalInfoBox = styled.div`
   }
   & > span {
     font-size: 1.125rem;
+
+    padding-left: 0.25rem;
   }
 `;
 
@@ -88,18 +92,18 @@ interface Props {
 
 export default function CreateKanbanModal(props: Props) {
   const location = useLocation();
-
   const { isShow, setIsShow, startDate, endDate } = props;
+  const [kanbanName, setKanbanName] = useState("");
 
-  const handleModalCloseClick = () => {
-    setIsShow(false);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKanbanName(e.target.value);
   };
 
   const handleCreateBtnClick = async () => {
     const kanbanID = await createKanban(location.pathname, {
       user_list: [],
       stage_list: [],
-      name: "테스트칸반",
+      name: kanbanName,
       start_date: new Date(startDate),
       end_date: new Date(endDate),
       created_date: serverTimestamp(),
@@ -121,6 +125,10 @@ export default function CreateKanbanModal(props: Props) {
     setIsShow(false);
   };
 
+  const handleModalCloseClick = () => {
+    setIsShow(false);
+  };
+
   return (
     <>
       <CreateKanbanModalLayout $isShow={isShow}>
@@ -129,7 +137,14 @@ export default function CreateKanbanModal(props: Props) {
         </CreateKanbanModalTitleParagraph>
         <CreateKanbanModalInfoBox>
           <p>이름</p>
-          <span>칸반 이름</span>
+          <CommonInputLayout
+            type="text"
+            placeholder="이름을 작성하세요"
+            $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
+            $dynamicWidth="20rem"
+            onChange={handleInputChange}
+            value={kanbanName}
+          />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalInfoBox>
           <p>시작일</p>
