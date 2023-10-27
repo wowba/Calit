@@ -202,8 +202,8 @@ type Props = {
 export default function CalendarModal({ calendarTabColor }: Props) {
   const kanbanDataState = useRecoilValue(kanbanState);
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const [kanbanEvents, setKanbanEvents] = useState(Array<any>);
 
@@ -220,8 +220,8 @@ export default function CalendarModal({ calendarTabColor }: Props) {
 
   const handleSelect = (info: DateSelectArg) => {
     const calendarApi = info.view.calendar;
-    setStartDate(info.startStr);
-    setEndDate(info.endStr);
+    setStartDate(info.start);
+    setEndDate(info.end);
     setIsShowCreateKanbanModal(true);
     calendarApi.unselect();
   };
@@ -245,6 +245,7 @@ export default function CalendarModal({ calendarTabColor }: Props) {
       // 버튼 텍스트 변환
       today: "오늘",
     },
+    fixedWeekCount: false,
     events: kanbanEvents,
     select: handleSelect,
   };
@@ -268,7 +269,9 @@ export default function CalendarModal({ calendarTabColor }: Props) {
           isShow={isShowCreateKanbanModal}
           setIsShow={setIsShowCreateKanbanModal}
           startDate={startDate}
+          setStartDate={setStartDate}
           endDate={endDate}
+          setEndDate={setEndDate}
         />
       </ProjectModalContentBox>
     </ProjectModalLayout>

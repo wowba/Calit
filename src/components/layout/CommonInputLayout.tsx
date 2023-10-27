@@ -1,14 +1,15 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface Props {
   $dynamicWidth?: string;
   $dynamicHeight?: string;
   $dynamicPadding?: string;
   $dynamicFontSize?: string;
+  $isHover?: boolean;
 }
 
 const CommonInputLayout = styled.input<Props>`
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
 
   width: ${(props) => (props.$dynamicWidth ? props.$dynamicWidth : "auto")};
   height: ${(props) =>
@@ -23,10 +24,18 @@ const CommonInputLayout = styled.input<Props>`
   border: 1px solid transparent;
   border-radius: 0.3rem;
   outline: none;
-  &:focus,
-  &:hover {
+
+  &:focus {
     border-color: black;
   }
+
+  ${(props) =>
+    props.$isHover &&
+    css`
+      &:hover {
+        border-color: black;
+      }
+    `}
 `;
 
 export default CommonInputLayout;
