@@ -159,7 +159,7 @@ export default function CreateKanbanModal(props: Props) {
           <p>시작일</p>
           <DatePicker
             date={startDate}
-            setDate={setStartDate}
+            onChange={(arg: Date) => setStartDate(arg)}
             $width="10rem"
             $height="1.5rem"
             $padding="0.25rem 0.25rem 0.25rem 0.25rem"
@@ -171,7 +171,7 @@ export default function CreateKanbanModal(props: Props) {
           <p>종료일</p>
           <DatePicker
             date={endDate}
-            setDate={setEndDate}
+            onChange={(arg: Date) => setEndDate(arg)}
             $width="10rem"
             $height="1.5rem"
             $padding="0.25rem 0.25rem 0.25rem 0.25rem"
