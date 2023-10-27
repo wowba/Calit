@@ -7,6 +7,7 @@ import { createKanban, createTodo } from "../../../api/CreateCollection";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import DatePicker from "../../../components/DatePicker";
+import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
 
 const CreateKanbanModalLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
@@ -98,6 +99,7 @@ export default function CreateKanbanModal(props: Props) {
   const { isShow, setIsShow, startDate, endDate, setStartDate, setEndDate } =
     props;
   const [kanbanName, setKanbanName] = useState("");
+  const [userList, setUserList] = useState<any[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKanbanName(e.target.value);
@@ -105,7 +107,7 @@ export default function CreateKanbanModal(props: Props) {
 
   const handleCreateBtnClick = async () => {
     const kanbanID = await createKanban(location.pathname, {
-      user_list: [],
+      user_list: userList,
       stage_list: [],
       name: kanbanName,
       start_date: startDate,
@@ -130,6 +132,8 @@ export default function CreateKanbanModal(props: Props) {
   };
 
   const handleModalCloseClick = () => {
+    setUserList([]);
+    setKanbanName("");
     setIsShow(false);
   };
 
@@ -177,7 +181,11 @@ export default function CreateKanbanModal(props: Props) {
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalInfoBox>
           <p>담당자</p>
-          <select>asdf</select>
+          <CommonSelectMemberLayout
+            userList={userList}
+            setUserList={setUserList}
+            onBlur={() => console.log(userList)}
+          />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalBtnBox>
           <ConfirmBtn
