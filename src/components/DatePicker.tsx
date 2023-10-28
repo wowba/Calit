@@ -14,34 +14,34 @@ interface Props {
   $fontsize: string;
 }
 
-export default function DatePicker(props: Props) {
-  const { date, onChange, $width, $height, $isHover, $padding, $fontsize } =
-    props;
+const StyledReactDatePicker = styled(ReactDatePicker)<Props>`
+  transition: all 0.3s ease-in-out;
+  width: ${(props) => props.$width};
+  height: ${(props) => props.$height};
+  padding: ${(props) => props.$padding};
 
-  const StyledReactDatePicker = styled(ReactDatePicker)`
-    transition: all 0.3s ease-in-out;
+  font-size: ${(props) => props.$fontsize};
 
-    width: ${$width};
-    height: ${$height};
-    padding: ${$padding};
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
+  outline: none;
 
-    font-size: ${$fontsize};
+  &:focus {
+    border-color: #adadad;
+  }
 
-    border: 1px solid transparent;
-    border-radius: 0.3rem;
-    outline: none;
-
-    &:focus {
-      border-color: #adadad;
-    }
-
-    ${$isHover &&
+  ${(props) =>
+    props.$isHover &&
     css`
       &:hover {
         border-color: #adadad;
       }
     `}
-  `;
+`;
+
+export default function DatePicker(props: Props) {
+  const { date, onChange, $width, $height, $isHover, $padding, $fontsize } =
+    props;
 
   return (
     <StyledReactDatePicker
@@ -49,6 +49,12 @@ export default function DatePicker(props: Props) {
       dateFormat="yyyy.MM.dd"
       selected={date}
       onChange={(selectedDate: Date) => onChange(selectedDate)}
+      // @ts-ignore
+      $width={$width}
+      $height={$height}
+      $isHover={$isHover}
+      $padding={$padding}
+      $fontsize={$fontsize}
     />
   );
 }
