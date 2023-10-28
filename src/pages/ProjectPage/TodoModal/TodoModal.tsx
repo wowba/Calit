@@ -185,6 +185,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
       });
     } else {
       // inputTodoName이 없을 때 유효성 검사 통과 못하게
+      // eslint-disable-next-line no-alert
       alert("제목을 입력해주세요");
     }
   };
