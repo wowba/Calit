@@ -45,11 +45,6 @@ const TodoSubtitle = styled.div`
   font-size: 1.1rem;
   margin: 0 1rem 1rem 0;
 `;
-const UserListContainer = styled.div`
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  grid-template-rows: 1fr;
-`;
 const ManagedUser = styled.div`
   background-color: pink;
   border-radius: 8px;
@@ -66,22 +61,15 @@ const ProfileImg = styled.img`
   vertical-align: middle;
   margin: 0 0.5rem 0 0;
 `;
-
-const DeadlineContainer = styled.div`
+const Container = styled.div`
   display: grid;
   grid-template-columns: 4.5rem 1fr;
   grid-template-rows: 1fr;
 `;
-const TagContainer = styled.div`
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  grid-template-rows: 1fr;
-`;
-const InfoContainer = styled.div`
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  grid-template-rows: 1fr;
-`;
+const UserListContainer = styled(Container)``;
+const DeadlineContainer = styled(Container)``;
+const TagContainer = styled(Container)``;
+const InfoContainer = styled(Container)``;
 
 export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -179,6 +167,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
       });
     } else {
       // inputTodoName이 없을 때 유효성 검사 통과 못하게
+      alert("제목을 입력해주세요");
     }
   };
 
