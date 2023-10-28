@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { DateSelectArg } from "@fullcalendar/core";
+import {
+  DateSelectArg,
+  EventClickArg,
+  CalendarOptions,
+  EventDropArg,
+} from "@fullcalendar/core";
 import styled from "styled-components";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, {
+  EventResizeDoneArg,
+} from "@fullcalendar/interaction";
 import { useRecoilValue } from "recoil";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { SetURLSearchParams } from "react-router-dom";
 
 import {
   ProjectModalLayout,
@@ -16,6 +25,9 @@ import {
 import CreateKanbanModal from "./CreateKanbanModal";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
+import { db } from "../../../firebaseSDK";
+import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
+import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -197,9 +209,13 @@ const CalendarBox = styled.div`
 
 type Props = {
   calendarTabColor: string;
+  setSearchParams: SetURLSearchParams;
 };
 
-export default function CalendarModal({ calendarTabColor }: Props) {
+export default function CalendarModal({
+  calendarTabColor,
+  setSearchParams,
+}: Props) {
   const kanbanDataState = useRecoilValue(kanbanState);
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -214,6 +230,9 @@ export default function CalendarModal({ calendarTabColor }: Props) {
       start: yearMonthDayFormat(item[1].start_date.seconds),
       end: yearMonthDayFormat(item[1].end_date.seconds),
       title: item[1].name,
+      backgroundColor: item[1].color,
+      textColor: getTextColorByBackgroundColor(item[1].color),
+      borderColor: getBorderColorByBackgroundColor(item[1].color),
     }));
     setKanbanEvents(result);
   }, [kanbanDataState]);
@@ -226,7 +245,58 @@ export default function CalendarModal({ calendarTabColor }: Props) {
     calendarApi.unselect();
   };
 
-  const fullCalendarSetting = {
+  const handleEventClick = (eventArg: EventClickArg) => {
+    const {
+      event: { _def: eventInfo },
+    } = eventArg;
+    setSearchParams({ kanbanID: eventInfo.publicId });
+  };
+
+  const handleEventDrop = async (eventArg: EventDropArg) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const { start, end } = eventArg.event._instance!.range;
+
+    const {
+      event: { _def: eventInfo },
+    } = eventArg;
+
+    const kanbanRef = doc(
+      db,
+      "project",
+      window.location.pathname,
+      "kanban",
+      eventInfo.publicId,
+    );
+    await updateDoc(kanbanRef, {
+      start_date: start,
+      end_date: end,
+      modified_date: serverTimestamp(),
+    });
+  };
+
+  const handleEventResize = async (eventArg: EventResizeDoneArg) => {
+    // eslint-disable-next-line no-underscore-dangle
+    const { end } = eventArg.event._instance!.range;
+
+    const {
+      event: { _def: eventInfo },
+    } = eventArg;
+
+    const kanbanRef = doc(
+      db,
+      "project",
+      window.location.pathname,
+      "kanban",
+      eventInfo.publicId,
+    );
+
+    await updateDoc(kanbanRef, {
+      end_date: end,
+      modified_date: serverTimestamp(),
+    });
+  };
+
+  const fullCalendarSetting: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     selectable: true,
     headerToolbar: {
@@ -242,12 +312,15 @@ export default function CalendarModal({ calendarTabColor }: Props) {
     initialView: "dayGridMonth",
     locale: "ko",
     buttonText: {
-      // 버튼 텍스트 변환
       today: "오늘",
     },
+    editable: true,
     fixedWeekCount: false,
     events: kanbanEvents,
     select: handleSelect,
+    eventClick: handleEventClick,
+    eventDrop: handleEventDrop,
+    eventResize: handleEventResize,
   };
 
   return (

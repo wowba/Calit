@@ -29,7 +29,7 @@ const ProjectLayoutFooter = styled.div`
 `;
 
 export default function Project() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   let calendarTabColor = "#FFD43B";
   let kanbanTabColor = "#ffea7a";
@@ -52,7 +52,10 @@ export default function Project() {
   return (
     <ProjectLayout>
       {/* 캘린더 */}
-      <CalendarModal calendarTabColor={calendarTabColor} />
+      <CalendarModal
+        calendarTabColor={calendarTabColor}
+        setSearchParams={setSearchParams}
+      />
       {/* 칸반 */}
       <KanbanModal
         kanbanTabColor={kanbanTabColor}

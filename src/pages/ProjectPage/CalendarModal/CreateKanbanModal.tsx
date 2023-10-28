@@ -17,7 +17,7 @@ const CreateKanbanModalLayout = styled.div<{ $isShow: boolean }>`
   transform: translate(-50%, -50%);
 
   width: 40rem;
-  height: 25rem;
+  height: auto;
   border-radius: 0.9rem;
   box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.3);
   background-color: white;
@@ -100,12 +100,30 @@ export default function CreateKanbanModal(props: Props) {
     props;
   const [kanbanName, setKanbanName] = useState("");
   const [userList, setUserList] = useState<any[]>([]);
+  const [color, setColor] = useState("#3888d8");
+
+  const resetCreateKanbanModalState = () => {
+    setUserList([]);
+    setKanbanName("");
+    setColor("#3888d8");
+    setIsShow(false);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKanbanName(e.target.value);
   };
 
   const handleCreateBtnClick = async () => {
+    if (!kanbanName) {
+      // eslint-disable-next-line no-alert
+      alert("칸반 제목을 입력해 주세요.");
+      return false;
+    }
+    if (userList.length === 0) {
+      // eslint-disable-next-line no-alert
+      alert("담당자를 최소 한 명 이상 할당해주세요.");
+      return false;
+    }
     const kanbanID = await createKanban(location.pathname, {
       user_list: userList,
       stage_list: [],
@@ -115,6 +133,7 @@ export default function CreateKanbanModal(props: Props) {
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
       is_deleted: false,
+      color,
     });
     await createTodo(location.pathname, kanbanID, {
       update_list: [],
@@ -128,13 +147,12 @@ export default function CreateKanbanModal(props: Props) {
       deadline: new Date(),
       info: "dummy",
     });
-    setIsShow(false);
+    resetCreateKanbanModalState();
+    return true;
   };
 
   const handleModalCloseClick = () => {
-    setUserList([]);
-    setKanbanName("");
-    setIsShow(false);
+    resetCreateKanbanModalState();
   };
 
   return (
@@ -153,6 +171,16 @@ export default function CreateKanbanModal(props: Props) {
             $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
             $dynamicWidth="20rem"
             $isHover
+          />
+        </CreateKanbanModalInfoBox>
+        <CreateKanbanModalInfoBox>
+          <p>색상</p>
+          <input
+            type="color"
+            value={color}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setColor(e.target.value)
+            }
           />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalInfoBox>
@@ -185,7 +213,7 @@ export default function CreateKanbanModal(props: Props) {
             userList={userList}
             setUserList={setUserList}
             // eslint-disable-next-line no-console
-            onBlur={() => console.log(userList)}
+            onBlur={() => false}
           />
         </CreateKanbanModalInfoBox>
         <CreateKanbanModalBtnBox>

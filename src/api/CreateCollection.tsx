@@ -10,6 +10,7 @@ interface KanbanData {
   created_date: FieldValue;
   modified_date: FieldValue;
   is_deleted: boolean;
+  color: string;
 }
 interface TodoData {
   update_list: Array<Object>;
