@@ -70,6 +70,7 @@ export default function CreateProjectBtn() {
       modified_date: serverTimestamp(),
       name: "dummyKanban",
       is_deleted: true,
+      color: "#3888d8",
     });
     // 유저의 project_list 업데이트
     if (userCredential) {
