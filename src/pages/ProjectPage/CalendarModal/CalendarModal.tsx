@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { DateSelectArg } from "@fullcalendar/core";
+import { DateSelectArg, EventClickArg } from "@fullcalendar/core";
 import styled from "styled-components";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useRecoilValue } from "recoil";
 
+import { SetURLSearchParams } from "react-router-dom";
 import {
   ProjectModalLayout,
   ProjectModalTabBackground,
@@ -197,9 +198,13 @@ const CalendarBox = styled.div`
 
 type Props = {
   calendarTabColor: string;
+  setSearchParams: SetURLSearchParams;
 };
 
-export default function CalendarModal({ calendarTabColor }: Props) {
+export default function CalendarModal({
+  calendarTabColor,
+  setSearchParams,
+}: Props) {
   const kanbanDataState = useRecoilValue(kanbanState);
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -226,6 +231,12 @@ export default function CalendarModal({ calendarTabColor }: Props) {
     calendarApi.unselect();
   };
 
+  const handleEventClick = (eventArg: EventClickArg) => {
+    const { event } = eventArg;
+    const { _def: eventInfo } = event;
+    setSearchParams({ kanbanID: eventInfo.publicId });
+  };
+
   const fullCalendarSetting = {
     plugins: [dayGridPlugin, interactionPlugin],
     selectable: true,
@@ -248,6 +259,7 @@ export default function CalendarModal({ calendarTabColor }: Props) {
     fixedWeekCount: false,
     events: kanbanEvents,
     select: handleSelect,
+    eventClick: handleEventClick,
   };
 
   return (
