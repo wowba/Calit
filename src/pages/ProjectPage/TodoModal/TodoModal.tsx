@@ -71,6 +71,14 @@ const DeadlineContainer = styled(Container)``;
 const TagContainer = styled(Container)``;
 const InfoContainer = styled(Container)``;
 
+const Contour = styled.div`
+  background-color: #eaeaea;
+  width: 100%;
+  height: 0.2rem;
+  transform: translateY(-1.5rem);
+  border-radius: 1px;
+`;
+
 export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const [isLoaded, setIsLoaded] = useState(false);
   // const [todoDataState, setTodoDataState] = useRecoilState(todoState);
@@ -103,45 +111,55 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
 
   // todo 문서 snapshot
   useEffect(() => {
-    const unsub = onSnapshot(todoRef, async (todoDoc) => {
-      if (todoDoc.exists() && !todoDoc.data().is_deleted) {
-        // setTodoDataState({ todoData: todoDoc.data() });
-        setIsLoaded(true);
-        setInputTodoName(todoDoc.data().name);
-        setInputTodoInfo(todoDoc.data().info);
-        setStartDate(todoDoc.data().deadline.toDate());
+    const unsub =
+      isTodoShow &&
+      onSnapshot(todoRef, async (todoDoc) => {
+        if (todoDoc.exists() && !todoDoc.data().is_deleted) {
+          // setTodoDataState({ todoData: todoDoc.data() });
+          setIsLoaded(true);
+          setInputTodoName(todoDoc.data().name);
+          setInputTodoInfo(todoDoc.data().info);
+          setStartDate(todoDoc.data().deadline.toDate());
 
-        const fetchData = async () => {
-          const data = await Promise.all(
-            todoDoc.data().user_list.map(async (id: string) => {
-              const userRef = doc(db, "user", id);
-              const userSnap: any = await getDoc(userRef);
-              return {
-                userImage: userSnap.data().profile_img_URL,
-                userName: userSnap.data().name,
-                userEmail: userSnap.data().email,
-              };
-            }),
-          );
-          setUserData(data);
-        };
+          const fetchData = async () => {
+            const data = await Promise.all(
+              todoDoc.data().user_list.map(async (id: string) => {
+                const userRef = doc(db, "user", id);
+                const userSnap: any = await getDoc(userRef);
+                return {
+                  userImage: userSnap.data().profile_img_URL,
+                  userName: userSnap.data().name,
+                  userEmail: userSnap.data().email,
+                };
+              }),
+            );
+            setUserData(data);
+          };
 
-        if (todoDoc.data().user_list) {
           await fetchData();
-          // 최초 접속 시에 textarea height 자동 조절
-          if (textarea.current) {
-            textarea.current.style.height = "auto";
-            textarea.current.style.height = `${textarea.current.scrollHeight}px`;
-          }
         } else {
+          // @ts-ignore
           unsub();
           navigate("/");
         }
-      }
-    });
+      });
 
-    return () => unsub();
-  }, [todoId]);
+    return () => {
+      if (isTodoShow) {
+        // @ts-ignore
+        unsub();
+      }
+      setIsLoaded(false);
+    };
+  }, [todoId, isTodoShow]);
+
+  // textarea height 자동 조절 (debouncing하기)
+  useEffect(() => {
+    if (textarea.current) {
+      textarea.current.style.height = "auto";
+      textarea.current.style.height = `${textarea.current.scrollHeight}px`;
+    }
+  }, [inputTodoInfo]);
 
   // Input 및 Textarea 이벤트 로직(Enter키, Focus상태)
   // 1. Enter키
@@ -173,11 +191,6 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
 
   const handleChange = (e: any) => {
     setInputTodoInfo(e.target.value);
-    // textarea 입력에 따라 높이 조절하기
-    if (textarea.current) {
-      textarea.current.style.height = "auto"; // height 초기화
-      textarea.current.style.height = `${textarea.current.scrollHeight}px`;
-    }
   };
 
   // 마감일 업데이트
@@ -273,6 +286,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         </div>
         <div>
           <TodoTitle>업데이트</TodoTitle>
+          <Contour>{}</Contour>
           {/* <MarkdownEditor /> */}
         </div>
       </TodoContainer>
