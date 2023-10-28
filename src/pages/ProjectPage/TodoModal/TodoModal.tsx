@@ -19,7 +19,7 @@ import {
 } from "../../../components/layout/ProjectModalLayout";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import CommonTextArea from "../../../components/layout/CommonTextArea";
-import MarkdownEditor from "./MarkdownEditor";
+// import MarkdownEditor from "./MarkdownEditor";
 import DatePicker from "../../../components/DatePicker";
 
 type Props = {
@@ -273,7 +273,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         </div>
         <div>
           <TodoTitle>업데이트</TodoTitle>
-          <MarkdownEditor />
+          {/* <MarkdownEditor /> */}
         </div>
       </TodoContainer>
     </ProjectModalLayout>
