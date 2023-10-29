@@ -11,7 +11,6 @@ import memberIcon from "../assets/icons/headerMemberIcon.svg";
 import bookmarkIcon from "../assets/icons/headerBookmarkIcon.svg";
 import tutorialIcon from "../assets/icons/headerInfoIcon.svg";
 import logIcon from "../assets/icons/headerBellIcon.svg";
-// import profileIcon from "../assets/icons/headerProfileSampleIcon.svg";
 
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
