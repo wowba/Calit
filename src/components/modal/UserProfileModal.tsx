@@ -80,6 +80,8 @@ export default function UserProfile() {
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files!.length === 0) return;
+
     const imgFile = e.target.files![0];
     if (imgFile) {
       const maxSize = 5 * 1024 * 1024; // 5MB 제한

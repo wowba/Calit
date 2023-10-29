@@ -61,7 +61,7 @@ export default function ModalCommon(name: ModalInfo) {
   return (
     <ModalLayout>
       <ModalBox onClick={() => handleClick()}>
-        <img src={children.props.children[0]} alt="modalIcon" />
+        {children.props.children[0]}
         {activeIndex === modalIndex ? children.props.children[1] : null}
       </ModalBox>
     </ModalLayout>

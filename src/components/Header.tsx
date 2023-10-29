@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
+import { useRecoilValue } from "recoil";
+import userData from "../recoil/atoms/login/userDataState";
+
 import ShrikhandRegular from "../assets/fonts/Shrikhand-Regular.ttf";
 
 // 모달 아이콘
@@ -8,7 +11,7 @@ import memberIcon from "../assets/icons/headerMemberIcon.svg";
 import bookmarkIcon from "../assets/icons/headerBookmarkIcon.svg";
 import tutorialIcon from "../assets/icons/headerInfoIcon.svg";
 import logIcon from "../assets/icons/headerBellIcon.svg";
-import profileIcon from "../assets/icons/headerProfileSampleIcon.svg";
+// import profileIcon from "../assets/icons/headerProfileSampleIcon.svg";
 
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
@@ -59,27 +62,32 @@ const HeaderModalBox = styled.div`
 
 const modals = [
   {
-    icon: memberIcon,
+    key: "member",
+    icon: <img src={memberIcon} alt="modalIcon" />,
     type: "project",
     content: <ProjectMember />,
   },
   {
-    icon: bookmarkIcon,
+    key: "bookmark",
+    icon: <img src={bookmarkIcon} alt="modalIcon" />,
     type: "project",
     content: <BookMark />,
   },
   {
-    icon: tutorialIcon,
+    key: "tutorial",
+    icon: <img src={tutorialIcon} alt="modalIcon" />,
     type: "list",
     content: <Tutorial />,
   },
   {
-    icon: logIcon,
+    key: "log",
+    icon: <img src={logIcon} alt="modalIcon" />,
     type: "project",
     content: <Log />,
   },
   {
-    icon: profileIcon,
+    key: "profile",
+    icon: "userProfile",
     type: "list",
     content: <UserProfile />,
   },
@@ -87,6 +95,8 @@ const modals = [
 
 export default function Header() {
   const location = useLocation();
+  const userDataState = useRecoilValue(userData);
+  const { profile_img_URL: profileImgUrl }: any = userDataState.userData;
   const [selectedModal, setSelectedModal] = useState(-1);
   let pageType = "list";
   if (location.pathname !== "/") {
@@ -103,10 +113,23 @@ export default function Header() {
       <HeaderLogoParagraph>Calit!</HeaderLogoParagraph>
       <HeaderIconBox>
         {(pageType === "list" ? listPageModals : modals).map((modal, index) => (
-          <HeaderModalBox key={modal.icon} onClick={() => handleClick(index)}>
+          <HeaderModalBox key={modal.key} onClick={() => handleClick(index)}>
             <ModalCommon modalSelected={selectedModal} modalIndex={index}>
               <>
-                {modal.icon}
+                {modal.icon === "userProfile" ? (
+                  <img
+                    style={{
+                      width: "2.75rem",
+                      height: "2.75rem",
+                      objectFit: "cover",
+                      borderRadius: "50%",
+                    }}
+                    src={profileImgUrl}
+                    alt="modalIcon"
+                  />
+                ) : (
+                  modal.icon
+                )}
                 {modal.content}
               </>
             </ModalCommon>

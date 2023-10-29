@@ -98,9 +98,11 @@ export default function ProjectIconContainer({
   };
 
   // 이미지 수정 버튼 클릭 시 동작
-  const handleBgImg = async (e: any) => {
+  const handleBgImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files!.length === 0) return;
+
     // storage 새 이미지 업로드
-    const imgFile = e.target.files[0];
+    const imgFile = e.target.files![0];
     if (imgFile) {
       const maxSize = 5 * 1024 * 1024; // 5MB 제한
       const fileSize = imgFile.size;
