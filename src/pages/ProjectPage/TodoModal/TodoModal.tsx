@@ -94,12 +94,8 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const projectId = window.location.pathname.substring(1);
 
   const urlQueryString = new URLSearchParams(window.location.search);
-  const kanbanId = urlQueryString.get("kanbanID")
-    ? String(urlQueryString.get("kanbanID"))
-    : "null";
-  const todoId = urlQueryString.get("todoID")
-    ? String(urlQueryString.get("todoID"))
-    : "null";
+  const kanbanId = isTodoShow ? String(urlQueryString.get("kanbanID")) : "null";
+  const todoId = isTodoShow ? String(urlQueryString.get("todoID")) : "null";
 
   const todoRef = doc(
     db,
@@ -142,7 +138,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         await fetchData();
       } else {
         unsub();
-        navigate(`/${projectId}?kanbanId=${kanbanId}`);
+        navigate(`/${projectId}?kanbanID=${kanbanId}`);
       }
     });
 
@@ -217,7 +213,11 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     });
   };
 
-  return isLoaded ? (
+  if (!isLoaded) {
+    return null;
+  }
+
+  return (
     <ProjectModalLayout $isShow={isTodoShow}>
       <ProjectModalTabBox $marginLeft={19.5}>
         <ProjectModalTabBackground $color={todoTabColor} />
@@ -290,5 +290,5 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         </div>
       </TodoContainer>
     </ProjectModalLayout>
-  ) : null;
+  );
 }
