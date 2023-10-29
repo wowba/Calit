@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
+import { getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import settingIcon from "../../../assets/icons/settingIcon.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
@@ -25,20 +25,44 @@ const Contour = styled.div`
   margin: 0.5rem auto;
 `;
 const UpdateContent = styled.div`
-  margin: 2rem 0;
+  margin: 1rem 0 2rem;
   border-radius: 10px;
   background-color: white;
   padding: 1rem;
 `;
 
-export default function UpdateContentBox({ data }: any) {
+export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const { name, profile_img_URL: profileImgUrl } =
     useRecoilValue(userState).userData;
 
   const [markdownContent, setMarkdownContent] = useState(data.detail);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleMarkdownChange = (edit: any) => {
     setMarkdownContent(edit);
+  };
+
+  const handleButtonClick = async () => {
+    if (isEditing) {
+      const todoSnap: any = await getDoc(todoRef);
+      const getUpdateContents = todoSnap.data().update_list;
+      // 변경된 데이터가 반영된 배열 생성
+      const newUpdateContents = getUpdateContents.map(
+        (updateContent: object, index: number) => {
+          if (index === updateIndex) {
+            return {
+              ...updateContent,
+              detail: markdownContent,
+            };
+          }
+          return updateContent;
+        },
+      );
+      await updateDoc(todoRef, {
+        update_list: newUpdateContents,
+      });
+    }
+    setIsEditing(!isEditing);
   };
 
   return (
@@ -59,15 +83,16 @@ export default function UpdateContentBox({ data }: any) {
         </ManagedUser>
         <SettingContainer>
           <span>{yearMonthDayFormat(data.created_date.seconds)}</span>
-          <img src={settingIcon} alt="설정" />
+          <button type="button" onClick={handleButtonClick}>
+            <img src={settingIcon} alt="설정" />
+          </button>
         </SettingContainer>
       </UpdateListHeader>
       <Contour />
       <MDEditor
         value={markdownContent}
-        /* @ts-ignore */
         onChange={handleMarkdownChange}
-        preview="preview"
+        preview={isEditing ? "edit" : "preview"}
       />
     </UpdateContent>
   );

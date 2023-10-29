@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
@@ -6,7 +5,14 @@ import { getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import userState from "../../../recoil/atoms/login/userDataState";
 import UpdateContentBox from "./UpdateContent";
+import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
+const AddUpdateTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 0.7rem;
+`;
 const UpdateContainer = styled.div`
   background-color: #eaeaea;
   height: auto;
@@ -17,7 +23,7 @@ const UpdateContainer = styled.div`
 `;
 const UpdateList = styled.div`
   max-height: 23rem;
-  margin: 1rem 0;
+  margin: 0 0 1rem;
 `;
 
 interface UpdateContentInterface {
@@ -53,21 +59,47 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
   return (
     <div style={{ height: "80%" }}>
       <UpdateContainer>
-        <span>업데이트 입력🌸</span>
-        <button type="submit" onClick={handleSubmit}>
-          등록
-        </button>
+        <AddUpdateTitle>
+          <span
+            style={{
+              fontWeight: "900",
+              fontSize: "1.2rem",
+            }}
+          >
+            업데이트 등록
+          </span>
+          <ConfirmBtn
+            type="submit"
+            onClick={handleSubmit}
+            $dynamicWidth="3.5rem"
+          >
+            등록
+          </ConfirmBtn>
+        </AddUpdateTitle>
 
         {/* @ts-ignore */}
         <MDEditor value={value} onChange={setValue} preview="edit" />
-
+        <span
+          style={{
+            fontWeight: "900",
+            fontSize: "1.2rem",
+            margin: "1.5rem 0 0",
+            display: "inline-block",
+          }}
+        >
+          업데이트 내역
+        </span>
         <UpdateList>
-          {todoDataState.todoData.update_list.map((updateContent: any) => (
-            <UpdateContentBox
-              key={updateContent.created_date.seconds}
-              data={updateContent}
-            />
-          ))}
+          {todoDataState.todoData.update_list.map(
+            (updateContent: any, index: number) => (
+              <UpdateContentBox
+                key={updateContent.created_date.seconds}
+                data={updateContent}
+                todoRef={todoRef}
+                updateIndex={index}
+              />
+            ),
+          )}
         </UpdateList>
       </UpdateContainer>
     </div>
