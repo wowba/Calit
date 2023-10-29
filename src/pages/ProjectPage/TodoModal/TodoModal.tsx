@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import queryString from "query-string";
 import {
   doc,
   getDoc,
@@ -93,9 +92,14 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const [startDate, setStartDate] = useState(new Date());
 
   const projectId = window.location.pathname.substring(1);
-  const parsed = queryString.parse(window.location.search);
-  const kanbanId = parsed.kanbanID ? String(parsed.kanbanID) : "null";
-  const todoId = parsed.todoID ? String(parsed.todoID) : "null";
+
+  const urlQueryString = new URLSearchParams(window.location.search);
+  const kanbanId = urlQueryString.get("kanbanID")
+    ? String(urlQueryString.get("kanbanID"))
+    : "null";
+  const todoId = urlQueryString.get("todoID")
+    ? String(urlQueryString.get("todoID"))
+    : "null";
 
   const todoRef = doc(
     db,
@@ -138,7 +142,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         await fetchData();
       } else {
         unsub();
-        navigate("/");
+        navigate(`/${projectId}?kanbanId=${kanbanId}`);
       }
     });
 
@@ -282,7 +286,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         <div>
           <TodoTitle>업데이트</TodoTitle>
           <Contour />
-          {/* <MarkdownEditor /> */}
+          {/* <MarkdownEditor todoRef={todoRef} /> */}
         </div>
       </TodoContainer>
     </ProjectModalLayout>
