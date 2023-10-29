@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
+import queryString from "query-string";
 import {
   doc,
   getDoc,
@@ -92,13 +93,11 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
 
   const [startDate, setStartDate] = useState(new Date());
 
-  const projectId = useLocation().pathname.substring(1);
-  const queryString = useLocation().search;
-  const kanbanId = queryString.substring(
-    queryString.lastIndexOf("kanbanID=") + 9,
-    queryString.indexOf("&"),
-  );
-  const todoId = queryString.substring(queryString.lastIndexOf("todoID=") + 7);
+  const projectId = window.location.pathname.substring(1);
+  const parsed = queryString.parse(window.location.search);
+  const kanbanId = parsed.kanbanID ? String(parsed.kanbanID) : "null";
+  const todoId = parsed.todoID ? String(parsed.todoID) : "null";
+
   const todoRef = doc(
     db,
     "project",
@@ -111,44 +110,42 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
 
   // todo 문서 snapshot
   useEffect(() => {
-    const unsub =
-      isTodoShow &&
-      onSnapshot(todoRef, async (todoDoc) => {
-        if (todoDoc.exists() && !todoDoc.data().is_deleted) {
-          // setTodoDataState({ todoData: todoDoc.data() });
-          setIsLoaded(true);
-          setInputTodoName(todoDoc.data().name);
-          setInputTodoInfo(todoDoc.data().info);
-          setStartDate(todoDoc.data().deadline.toDate());
+    if (!isTodoShow) {
+      return;
+    }
+    const unsub = onSnapshot(todoRef, async (todoDoc) => {
+      if (todoDoc.exists() && !todoDoc.data().is_deleted) {
+        // setTodoDataState({ todoData: todoDoc.data() });
+        setIsLoaded(true);
+        setInputTodoName(todoDoc.data().name);
+        setInputTodoInfo(todoDoc.data().info);
+        setStartDate(todoDoc.data().deadline.toDate());
 
-          const fetchData = async () => {
-            const data = await Promise.all(
-              todoDoc.data().user_list.map(async (id: string) => {
-                const userRef = doc(db, "user", id);
-                const userSnap: any = await getDoc(userRef);
-                return {
-                  userImage: userSnap.data().profile_img_URL,
-                  userName: userSnap.data().name,
-                  userEmail: userSnap.data().email,
-                };
-              }),
-            );
-            setUserData(data);
-          };
+        const fetchData = async () => {
+          const data = await Promise.all(
+            todoDoc.data().user_list.map(async (id: string) => {
+              const userRef = doc(db, "user", id);
+              const userSnap: any = await getDoc(userRef);
+              return {
+                userImage: userSnap.data().profile_img_URL,
+                userName: userSnap.data().name,
+                userEmail: userSnap.data().email,
+              };
+            }),
+          );
+          setUserData(data);
+        };
 
-          await fetchData();
-        } else {
-          // @ts-ignore
-          unsub();
-          navigate("/");
-        }
-      });
-
-    return () => {
-      if (isTodoShow) {
-        // @ts-ignore
+        await fetchData();
+      } else {
         unsub();
+        navigate("/");
       }
+    });
+
+    // eslint-disable-next-line consistent-return
+    return () => {
+      unsub();
       setIsLoaded(false);
     };
   }, [todoId, isTodoShow]);
@@ -279,15 +276,13 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
                 // onKeyDown={handleEnterPress}
                 onChange={handleChange}
                 onBlur={handleFocus}
-              >
-                {}
-              </CommonTextArea>
+              />
             </InfoContainer>
           </div>
         </div>
         <div>
           <TodoTitle>업데이트</TodoTitle>
-          <Contour>{}</Contour>
+          <Contour />
           {/* <MarkdownEditor /> */}
         </div>
       </TodoContainer>
