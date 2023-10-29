@@ -45,7 +45,7 @@ const HeaderIconBox = styled.div`
   align-items: center;
   height: 100%;
 
-  div:not(:last-of-type) {
+  > div:not(:last-of-type) {
     margin-right: 1rem;
   }
   img:hover {
