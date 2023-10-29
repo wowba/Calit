@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import {
   doc,
@@ -173,7 +172,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   //   }
   // };
   // 2. Focus 상태
-  const handleFocus = async (e: any) => {
+  const handleFocus = async () => {
     if (inputTodoName) {
       await updateDoc(todoRef, {
         name: inputTodoName,
