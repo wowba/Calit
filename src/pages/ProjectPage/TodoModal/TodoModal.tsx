@@ -216,7 +216,16 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   };
 
   if (!isLoaded) {
-    return null;
+    return (
+      <ProjectModalLayout $isShow={isTodoShow}>
+        <ProjectModalTabBox $marginLeft={19.5}>
+          <ProjectModalTabBackground $color={todoTabColor} />
+          <ProjectModalTabText $top={0.4} $left={3.3}>
+            Todo
+          </ProjectModalTabText>
+        </ProjectModalTabBox>
+      </ProjectModalLayout>
+    );
   }
 
   return (
