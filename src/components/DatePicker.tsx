@@ -27,14 +27,14 @@ const StyledReactDatePicker = styled(ReactDatePicker)<Props>`
   outline: none;
 
   &:focus {
-    border-color: black;
+    border-color: #adadad;
   }
 
   ${(props) =>
     props.$isHover &&
     css`
       &:hover {
-        border-color: black;
+        border-color: #adadad;
       }
     `}
 `;

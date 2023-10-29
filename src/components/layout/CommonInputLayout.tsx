@@ -26,14 +26,14 @@ const CommonInputLayout = styled.input<Props>`
   outline: none;
 
   &:focus {
-    border-color: black;
+    border-color: #adadad;
   }
 
   ${(props) =>
     props.$isHover &&
     css`
       &:hover {
-        border-color: black;
+        border-color: #adadad;
       }
     `}
 `;

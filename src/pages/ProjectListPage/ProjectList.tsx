@@ -49,7 +49,7 @@ export default function ProjectList() {
 
   useEffect(() => {
     fetchProjectData();
-  }, [name, projectImgUrl, projectIntro]);
+  }, [name, projectImgUrl, projectIntro, projectList]);
 
   return (
     <div>
