@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
+import { useRecoilState } from "recoil";
 import { db } from "../../../firebaseSDK";
 import {
   ProjectModalLayout,
@@ -18,8 +19,9 @@ import {
 } from "../../../components/layout/ProjectModalLayout";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import CommonTextArea from "../../../components/layout/CommonTextArea";
-// import MarkdownEditor from "./MarkdownEditor";
+import MarkdownEditor from "./MarkdownEditor";
 import DatePicker from "../../../components/DatePicker";
+import todoState from "../../../recoil/atoms/todo/todoState";
 
 type Props = {
   todoTabColor: string;
@@ -80,7 +82,7 @@ const Contour = styled.div`
 
 export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const [isLoaded, setIsLoaded] = useState(false);
-  // const [todoDataState, setTodoDataState] = useRecoilState(todoState);
+  const [todoDataState, setTodoDataState] = useRecoilState(todoState);
   const navigate = useNavigate();
   const [userData, setUserData] = useState<any[]>([]);
 
@@ -114,7 +116,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     }
     const unsub = onSnapshot(todoRef, async (todoDoc) => {
       if (todoDoc.exists() && !todoDoc.data().is_deleted) {
-        // setTodoDataState({ todoData: todoDoc.data() });
+        setTodoDataState({ todoData: todoDoc.data() });
         setIsLoaded(true);
         setInputTodoName(todoDoc.data().name);
         setInputTodoInfo(todoDoc.data().info);
@@ -286,7 +288,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         <div>
           <TodoTitle>업데이트</TodoTitle>
           <Contour />
-          {/* <MarkdownEditor todoRef={todoRef} /> */}
+          <MarkdownEditor todoRef={todoRef} todoDataState={todoDataState} />
         </div>
       </TodoContainer>
     </ProjectModalLayout>
