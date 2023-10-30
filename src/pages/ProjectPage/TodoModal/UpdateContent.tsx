@@ -6,10 +6,10 @@ import { useRecoilValue } from "recoil";
 import settingIcon from "../../../assets/icons/settingIcon.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import userState from "../../../recoil/atoms/login/userDataState";
-import { ChangeComponentModal } from "../../ProjectListPage/ProjectIconContainer";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import pencilIcon from "../../../assets/icons/pencilIcon.svg";
 import reloadIcon from "../../../assets/icons/reloadIcon.svg";
+import CommonSettingModal from "../../../components/layout/CommonSettingModal";
 
 const UpdateListHeader = styled.div`
   display: flex;
@@ -36,16 +36,10 @@ const UpdateContent = styled.div`
   padding: 1rem;
 `;
 
-const ChangeUpdateModal = styled(ChangeComponentModal)`
+const ChangeUpdateModal = styled(CommonSettingModal)`
   bottom: -2rem;
   right: 0;
   height: 2rem;
-  box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: 1px 2px 6px 3px rgba(0, 0, 0, 0.2);
-  > :first-child {
-    margin: 0 0.5rem 0 0;
-  }
 `;
 
 export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
@@ -132,7 +126,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
             <img src={settingIcon} alt="설정" />
           </button>
           {isSettingOpened && (
-            <ChangeUpdateModal>
+            <ChangeUpdateModal $upArrow>
               {isEditing ? (
                 <>
                   <button type="button" onClick={handleButtonClick}>
