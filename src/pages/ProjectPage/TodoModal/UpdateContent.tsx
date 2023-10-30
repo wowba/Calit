@@ -63,18 +63,18 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const handleMarkdownChange = (edit: any) => {
     setMarkdownContent(edit);
   };
-
+  // 업데이트 컴포넌트 변경 취소
   const handleCancleClick = () => {
     setMarkdownContent(originalMarkdownContent);
     setIsEditing(!isEditing);
     setIsSettingOpened(!isSettingOpened);
   };
-
+  // 업데이트 컴포넌트 수정
   const handleButtonClick = async () => {
     if (isEditing) {
       const todoSnap: any = await getDoc(todoRef);
       const getUpdateContents = todoSnap.data().update_list.slice().reverse();
-      // 변경된 데이터가 반영된 배열 생성
+
       const newUpdateContents = getUpdateContents.map(
         (updateContent: object, index: number) => {
           if (index === updateIndex) {
@@ -89,10 +89,23 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
       await updateDoc(todoRef, {
         update_list: newUpdateContents.slice().reverse(),
       });
+      setIsSettingOpened(!isSettingOpened);
     }
     setOriginalMarkdownContent(markdownContent);
     setIsEditing(!isEditing);
-    if (isEditing) setIsSettingOpened(!isSettingOpened);
+  };
+  // 업데이트 컴포넌트 삭제
+  const handleDeleteClick = async () => {
+    const todoSnap: any = await getDoc(todoRef);
+    const getUpdateContents = todoSnap.data().update_list.slice().reverse();
+    const newUpdateContents = getUpdateContents
+      .filter((_: object, index: number) => index !== updateIndex)
+      .slice()
+      .reverse();
+    await updateDoc(todoRef, {
+      update_list: newUpdateContents,
+    });
+    setIsSettingOpened(!isSettingOpened);
   };
 
   return (
@@ -140,7 +153,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
                 </button>
               )}
 
-              <button type="button">
+              <button type="button" onClick={handleDeleteClick}>
                 <img src={trashIcon} alt="삭제" />
               </button>
             </ChangeUpdateModal>
