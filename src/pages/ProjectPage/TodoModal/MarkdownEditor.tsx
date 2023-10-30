@@ -90,17 +90,16 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
           업데이트 내역
         </span>
         <UpdateList>
-          {todoDataState.todoData.update_list
-            .slice()
-            .reverse()
-            .map((updateContent: any, index: number) => (
+          {todoDataState.todoData.update_list.map(
+            (updateContent: any, index: number) => (
               <UpdateContentBox
                 key={updateContent.created_date.seconds}
                 data={updateContent}
                 todoRef={todoRef}
                 updateIndex={index}
               />
-            ))}
+            ),
+          )}
         </UpdateList>
       </UpdateContainer>
     </div>
