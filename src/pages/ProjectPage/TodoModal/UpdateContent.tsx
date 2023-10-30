@@ -6,6 +6,10 @@ import { useRecoilValue } from "recoil";
 import settingIcon from "../../../assets/icons/settingIcon.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import userState from "../../../recoil/atoms/login/userDataState";
+import trashIcon from "../../../assets/icons/trashIcon.svg";
+import pencilIcon from "../../../assets/icons/pencilIcon.svg";
+import reloadIcon from "../../../assets/icons/reloadIcon.svg";
+import CommonSettingModal from "../../../components/layout/CommonSettingModal";
 
 const UpdateListHeader = styled.div`
   display: flex;
@@ -16,6 +20,7 @@ const ManagedUser = styled.div`
 `;
 const SettingContainer = styled.div`
   display: flex;
+  position: relative;
 `;
 
 const Contour = styled.div`
@@ -31,22 +36,39 @@ const UpdateContent = styled.div`
   padding: 1rem;
 `;
 
+const ChangeUpdateModal = styled(CommonSettingModal)`
+  bottom: -2rem;
+  right: 0;
+  height: 2rem;
+`;
+
 export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const { name, profile_img_URL: profileImgUrl } =
     useRecoilValue(userState).userData;
 
   const [markdownContent, setMarkdownContent] = useState(data.detail);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSettingOpened, setIsSettingOpened] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [originalMarkdownContent, setOriginalMarkdownContent] = useState(
+    data.detail,
+  );
 
   const handleMarkdownChange = (edit: any) => {
     setMarkdownContent(edit);
   };
-
+  // 업데이트 컴포넌트 변경 취소
+  const handleCancleClick = () => {
+    setMarkdownContent(originalMarkdownContent);
+    setIsEditing(!isEditing);
+    setIsSettingOpened(!isSettingOpened);
+  };
+  // 업데이트 컴포넌트 수정
   const handleButtonClick = async () => {
     if (isEditing) {
       const todoSnap: any = await getDoc(todoRef);
       const getUpdateContents = todoSnap.data().update_list;
-      // 변경된 데이터가 반영된 배열 생성
+
       const newUpdateContents = getUpdateContents.map(
         (updateContent: object, index: number) => {
           if (index === updateIndex) {
@@ -61,8 +83,22 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
       await updateDoc(todoRef, {
         update_list: newUpdateContents,
       });
+      setIsSettingOpened(!isSettingOpened);
     }
+    setOriginalMarkdownContent(markdownContent);
     setIsEditing(!isEditing);
+  };
+  // 업데이트 컴포넌트 삭제
+  const handleDeleteClick = async () => {
+    const todoSnap: any = await getDoc(todoRef);
+    const getUpdateContents = todoSnap.data().update_list;
+    const newUpdateContents = getUpdateContents.filter(
+      (_: object, index: number) => index !== updateIndex,
+    );
+    await updateDoc(todoRef, {
+      update_list: newUpdateContents,
+    });
+    setIsSettingOpened(!isSettingOpened);
   };
 
   return (
@@ -83,9 +119,38 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
         </ManagedUser>
         <SettingContainer>
           <span>{yearMonthDayFormat(data.created_date.seconds)}</span>
-          <button type="button" onClick={handleButtonClick}>
+          <button
+            type="button"
+            onClick={() => setIsSettingOpened(!isSettingOpened)}
+          >
             <img src={settingIcon} alt="설정" />
           </button>
+          {isSettingOpened && (
+            <ChangeUpdateModal $upArrow>
+              {isEditing ? (
+                <>
+                  <button type="button" onClick={handleButtonClick}>
+                    <img src={pencilIcon} alt="완료" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancleClick}
+                    style={{ margin: "0 0.5rem 0 0" }}
+                  >
+                    <img src={reloadIcon} alt="취소" />
+                  </button>
+                </>
+              ) : (
+                <button type="button" onClick={handleButtonClick}>
+                  <img src={pencilIcon} alt="수정" />
+                </button>
+              )}
+
+              <button type="button" onClick={handleDeleteClick}>
+                <img src={trashIcon} alt="삭제" />
+              </button>
+            </ChangeUpdateModal>
+          )}
         </SettingContainer>
       </UpdateListHeader>
       <Contour />

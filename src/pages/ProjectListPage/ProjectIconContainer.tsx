@@ -15,10 +15,10 @@ import settingIcon from "../../assets/icons/settingIcon.svg";
 import linkIcon from "../../assets/icons/linkIcon.svg";
 import pictureIcon from "../../assets/icons/pictureIcon.svg";
 import trashIcon from "../../assets/icons/trashIcon.svg";
-import Arrow from "../../assets/images/Arrow.svg";
 import DeleteModal from "./DeleteModal";
 import deleteStorageImg from "../../utils/deleteStorageImg";
 import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
+import CommonSettingModal from "../../components/layout/CommonSettingModal";
 
 const Container = styled.div`
   display: flex;
@@ -34,24 +34,11 @@ const LinkIcon = styled.img`
   z-index: 2;
   cursor: pointer;
 `;
-const ChangeCardModal = styled.div`
-  display: flex;
-  background-color: #ededed;
-  border-radius: 4px;
-  padding: 0.3rem 0.5rem;
-  position: absolute;
+const ChangeComponentModal = styled(CommonSettingModal)`
   bottom: -2rem;
-  box-shadow: 11px 21px 75px -24px rgba(0, 0, 0, 1);
-  -webkit-box-shadow: 11px 21px 75px -24px rgba(0, 0, 0, 1);
-  -moz-box-shadow: 11px 21px 75px -24px rgba(0, 0, 0, 1);
-  z-index: 2;
-  &:before {
-    content: url(${Arrow});
-    position: absolute;
-    top: -1rem;
-    right: 0.35rem;
-    fill: #d9d9d9;
-  }
+  // box-shadow: 11px 21px 75px -24px rgba(0, 0, 0, 1);
+  // -webkit-box-shadow: 11px 21px 75px -24px rgba(0, 0, 0, 1);
+  // -moz-box-shadow: 11px 21px 75px -24px rgba(0, 0, 0, 1);
 `;
 
 const ChangePicInput = styled.input`
@@ -151,7 +138,7 @@ export default function ProjectIconContainer({
           <SettingIcon src={settingIcon} alt="설정" onClick={handleClick} />
         )}
         {isOpened && (
-          <ChangeCardModal>
+          <ChangeComponentModal $upArrow $dynamicChildMargin="0.01rem">
             <label htmlFor="file-input">
               <ChangeIcon src={pictureIcon} alt="변경" />
               {}
@@ -164,7 +151,7 @@ export default function ProjectIconContainer({
             </label>
 
             <DeleteIcon src={trashIcon} alt="삭제" onClick={handleOpen} />
-          </ChangeCardModal>
+          </ChangeComponentModal>
         )}
       </Container>
       {openModal && (
