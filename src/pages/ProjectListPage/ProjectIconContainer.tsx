@@ -34,7 +34,7 @@ const LinkIcon = styled.img`
   z-index: 2;
   cursor: pointer;
 `;
-const ChangeCardModal = styled.div`
+export const ChangeComponentModal = styled.div`
   display: flex;
   background-color: #ededed;
   border-radius: 4px;
@@ -151,7 +151,7 @@ export default function ProjectIconContainer({
           <SettingIcon src={settingIcon} alt="설정" onClick={handleClick} />
         )}
         {isOpened && (
-          <ChangeCardModal>
+          <ChangeComponentModal>
             <label htmlFor="file-input">
               <ChangeIcon src={pictureIcon} alt="변경" />
               {}
@@ -164,7 +164,7 @@ export default function ProjectIconContainer({
             </label>
 
             <DeleteIcon src={trashIcon} alt="삭제" onClick={handleOpen} />
-          </ChangeCardModal>
+          </ChangeComponentModal>
         )}
       </Container>
       {openModal && (
