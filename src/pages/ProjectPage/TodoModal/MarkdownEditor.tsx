@@ -48,7 +48,7 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
     };
     const todoSnap: any = await getDoc(todoRef);
     const updateContents = todoSnap.data().update_list;
-    updateContents.push(newUpdateContent);
+    updateContents.unshift(newUpdateContent);
     updateDoc(todoRef, {
       update_list: updateContents,
       modified_date: serverTimestamp(),

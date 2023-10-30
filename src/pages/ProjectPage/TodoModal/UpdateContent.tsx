@@ -73,7 +73,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const handleButtonClick = async () => {
     if (isEditing) {
       const todoSnap: any = await getDoc(todoRef);
-      const getUpdateContents = todoSnap.data().update_list.slice().reverse();
+      const getUpdateContents = todoSnap.data().update_list;
 
       const newUpdateContents = getUpdateContents.map(
         (updateContent: object, index: number) => {
@@ -87,7 +87,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
         },
       );
       await updateDoc(todoRef, {
-        update_list: newUpdateContents.slice().reverse(),
+        update_list: newUpdateContents,
       });
       setIsSettingOpened(!isSettingOpened);
     }
@@ -97,11 +97,10 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   // 업데이트 컴포넌트 삭제
   const handleDeleteClick = async () => {
     const todoSnap: any = await getDoc(todoRef);
-    const getUpdateContents = todoSnap.data().update_list.slice().reverse();
-    const newUpdateContents = getUpdateContents
-      .filter((_: object, index: number) => index !== updateIndex)
-      .slice()
-      .reverse();
+    const getUpdateContents = todoSnap.data().update_list;
+    const newUpdateContents = getUpdateContents.filter(
+      (_: object, index: number) => index !== updateIndex,
+    );
     await updateDoc(todoRef, {
       update_list: newUpdateContents,
     });
