@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 import Stage from "./Stage";
@@ -18,6 +18,7 @@ type Props = {
 
 export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const TestBtn = styled.button`
     margin: 10px;
@@ -39,6 +40,38 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
       todoID: "5678",
     });
   };
+
+  useEffect(() => {
+    if (!isKanbanShow) {
+      return;
+    }
+    setIsLoaded(true);
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <ProjectModalLayout $isShow={isKanbanShow}>
+        <ProjectModalTabBox $marginLeft={10.75}>
+          <ProjectModalTabBackground $color={kanbanTabColor} />
+          <ProjectModalTabText $top={0.4} $left={2.8}>
+            Kanban
+          </ProjectModalTabText>
+        </ProjectModalTabBox>
+        <ProjectModalContentBox>
+          <TestBtn type="button" onClick={() => handleCalClick()}>
+            calender
+          </TestBtn>
+          <TestBtn type="button" onClick={() => handlekanbanCLick()}>
+            kanban
+          </TestBtn>
+          <TestBtn type="button" onClick={() => handleTodoCLick()}>
+            todo
+          </TestBtn>
+          <div>kanban</div>
+        </ProjectModalContentBox>
+      </ProjectModalLayout>
+    );
+  }
 
   return (
     <ProjectModalLayout $isShow={isKanbanShow}>
