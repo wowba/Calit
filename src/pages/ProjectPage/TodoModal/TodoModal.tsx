@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import {
   doc,
-  getDoc,
   onSnapshot,
   serverTimestamp,
   updateDoc,
@@ -22,6 +21,7 @@ import CommonTextArea from "../../../components/layout/CommonTextArea";
 import MarkdownEditor from "./MarkdownEditor";
 import DatePicker from "../../../components/DatePicker";
 import todoState from "../../../recoil/atoms/todo/todoState";
+import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
 
 type Props = {
   todoTabColor: string;
@@ -46,22 +46,7 @@ const TodoSubtitle = styled.div`
   font-size: 1.1rem;
   margin: 0 1rem 1rem 0;
 `;
-const ManagedUser = styled.div`
-  background-color: pink;
-  border-radius: 8px;
-  display: inline-block;
-  white-space: nowrap;
-  padding: 5px 7px;
-  margin: 0 0.5rem 0 0;
-`;
-const ProfileImg = styled.img`
-  border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 0.5rem 0 0;
-`;
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: 4.5rem 1fr;
@@ -84,7 +69,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [todoDataState, setTodoDataState] = useRecoilState(todoState);
   const navigate = useNavigate();
-  const [userData, setUserData] = useState<any[]>([]);
+  const [userList, setUserList] = useState<any[]>([]);
 
   const [inputTodoName, setInputTodoName] = useState("");
   const [inputTodoInfo, setInputTodoInfo] = useState("");
@@ -121,23 +106,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         setInputTodoName(todoDoc.data().name);
         setInputTodoInfo(todoDoc.data().info);
         setStartDate(todoDoc.data().deadline.toDate());
-
-        const fetchData = async () => {
-          const data = await Promise.all(
-            todoDoc.data().user_list.map(async (id: string) => {
-              const userRef = doc(db, "user", id);
-              const userSnap: any = await getDoc(userRef);
-              return {
-                userImage: userSnap.data().profile_img_URL,
-                userName: userSnap.data().name,
-                userEmail: userSnap.data().email,
-              };
-            }),
-          );
-          setUserData(data);
-        };
-
-        await fetchData();
+        setUserList(todoDoc.data().user_list);
       } else {
         unsub();
         navigate(`/${projectId}?kanbanID=${kanbanId}`);
@@ -179,6 +148,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
       await updateDoc(todoRef, {
         name: inputTodoName,
         info: inputTodoInfo,
+        user_list: userList,
         modified_date: serverTimestamp(),
       });
     } else {
@@ -201,18 +171,6 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         modified_date: serverTimestamp(),
       });
     }
-  };
-
-  // 담당자 삭제
-  const handleDeleteUser = async (email: any) => {
-    const userEmailList = userData.map((user) => user.userEmail);
-    const updateManagedUser = userEmailList.filter(
-      (curEmail: string) => curEmail !== email,
-    );
-    await updateDoc(todoRef, {
-      user_list: updateManagedUser,
-      modified_date: serverTimestamp(),
-    });
   };
 
   if (!isLoaded) {
@@ -254,17 +212,12 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
           <div>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
-              <div>
-                {userData.map((user: any) => (
-                  <ManagedUser
-                    onClick={() => handleDeleteUser(user.userEmail)}
-                    key={user.userName}
-                  >
-                    <ProfileImg src={user.userImage} alt="User Profile" />
-                    <span>{user.userName}</span>
-                  </ManagedUser>
-                ))}
-              </div>
+              <CommonSelectMemberLayout
+                userList={userList}
+                setUserList={setUserList}
+                // eslint-disable-next-line no-console
+                onBlur={handleFocus}
+              />
             </UserListContainer>
             <DeadlineContainer>
               <TodoSubtitle>마감일</TodoSubtitle>
