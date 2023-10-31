@@ -23,7 +23,6 @@ const ProjectModalTabBox = styled.div<{ $marginLeft: number }>`
   width: 9rem;
   position: relative;
   transform: translate(${(props) => `${props.$marginLeft}rem`}, -2rem);
-  z-index: 1000;
 `;
 
 const ProjectModalTabBackground = styled(ProjectModalTabSVG)<{
