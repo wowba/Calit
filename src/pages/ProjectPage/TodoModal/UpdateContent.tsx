@@ -30,7 +30,7 @@ const Contour = styled.div`
   margin: 0.5rem auto;
 `;
 const UpdateContent = styled.div`
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 1rem;
   border-radius: 10px;
   background-color: white;
   padding: 1rem;
@@ -109,10 +109,11 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
             src={profileImgUrl}
             alt="프로필사진"
             style={{
-              width: "3rem",
-              height: "3rem",
+              width: "1.5rem",
+              height: "1.5rem",
               objectFit: "cover",
               borderRadius: "50%",
+              margin: "0 0.5rem 0 0",
             }}
           />
           {name}
@@ -154,11 +155,22 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
         </SettingContainer>
       </UpdateListHeader>
       <Contour />
-      <MDEditor
-        value={markdownContent}
-        onChange={handleMarkdownChange}
-        preview={isEditing ? "edit" : "preview"}
-      />
+      {isEditing ? (
+        <MDEditor
+          value={markdownContent}
+          onChange={handleMarkdownChange}
+          preview={isEditing ? "edit" : "preview"}
+          hideToolbar={false}
+        />
+      ) : (
+        <MDEditor
+          value={markdownContent}
+          onChange={handleMarkdownChange}
+          preview={isEditing ? "edit" : "preview"}
+          // eslint-disable-next-line react/jsx-boolean-value
+          hideToolbar={true}
+        />
+      )}
     </UpdateContent>
   );
 }
