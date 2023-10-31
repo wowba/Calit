@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useSearchParams } from "react-router-dom";
-import { serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { createTodo } from "../../../api/CreateCollection";
+import todoState from "../../../recoil/atoms/todo/todoState";
 import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
+import { db } from "../../../firebaseSDK";
 
 const StageLayout = styled.div`
   display: flex;
@@ -81,10 +91,60 @@ interface Props {
 }
 
 export default function Stage({ stageLists }: Props) {
-  console.log("stage info", stageLists);
   const [searchParams] = useSearchParams();
+  const [todoLists, setTodoLists] = useState<any[]>();
   const projectID = window.location.pathname.substring(1)!;
   const kanbanID = searchParams.get("kanbanID")!;
+  // const [todoDataState] = useRecoilState(todoState);
+  // const [todoData, setTodoData] = useState(todoDataState);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setTodoDataState = useSetRecoilState(todoState);
+
+  // console.log(stageLists, todoLists);
+
+  useEffect(() => {
+    const todoQuery = query(
+      collection(db, "project", projectID, "kanban", kanbanID, "todo"),
+      where("is_deleted", "==", false),
+    );
+
+    // setTodoDataState({ todoData: new Map() });
+    const unsubTodo = onSnapshot(todoQuery, (todoSnapshot) => {
+      const addedMap = new Map();
+      const todos: any[] = [];
+      todoSnapshot.docChanges().forEach((change) => {
+        // console.log(change.type);
+        todos.push(change.doc.data());
+        if (change.type === "added") {
+          addedMap.set(change.doc.id, change.doc.data());
+        }
+
+        // if (change.type === "modified") {
+        //   setTodoDataState((prev) => {
+        //     prev.set(change.doc.id, change.doc.data());
+        //     return new Map([...prev]);
+        //   });
+        // }
+        // // 칸반이 삭제된 경우 (is_deleted 수정 시 쿼리 결과 변경)
+        // if (change.type === "removed") {
+        //   setTodoDataState((prev) => {
+        //     prev.delete(change.doc.id);
+        //     return new Map([...prev]);
+        //   });
+        // }
+
+        // if (addedMap.size > 0) {
+        //   setTodoDataState((todoData) => new Map([...prev, ...addedMap]));
+        // }
+        setTodoLists(todos);
+      });
+    });
+
+    return () => {
+      unsubTodo();
+    };
+  }, [kanbanID]);
 
   const handleTodoClick = async (stageOrder: number, stageName: string) => {
     await createTodo(projectID, kanbanID, {
@@ -99,7 +159,6 @@ export default function Stage({ stageLists }: Props) {
       deadline: new Date(),
       info: "내용",
     });
-    console.log("todo created");
   };
 
   return (
@@ -118,9 +177,16 @@ export default function Stage({ stageLists }: Props) {
             </StageIconBox>
           </StageInfoBox>
           <StageContentBox>
-            <StageContent>
-              <StageContentParagraph />
-            </StageContent>
+            {todoLists
+              ?.filter((stageTodo: any) => stageTodo.stageID === stage.name)
+              .map((todo: any) => (
+                <StageContent>
+                  <StageContentParagraph>
+                    {todo.name}
+                    {todo.info}
+                  </StageContentParagraph>
+                </StageContent>
+              ))}
           </StageContentBox>
         </StageBox>
       ))}

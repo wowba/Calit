@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebaseSDK";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import Stage from "./Stage";
-
+import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
+import trashIcon from "../../../assets/icons/trashIcon.svg";
 import {
   ProjectModalLayout,
   ProjectModalTabBackground,
@@ -43,9 +46,41 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const [stageLists, setStageLists] = useState([]);
+  const navigate = useNavigate();
   const kanbanDataState = useRecoilState(kanbanState);
   const setKanbanDataState = useSetRecoilState(kanbanState);
+  const projectID = window.location.pathname.substring(1);
   const kanbanID = searchParams.get("kanbanID")!;
+
+  const ProjectKanbanBox = styled.div`
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+  `;
+
+  const ProjectKanbanInfoBox = styled.div``;
+
+  const ProjectKanbanInfoInnerBox = styled.div`
+    display: flex;
+    justify-content: space-between;
+  `;
+
+  const ProjectKanbanTrashIcon = styled.img`
+    z-index: 2;
+    cursor: pointer;
+    padding: 0 1rem;
+  `;
+
+  const ProjectKanbanProgressBox = styled.div``;
+
+  const ProjectKanbanInfoParagraph = styled.p`
+    font-weight: bold;
+    font-size: 1.5rem;
+  `;
+
+  const ProjectKanbanDateParagraph = styled.p`
+    font-size: 0.75rem;
+  `;
 
   const TestBtn = styled.button`
     margin: 10px;
@@ -68,20 +103,30 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
     });
   };
 
+  const handleDelete = async () => {
+    const kanbanRef = doc(db, "project", projectID, "kanban", kanbanID);
+    const targetKanban = kanbanDataState[0]?.get(kanbanID);
+    await updateDoc(kanbanRef, {
+      is_deleted: true,
+    });
+    setKanbanDataState((prev) => {
+      prev.set(kanbanID, targetKanban);
+      return new Map([...prev]);
+    });
+    navigate("/");
+  };
+
   useEffect(() => {
     if (!isKanbanShow) {
       return;
     }
 
-    const targetKanban = kanbanDataState[0].get(kanbanID);
-    console.log(targetKanban);
-    console.log(targetKanban.stage_list);
+    const targetKanban = kanbanDataState[0]?.get(kanbanID);
     setKanbanDataState((prev) => {
       targetKanban.stage_list = DEFAULT_STAGES;
       prev.set(kanbanID, targetKanban);
       return new Map([...prev]);
     });
-    console.log("프로젝트 내 칸반 정보", kanbanDataState);
     setStageLists(targetKanban.stage_list);
     setIsLoaded(true);
   }, [kanbanID]);
@@ -105,7 +150,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
           <TestBtn type="button" onClick={() => handleTodoCLick()}>
             todo
           </TestBtn>
-          <div>kanbannnnn</div>
+          <div>kanban</div>
         </ProjectModalContentBox>
       </ProjectModalLayout>
     );
@@ -120,16 +165,28 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
         </ProjectModalTabText>
       </ProjectModalTabBox>
       <ProjectModalContentBox>
-        <TestBtn type="button" onClick={() => handleCalClick()}>
-          calender
-        </TestBtn>
-        <TestBtn type="button" onClick={() => handlekanbanCLick()}>
-          kanban
-        </TestBtn>
-        <TestBtn type="button" onClick={() => handleTodoCLick()}>
-          todo
-        </TestBtn>
-        <div>kanban</div>
+        <ProjectKanbanBox>
+          <ProjectKanbanInfoBox>
+            <ProjectKanbanInfoInnerBox>
+              <ProjectKanbanInfoParagraph>
+                {kanbanDataState[0].get(kanbanID).name}
+              </ProjectKanbanInfoParagraph>
+              <ProjectKanbanTrashIcon
+                src={trashIcon}
+                alt="칸반 삭제"
+                onClick={() => handleDelete()}
+              />
+            </ProjectKanbanInfoInnerBox>
+            <ProjectKanbanDateParagraph>
+              {`${yearMonthDayFormat(
+                kanbanDataState[0].get(kanbanID).created_date.seconds,
+              )} - ${yearMonthDayFormat(
+                kanbanDataState[0].get(kanbanID).end_date.seconds,
+              )}`}
+            </ProjectKanbanDateParagraph>
+          </ProjectKanbanInfoBox>
+          <ProjectKanbanProgressBox />
+        </ProjectKanbanBox>
         <Stage stageLists={stageLists} />
       </ProjectModalContentBox>
     </ProjectModalLayout>
