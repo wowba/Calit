@@ -237,6 +237,10 @@ export default function CalendarModal({
     setKanbanEvents(result);
   }, [kanbanDataState]);
 
+  const handleCalendarTabClick = () => {
+    setSearchParams();
+  };
+
   const handleSelect = (info: DateSelectArg) => {
     const calendarApi = info.view.calendar;
     setStartDate(info.start);
@@ -325,7 +329,7 @@ export default function CalendarModal({
 
   return (
     <ProjectModalLayout $isShow>
-      <ProjectModalTabBox $marginLeft={2}>
+      <ProjectModalTabBox $marginLeft={2} onClick={handleCalendarTabClick}>
         <ProjectModalTabBackground $color={calendarTabColor} />
         <ProjectModalTabText $top={0.4} $left={2.5}>
           Calender
