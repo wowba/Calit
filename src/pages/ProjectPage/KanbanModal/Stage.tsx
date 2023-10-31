@@ -1,5 +1,8 @@
 import React from "react";
 import { styled } from "styled-components";
+import { useSearchParams } from "react-router-dom";
+import { serverTimestamp } from "firebase/firestore";
+import { createTodo } from "../../../api/CreateCollection";
 import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 
@@ -79,6 +82,25 @@ interface Props {
 
 export default function Stage({ stageLists }: Props) {
   console.log("stage info", stageLists);
+  const [searchParams] = useSearchParams();
+  const projectID = window.location.pathname.substring(1)!;
+  const kanbanID = searchParams.get("kanbanID")!;
+
+  const handleTodoClick = async (stageOrder: number, stageName: string) => {
+    await createTodo(projectID, kanbanID, {
+      update_list: [],
+      user_list: [],
+      name: "테스트투두",
+      order: stageOrder,
+      created_date: serverTimestamp(),
+      modified_date: serverTimestamp(),
+      is_deleted: false,
+      stageID: stageName,
+      deadline: new Date(),
+      info: "내용",
+    });
+    console.log("todo created");
+  };
 
   return (
     <StageLayout>
@@ -88,7 +110,11 @@ export default function Stage({ stageLists }: Props) {
             {stage.name}
             <StageIconBox>
               <StageInfoTrashIcon src={trashIcon} alt="스테이지 삭제" />
-              <StageInfoPlusIcon src={icon_plus_circle} alt="투두 추가" />
+              <StageInfoPlusIcon
+                src={icon_plus_circle}
+                alt="투두 추가"
+                onClick={() => handleTodoClick(stage.order, stage.name)}
+              />
             </StageIconBox>
           </StageInfoBox>
           <StageContentBox>
