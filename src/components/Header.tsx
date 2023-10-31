@@ -23,12 +23,12 @@ import UserProfile from "./modal/UserProfileModal";
 import ModalCommon from "./layout/ModalCommonLayout";
 
 const HeaderLayout = styled.div`
-  height: 4rem;
+  height: 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0rem 1rem 0rem 1rem;
-  border-bottom: 1px solid #000000;
+  border-bottom: 1.5px solid #ebebeb;
 `;
 
 const HeaderLogoParagraph = styled.p`
@@ -62,25 +62,29 @@ const HeaderModalBox = styled.div`
 const modals = [
   {
     key: "member",
-    icon: <img src={memberIcon} alt="modalIcon" />,
+    icon: <img style={{ width: "1.5rem" }} src={memberIcon} alt="modalIcon" />,
     type: "project",
     content: <ProjectMember />,
   },
   {
     key: "bookmark",
-    icon: <img src={bookmarkIcon} alt="modalIcon" />,
+    icon: (
+      <img style={{ width: "1.5rem" }} src={bookmarkIcon} alt="modalIcon" />
+    ),
     type: "project",
     content: <BookMark />,
   },
   {
     key: "tutorial",
-    icon: <img src={tutorialIcon} alt="modalIcon" />,
+    icon: (
+      <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
+    ),
     type: "list",
     content: <Tutorial />,
   },
   {
     key: "log",
-    icon: <img src={logIcon} alt="modalIcon" />,
+    icon: <img style={{ width: "1.5rem" }} src={logIcon} alt="modalIcon" />,
     type: "project",
     content: <Log />,
   },
@@ -118,8 +122,8 @@ export default function Header() {
                 {modal.icon === "userProfile" ? (
                   <img
                     style={{
-                      width: "2.75rem",
-                      height: "2.75rem",
+                      width: "2rem",
+                      height: "2rem",
                       objectFit: "cover",
                       borderRadius: "50%",
                     }}
