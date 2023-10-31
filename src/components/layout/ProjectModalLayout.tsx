@@ -9,9 +9,9 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
 
   // 헤더 및 사이드바 CSS 변경시 width, height 수정 요망
   width: calc(100% - 14rem);
-  height: calc(100% - 7rem);
+  height: calc(100% - 5.5rem);
 
-  top: calc(5rem);
+  top: calc(3.75rem);
   ${(props) =>
     !props.$isShow &&
     css`

@@ -15,7 +15,7 @@ const SidebarLayout = styled.div`
   width: 14rem;
   height: 100%;
 
-  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  padding: 1rem 1.25rem 1.25rem 1.25rem;
 `;
 
 const ProjectInfoBox = styled.div`
@@ -32,7 +32,7 @@ const ProjectTitleParagraph = styled.p`
 
   font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.25rem;
 `;
 
 const ProjectProfileImg = styled.img`
