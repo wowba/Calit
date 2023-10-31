@@ -57,6 +57,10 @@ const StageContentParagraph = styled.p`
   }
 `;
 
+const StageIconBox = styled.div`
+  display: flex;
+`;
+
 const StageInfoTrashIcon = styled.img`
   height: 1rem;
   width: 1rem;
@@ -69,9 +73,32 @@ const StageInfoPlusIcon = styled.img`
   cursor: pointer;
 `;
 
-export default function Stage() {
+interface Props {
+  stageLists: any;
+}
+
+export default function Stage({ stageLists }: Props) {
+  console.log("stage info", stageLists);
+
   return (
     <StageLayout>
+      {stageLists.map((stage: any) => (
+        <StageBox>
+          <StageInfoBox>
+            {stage.name}
+            <StageIconBox>
+              <StageInfoTrashIcon src={trashIcon} alt="스테이지 삭제" />
+              <StageInfoPlusIcon src={icon_plus_circle} alt="투두 추가" />
+            </StageIconBox>
+          </StageInfoBox>
+          <StageContentBox>
+            <StageContent>
+              <StageContentParagraph />
+            </StageContent>
+          </StageContentBox>
+        </StageBox>
+      ))}
+
       <StageBox>
         <StageInfoBox>
           스테이지 추가하기

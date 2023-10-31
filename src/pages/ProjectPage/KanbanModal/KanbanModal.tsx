@@ -42,6 +42,7 @@ const DEFAULT_STAGES = [
 export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [stageLists, setStageLists] = useState([]);
   const kanbanDataState = useRecoilState(kanbanState);
   const setKanbanDataState = useSetRecoilState(kanbanState);
   const kanbanID = searchParams.get("kanbanID")!;
@@ -81,6 +82,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
       return new Map([...prev]);
     });
     console.log("프로젝트 내 칸반 정보", kanbanDataState);
+    setStageLists(targetKanban.stage_list);
     setIsLoaded(true);
   }, [kanbanID]);
 
@@ -128,7 +130,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
           todo
         </TestBtn>
         <div>kanban</div>
-        <Stage />
+        <Stage stageLists={stageLists} />
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );
