@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import Stage from "./Stage";
 
 import {
@@ -16,9 +18,35 @@ type Props = {
   isKanbanShow: boolean;
 };
 
+const DEFAULT_STAGES = [
+  {
+    name: "완료",
+    order: 0,
+    created_date: new Date(),
+    modified_date: new Date(),
+  },
+  {
+    name: "작업 중",
+    order: 1,
+    created_date: new Date(),
+    modified_date: new Date(),
+  },
+  {
+    name: "작업 전",
+    order: 2,
+    created_date: new Date(),
+    modified_date: new Date(),
+  },
+];
+
 export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoaded, setIsLoaded] = useState(false);
+  const kanbanDataState = useRecoilState(kanbanState);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setKanbanDataState = useSetRecoilState(kanbanState);
+  const kanbanID = searchParams.get("kanbanID")!;
+  // console.log("...", ...kanbanDataState, DEFAULT_STAGES);
 
   const TestBtn = styled.button`
     margin: 10px;
@@ -45,8 +73,18 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
     if (!isKanbanShow) {
       return;
     }
+
+    const targetKanban = kanbanDataState[0].get(kanbanID);
+    console.log(targetKanban);
+    console.log(targetKanban.stage_list);
+    setKanbanDataState((prev) => {
+      targetKanban.stage_list = DEFAULT_STAGES;
+      prev.set(kanbanID, targetKanban);
+      return new Map([...prev]);
+    });
+    console.log("프로젝트 내 칸반 정보", kanbanDataState);
     setIsLoaded(true);
-  }, []);
+  }, [kanbanID]);
 
   if (!isLoaded) {
     return (
@@ -67,7 +105,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
           <TestBtn type="button" onClick={() => handleTodoCLick()}>
             todo
           </TestBtn>
-          <div>kanban</div>
+          <div>kanbannnnn</div>
         </ProjectModalContentBox>
       </ProjectModalLayout>
     );
