@@ -49,12 +49,6 @@ export default function CommonSelectMemberLayout(props: Props) {
         }),
       );
       setUserData(data);
-      if (userList) {
-        const filteredValue = data.filter((user) =>
-          userList.includes(user.value),
-        );
-        setUserList(filteredValue);
-      }
     };
 
     fetchData();
