@@ -15,9 +15,9 @@ const AddUpdateTitle = styled.div`
 `;
 const UpdateContainer = styled.div`
   background-color: #eaeaea;
-  height: auto;
+  height: 80%;
   overflow: scroll;
-  padding: 1.2rem;
+  padding: 1.2rem 1.2rem 0 1.2rem;
   border-radius: 10px;
   border: 0.5px solid #eaeaea;
 `;
@@ -63,7 +63,7 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
           <span
             style={{
               fontWeight: "900",
-              fontSize: "1.2rem",
+              fontSize: "0.9rem",
             }}
           >
             업데이트 등록
@@ -72,6 +72,8 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
             type="submit"
             onClick={handleSubmit}
             $dynamicWidth="3.5rem"
+            $dynamicHeight="2rem"
+            style={{ fontSize: "0.9rem" }}
           >
             등록
           </ConfirmBtn>
@@ -82,7 +84,7 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
         <span
           style={{
             fontWeight: "900",
-            fontSize: "1.2rem",
+            fontSize: "0.9rem",
             margin: "1.5rem 0 0",
             display: "inline-block",
           }}

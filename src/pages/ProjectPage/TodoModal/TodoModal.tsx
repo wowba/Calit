@@ -33,17 +33,18 @@ const TodoContainer = styled(ProjectModalContentBox)`
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  overflow: hidden;
 `;
 const TodoTitle = styled.div`
   display: inline-block;
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin: 0 1rem 2rem 0;
 `;
 const TodoSubtitle = styled.div`
   display: inline-block;
   font-weight: 900;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   margin: 0 1rem 1rem 0;
 `;
 
@@ -195,13 +196,13 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         </ProjectModalTabText>
       </ProjectModalTabBox>
       <TodoContainer>
-        <div>
+        <div style={{ padding: "0 2rem 0 0" }}>
           <TodoTitle>
             <CommonInputLayout
               type="text"
               placeholder="제목을 입력하세요"
               value={inputTodoName}
-              $dynamicFontSize=" 1.5rem"
+              $dynamicFontSize=" 1.2rem"
               $dynamicPadding="1rem 0.5rem"
               $dynamicWidth="auto"
               // onKeyDown={handleEnterPress}
