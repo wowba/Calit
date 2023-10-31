@@ -11,17 +11,18 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
   width: calc(100% - 14rem);
   height: calc(100% - 5.5rem);
 
-  top: calc(3.75rem);
+  top: calc(5.75rem);
   ${(props) =>
     !props.$isShow &&
     css`
-      top: calc(100% - 2.6rem);
+      top: calc(100% - 0.6rem);
     `};
 `;
 
 const ProjectModalTabBox = styled.div<{ $marginLeft: number }>`
+  width: 9rem;
   position: relative;
-  margin-left: ${(props) => `${props.$marginLeft}rem`};
+  transform: translate(${(props) => `${props.$marginLeft}rem`}, -2rem);
 `;
 
 const ProjectModalTabBackground = styled(ProjectModalTabSVG)<{
@@ -52,6 +53,8 @@ const ProjectModalContentBox = styled.div`
   background-color: white;
   border-radius: 0.6rem 0.6rem 0 0;
   box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
+
+  transform: translateY(-2rem);
 
   overflow: scroll;
   -ms-overflow-style: none;
