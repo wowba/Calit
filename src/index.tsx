@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { createGlobalStyle } from "styled-components";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import App from "./App";
 
@@ -16,7 +16,54 @@ const GlobalStyle = createGlobalStyle`
   button {background:none;border:0;cursor:pointer;}
   a {text-decoration:none}
   table {border-collapse:collapse;border-spacing:0}
+
+  /* font */
+  * {
+    @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    }
+  }
+  * {
+      box-sizing: border-box;
+      font-family: 'Pretendard-Regular';
+  }
 `;
+
+const theme = {
+  Color: {
+    btnColor1: "#ee6a6a",
+    btnColor2: "#d0d0d0",
+    btnHoverColor1: "#D05f5f",
+    btnHoverColor2: "#c9c9c9",
+    yellow1: "#ffd43b",
+    yellow2: "#ffea7a",
+    gray1: "#eaeaea",
+    gray2: "#c9c9c9",
+  },
+
+  Fs: {
+    size28: "1.75rem",
+    size24: "1.5rem",
+    size20: "1.25rem",
+    size18: "1.125rem",
+    size16: "1rem",
+    size14: "0.875rem",
+    size12: "0.75rem",
+  },
+
+  Is: {
+    size28: "1.75rem",
+    size24: "1.5rem",
+    size20: "1.25rem",
+    size18: "1.125rem",
+    size16: "1rem",
+    size14: "0.875rem",
+    size12: "0.75rem",
+  },
+};
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -25,8 +72,10 @@ root.render(
   <React.StrictMode>
     <RecoilRoot>
       <BrowserRouter>
-        <GlobalStyle />
-        <App />
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <App />
+        </ThemeProvider>
       </BrowserRouter>
     </RecoilRoot>
   </React.StrictMode>,
