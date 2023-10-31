@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
+import Stage from "./Stage";
 
 import {
   ProjectModalLayout,
@@ -58,6 +59,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
           todo
         </TestBtn>
         <div>kanban</div>
+        <Stage />
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );
