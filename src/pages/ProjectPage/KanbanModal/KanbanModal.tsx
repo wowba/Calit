@@ -43,10 +43,8 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const kanbanDataState = useRecoilState(kanbanState);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const setKanbanDataState = useSetRecoilState(kanbanState);
   const kanbanID = searchParams.get("kanbanID")!;
-  // console.log("...", ...kanbanDataState, DEFAULT_STAGES);
 
   const TestBtn = styled.button`
     margin: 10px;
