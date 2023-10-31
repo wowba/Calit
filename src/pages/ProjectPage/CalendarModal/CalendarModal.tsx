@@ -330,7 +330,7 @@ export default function CalendarModal({
   return (
     <ProjectModalLayout $isShow>
       <ProjectModalTabBox $marginLeft={2} onClick={handleCalendarTabClick}>
-        <ProjectModalTabBackground $color={calendarTabColor} />
+        <ProjectModalTabBackground $color={calendarTabColor} $isShow />
         <ProjectModalTabText $top={0.4} $left={2.5}>
           Calender
         </ProjectModalTabText>

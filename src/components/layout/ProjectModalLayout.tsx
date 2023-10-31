@@ -23,14 +23,24 @@ const ProjectModalTabBox = styled.div<{ $marginLeft: number }>`
   width: 9rem;
   position: relative;
   transform: translate(${(props) => `${props.$marginLeft}rem`}, -2rem);
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const ProjectModalTabBackground = styled(ProjectModalTabSVG)<{
   $color: string;
+  $isShow?: boolean;
 }>`
+  transition: all 0.2s ease;
+
   width: 9rem;
   height: 2rem;
   fill: ${(props) => `${props.$color}`};
+
+  &:hover {
+    fill: ${(props) => (props.$isShow ? "#ffd43b" : "#D0D0D0")};
+  }
 `;
 
 const ProjectModalTabText = styled.span<{ $top: number; $left: number }>`
