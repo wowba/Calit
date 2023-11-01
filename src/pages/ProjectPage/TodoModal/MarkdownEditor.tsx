@@ -20,6 +20,15 @@ const UpdateContainer = styled.div`
   padding: 1.2rem 1.2rem 0 1.2rem;
   border-radius: 10px;
   border: 0.5px solid #eaeaea;
+  &::-webkit-scrollbar {
+    width: 8px;
+    overflow-y: scroll;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
 `;
 const UpdateList = styled.div`
   max-height: 23rem;

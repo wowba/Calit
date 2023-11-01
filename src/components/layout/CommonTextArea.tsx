@@ -5,6 +5,7 @@ interface Props {
   $dynamicMaxHeight?: string;
   $dynamicRow?: string;
   $dynamicPadding?: string;
+  onBlur: any;
 }
 
 const CommonTextArea = styled.textarea<Props>`
@@ -21,6 +22,16 @@ const CommonTextArea = styled.textarea<Props>`
   transition: all 0.3s ease-in-out;
   &:focus {
     border-color: #adadad;
+  }
+  &::-webkit-scrollbar {
+    width: 8px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
   }
 `;
 
