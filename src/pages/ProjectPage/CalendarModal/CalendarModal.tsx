@@ -274,6 +274,14 @@ type Props = {
   setSearchParams: SetURLSearchParams;
 };
 
+type ColorModalInfo = {
+  top: number;
+  left: number;
+  color: string;
+  selectedKanbanId: string;
+  selectedEvent: EventContentArg | null;
+};
+
 export default function CalendarModal({
   calendarTabColor,
   setSearchParams,
@@ -282,11 +290,12 @@ export default function CalendarModal({
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [colorModalInfo, setColorModalInfo] = useState({
+  const [colorModalInfo, setColorModalInfo] = useState<ColorModalInfo>({
     top: 0,
     left: 0,
     color: "",
     selectedKanbanId: "",
+    selectedEvent: null,
   });
   const [isColorModalShow, setIsColorModalShow] = useState(false);
 
@@ -386,6 +395,7 @@ export default function CalendarModal({
         left: ModifyIcon.getBoundingClientRect().left - 16,
         color: eventArg.backgroundColor,
         selectedKanbanId: eventInfo.publicId,
+        selectedEvent: eventArg,
       });
       setIsColorModalShow(true);
     });
@@ -399,6 +409,18 @@ export default function CalendarModal({
       ...prev,
       color: e.target.value,
     }));
+    colorModalInfo.selectedEvent?.event.setProp(
+      "backgroundColor",
+      e.target.value,
+    );
+    colorModalInfo.selectedEvent?.event.setProp(
+      "textColor",
+      getTextColorByBackgroundColor(e.target.value),
+    );
+    colorModalInfo.selectedEvent?.event.setProp(
+      "borderColor",
+      getBorderColorByBackgroundColor(e.target.value),
+    );
   };
 
   const handleModalCloseClick = () => {
