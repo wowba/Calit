@@ -3,7 +3,7 @@ import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
 import { getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
-import settingIcon from "../../../assets/icons/settingIcon.svg";
+import settingIcon from "../../../assets/icons/settingIconBlack.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import userState from "../../../recoil/atoms/login/userDataState";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
@@ -14,6 +14,8 @@ import CommonSettingModal from "../../../components/layout/CommonSettingModal";
 const UpdateListHeader = styled.div`
   display: flex;
   justify-content: space-between;
+  font-size: 0.9rem;
+  align-items: center;
 `;
 const ManagedUser = styled.div`
   display: flex;
@@ -25,7 +27,7 @@ const SettingContainer = styled.div`
 
 const Contour = styled.div`
   background-color: #eaeaea;
-  height: 0.2rem;
+  height: 0.1rem;
   border-radius: 1px;
   margin: 0.5rem auto;
 `;
@@ -123,6 +125,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           <button
             type="button"
             onClick={() => setIsSettingOpened(!isSettingOpened)}
+            style={{ margin: "0 0 0 0.5rem" }}
           >
             <img src={settingIcon} alt="설정" />
           </button>
