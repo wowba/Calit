@@ -73,29 +73,6 @@ export default function ProjectCard({
   const [inputIntroValue, setInputIntroValue] = useState(projectIntro);
   const [isTextInputActive, setIsTextInputActive] = useState(false);
 
-  // const handleNameChangeable = () => {
-  //   setIsNameChangeable(!isNameChangeable);
-  // };
-  // const handleInputChangeable = () => {
-  //   setIsIntroChangeable(!isIntroChangeable);
-  // };
-
-  // const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === "Enter") {
-  //     const docRef = doc(db, "project", projectId);
-  //     await updateDoc(docRef, {
-  //       name: inputNameValue,
-  //       project_intro: inputIntroValue,
-  //       modified_date: serverTimestamp(),
-  //     });
-  //     if (isNameChangeable) {
-  //       handleNameChangeable();
-  //     } else if (isIntroChangeable) {
-  //       handleInputChangeable();
-  //     }
-  //   }
-  // };
-
   const handleTitleBlur = async () => {
     if (inputNameValue) {
       const docRef = doc(db, "project", projectId);
