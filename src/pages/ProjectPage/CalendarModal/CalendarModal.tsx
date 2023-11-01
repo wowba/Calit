@@ -394,9 +394,7 @@ export default function CalendarModal({
     return { domNodes: arrayOfDomNodes };
   }
 
-  const handleColorModalChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleColorModalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setColorModalInfo((prev) => ({
       ...prev,
       color: e.target.value,
