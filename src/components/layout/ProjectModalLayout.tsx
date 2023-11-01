@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 
 import { ReactComponent as ProjectModalTabSVG } from "../../assets/ProjectModalTab.svg";
 
@@ -29,7 +28,10 @@ const ProjectModalTabBox = styled.div<{
   &:hover {
     cursor: pointer;
     > svg {
-      fill: ${(props) => (props.$isShow ? "#ffd43b" : "#D0D0D0")};
+      fill: ${(props) =>
+        props.$isShow
+          ? props.theme.Color.yellow1
+          : props.theme.Color.btnColor2};
     }
   }
 `;
@@ -49,13 +51,9 @@ const ProjectModalTabText = styled.span<{ $top: number; $left: number }>`
   top: ${(props) => `${props.$top}rem`};
   left: ${(props) => `${props.$left}rem`};
 
-  @font-face {
-    font-family: "RobotoRegular";
-    src: local("RobotoRegular"), url(${RobotoRegular});
-  }
-
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: ${(props) => props.theme.Fs.size16};
+  font-weight: 800;
+  scale: 1.1;
 `;
 
 const ProjectModalContentBox = styled.div`
