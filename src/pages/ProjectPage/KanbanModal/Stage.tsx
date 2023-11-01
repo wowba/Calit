@@ -3,15 +3,19 @@ import { styled } from "styled-components";
 import { useSearchParams } from "react-router-dom";
 import {
   collection,
+  doc,
+  getDoc,
   onSnapshot,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { createTodo } from "../../../api/CreateCollection";
 import todoState from "../../../recoil/atoms/todo/todoState";
+import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import { db } from "../../../firebaseSDK";
@@ -35,6 +39,7 @@ const StageBox = styled.div`
 const StageInfoBox = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 10rem;
   border-bottom: 2px solid #eaeaea;
   margin-bottom: 0.5rem;
@@ -78,6 +83,7 @@ const StageInfoTrashIcon = styled.img`
   height: 1rem;
   width: 1rem;
   cursor: pointer;
+  display: none;
 `;
 
 const StageInfoPlusIcon = styled.img`
@@ -95,13 +101,11 @@ export default function Stage({ stageLists }: Props) {
   const [todoLists, setTodoLists] = useState<any[]>();
   const projectID = window.location.pathname.substring(1)!;
   const kanbanID = searchParams.get("kanbanID")!;
-  // const [todoDataState] = useRecoilState(todoState);
+  const [todoDataState, setTodoDataState] = useRecoilState(todoState);
+  const [isStage, setIsStage] = useState(stageLists);
+  const setKanbanDataState = useSetRecoilState(kanbanState);
+  console.log(todoDataState);
   // const [todoData, setTodoData] = useState(todoDataState);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const setTodoDataState = useSetRecoilState(todoState);
-
-  // console.log(stageLists, todoLists);
 
   useEffect(() => {
     const todoQuery = query(
@@ -111,32 +115,50 @@ export default function Stage({ stageLists }: Props) {
 
     // setTodoDataState({ todoData: new Map() });
     const unsubTodo = onSnapshot(todoQuery, (todoSnapshot) => {
-      const addedMap = new Map();
+      console.log("before", todoDataState);
+      // const addedMap = new Map();
+      // const todoData = {"todoData": todoDataState?.todoData?.size ? todoDataState.todoData: addedMap}
+      const addedMap = todoDataState?.todoData?.size
+        ? todoDataState.todoData
+        : new Map();
+      const todoData1 = { todoData: addedMap };
+      console.log(addedMap, todoData1);
+
       const todos: any[] = [];
       todoSnapshot.docChanges().forEach((change) => {
-        // console.log(change.type);
         todos.push(change.doc.data());
         if (change.type === "added") {
+          console.log("@add");
           addedMap.set(change.doc.id, change.doc.data());
         }
 
-        // if (change.type === "modified") {
-        //   setTodoDataState((prev) => {
-        //     prev.set(change.doc.id, change.doc.data());
-        //     return new Map([...prev]);
-        //   });
-        // }
+        if (change.type === "modified") {
+          console.log(change);
+          console.log("modified@@@@@");
+          console.log(todoDataState);
+          addedMap.set(change.doc.id, change.doc.data());
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setTodoDataState((todoData: any | Map<any, any>) => {
+            // eslint-disable-next-line no-param-reassign
+            // todoData = new Map();
+            addedMap.set(change.doc.id, change.doc.data());
+            return addedMap;
+          });
+          // setTodoDataState((prev) => {
+          // prev.set(change.doc.id, change.doc.data());
+          // return new Map([...prev]);
+          // });
+        }
         // // 칸반이 삭제된 경우 (is_deleted 수정 시 쿼리 결과 변경)
-        // if (change.type === "removed") {
-        //   setTodoDataState((prev) => {
-        //     prev.delete(change.doc.id);
-        //     return new Map([...prev]);
-        //   });
-        // }
+        if (change.type === "removed") {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          setTodoDataState((todoData: any | Map<any, any>) => {
+            addedMap.delete(change.doc.id);
+            return addedMap;
+          });
+        }
 
-        // if (addedMap.size > 0) {
-        //   setTodoDataState((todoData) => new Map([...prev, ...addedMap]));
-        // }
+        setTodoDataState(todoData1);
         setTodoLists(todos);
       });
     });
@@ -146,7 +168,7 @@ export default function Stage({ stageLists }: Props) {
     };
   }, [kanbanID]);
 
-  const handleTodoClick = async (stageOrder: number, stageName: string) => {
+  const handleTodoAddClick = async (stageOrder: number, stageName: string) => {
     await createTodo(projectID, kanbanID, {
       update_list: [],
       user_list: [],
@@ -159,11 +181,44 @@ export default function Stage({ stageLists }: Props) {
       deadline: new Date(),
       info: "내용",
     });
+    console.log("todo created");
+  };
+
+  const handleGoTodoClick = (todo: any) => {
+    console.log("clicked info: ", todo);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const todoData = todoDataState;
+    console.log([todoData][0].todoData);
+  };
+
+  const handleAddStageClick = async () => {
+    const kanbanRef = doc(db, "project", projectID, "kanban", kanbanID);
+    const newStage = isStage
+      .concat({
+        name: `새 스테이지 ${isStage.length - 2}`,
+        order: isStage.length,
+        created_date: new Date(),
+        modified_date: new Date(),
+      })
+      .sort((a: any, b: any) => b.order - a.order);
+    console.log(kanbanRef);
+    await updateDoc(kanbanRef, {
+      stage_list: newStage,
+    });
+    setIsStage(newStage);
+    console.log(newStage);
+
+    const targetDoc = await getDoc(kanbanRef);
+    console.log(targetDoc.data());
+    setKanbanDataState((prev) => {
+      prev.set(targetDoc.id, targetDoc.data());
+      return new Map([...prev]);
+    });
   };
 
   return (
     <StageLayout>
-      {stageLists.map((stage: any) => (
+      {isStage.map((stage: any) => (
         <StageBox>
           <StageInfoBox>
             {stage.name}
@@ -172,7 +227,7 @@ export default function Stage({ stageLists }: Props) {
               <StageInfoPlusIcon
                 src={icon_plus_circle}
                 alt="투두 추가"
-                onClick={() => handleTodoClick(stage.order, stage.name)}
+                onClick={() => handleTodoAddClick(stage.order, stage.name)}
               />
             </StageIconBox>
           </StageInfoBox>
@@ -180,7 +235,7 @@ export default function Stage({ stageLists }: Props) {
             {todoLists
               ?.filter((stageTodo: any) => stageTodo.stageID === stage.name)
               .map((todo: any) => (
-                <StageContent>
+                <StageContent onClick={() => handleGoTodoClick(todo)}>
                   <StageContentParagraph>
                     {todo.name}
                     {todo.info}
@@ -195,13 +250,13 @@ export default function Stage({ stageLists }: Props) {
         <StageInfoBox>
           스테이지 추가하기
           <StageInfoTrashIcon src={trashIcon} alt="스테이지 삭제" />
-          <StageInfoPlusIcon src={icon_plus_circle} alt="스테이지 추가" />
+          <StageInfoPlusIcon
+            src={icon_plus_circle}
+            alt="스테이지 추가"
+            onClick={() => handleAddStageClick()}
+          />
         </StageInfoBox>
-        <StageContentBox>
-          <StageContent>
-            <StageContentParagraph />
-          </StageContent>
-        </StageContentBox>
+        <StageContentBox />
       </StageBox>
     </StageLayout>
   );
