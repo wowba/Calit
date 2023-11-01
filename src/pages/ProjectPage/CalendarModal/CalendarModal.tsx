@@ -94,6 +94,7 @@ const CalendarBox = styled.div`
   }
   // 오늘 button
   .fc-today-button {
+    transition: all 0.2s;
     opacity: 1 !important;
     background-color: #ee6a6a !important;
     width: 3rem;
@@ -101,6 +102,9 @@ const CalendarBox = styled.div`
     font-size: 0.8rem;
     color: white !important;
     border-radius: 7px;
+    &:hover {
+      background-color: #d05f5f !important;
+    }
     &:active {
       background-color: #f69c9c !important;
     }
@@ -329,9 +333,13 @@ export default function CalendarModal({
 
   return (
     <ProjectModalLayout $isShow>
-      <ProjectModalTabBox $marginLeft={2} onClick={handleCalendarTabClick}>
-        <ProjectModalTabBackground $color={calendarTabColor} $isShow />
-        <ProjectModalTabText $top={0.4} $left={2.5}>
+      <ProjectModalTabBox
+        $marginLeft={2}
+        onClick={handleCalendarTabClick}
+        $isShow
+      >
+        <ProjectModalTabBackground $color={calendarTabColor} />
+        <ProjectModalTabText $top={0.28} $left={2.5}>
           Calender
         </ProjectModalTabText>
       </ProjectModalTabBox>
