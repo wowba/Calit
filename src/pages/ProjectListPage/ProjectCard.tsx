@@ -1,10 +1,11 @@
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../firebaseSDK";
 import rectangle from "../../assets/images/Rectangle.svg";
 import ProjectIconContainer from "./ProjectIconContainer";
-import InputCommon from "../../components/layout/InputCommonLayout";
+import CommonInputLayout from "../../components/layout/CommonInputLayout";
+import CommonTextArea from "../../components/layout/CommonTextArea";
 
 interface Props {
   $dynamic_url?: string;
@@ -37,19 +38,21 @@ const ProjectCardBgImg = styled.a<Props>`
   overflow: hidden;
 `;
 
-const ProjectCardInfo = styled.div`
+const ProjectCardInfo = styled.div<{ isTextInputActive: boolean }>`
   width: 400px;
-  height: 0px;
+  height: ${(props) => (props.isTextInputActive ? "110px" : "0px")};
   background-color: #ededed;
   border-radius: 3px 3px 13px 13px;
   position: absolute;
-  bottom: 0px;
+  bottom: ${(props) => (props.isTextInputActive ? "-5px" : "0px")};
+  justify-contents: center;
   box-shadow: -1px -3px 76px -18px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: -1px -3px 76px -18px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: -1px -3px 76px -18px rgba(0, 0, 0, 0.5);
-  transition: height 0.3s ease;
+  transition: all 0.5s ease;
   &:hover {
-    height: 100px;
+    height: 110px;
+    bottom: -5px;
   }
 `;
 
@@ -59,53 +62,6 @@ const ProjectCardTag = styled.img`
   left: 10px;
 `;
 
-const ProjectCardName = styled.p`
-  position: absolute;
-  top: -28px;
-  z-index: 1;
-  left: 30px;
-  width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 700;
-  cursor: pointer;
-`;
-const ProjectCardNameInput = styled(InputCommon)<{ $dynamicWidth: string }>`
-  width: ${(props) => props.$dynamicWidth};
-  position: absolute;
-  top: -28px;
-  z-index: 1;
-  left: 30px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 700;
-`;
-
-const ProjectCardIntro = styled.p`
-  margin: -20px 20px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  cursor: pointer;
-  position: relative;
-  top: 10px;
-`;
-
-const ProjectCardIntroInput = styled(InputCommon)<{ $dynamicWidth: string }>`
-  width: ${(props) => props.$dynamicWidth};
-  height: 70px;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  position: relative;
-  top: -20px;
-`;
-
 export default function ProjectCard({
   projectId,
   projectImgUrl,
@@ -113,73 +69,108 @@ export default function ProjectCard({
   projectIntro,
   fetchProjectData,
 }: any) {
-  const [isNameChangeable, setIsNameChangeable] = useState(false);
-  const [isIntroChangeable, setIsIntroChangeable] = useState(false);
   const [inputNameValue, setInputNameValue] = useState(projectName);
   const [inputIntroValue, setInputIntroValue] = useState(projectIntro);
+  const [isTextInputActive, setIsTextInputActive] = useState(false);
 
-  const handleNameChangeable = () => {
-    setIsNameChangeable(!isNameChangeable);
-  };
-  const handleInputChangeable = () => {
-    setIsIntroChangeable(!isIntroChangeable);
-  };
+  // const handleNameChangeable = () => {
+  //   setIsNameChangeable(!isNameChangeable);
+  // };
+  // const handleInputChangeable = () => {
+  //   setIsIntroChangeable(!isIntroChangeable);
+  // };
 
-  const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+  // const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
+  //   if (e.key === "Enter") {
+  //     const docRef = doc(db, "project", projectId);
+  //     await updateDoc(docRef, {
+  //       name: inputNameValue,
+  //       project_intro: inputIntroValue,
+  //       modified_date: serverTimestamp(),
+  //     });
+  //     if (isNameChangeable) {
+  //       handleNameChangeable();
+  //     } else if (isIntroChangeable) {
+  //       handleInputChangeable();
+  //     }
+  //   }
+  // };
+
+  const handleTitleBlur = async () => {
+    if (inputNameValue) {
       const docRef = doc(db, "project", projectId);
       await updateDoc(docRef, {
         name: inputNameValue,
+        modified_date: serverTimestamp(),
+      });
+    }
+  };
+  const handleIntroBlur = async () => {
+    setIsTextInputActive(false);
+    if (inputIntroValue) {
+      const docRef = doc(db, "project", projectId);
+      await updateDoc(docRef, {
         project_intro: inputIntroValue,
         modified_date: serverTimestamp(),
       });
-      if (isNameChangeable) {
-        handleNameChangeable();
-      } else if (isIntroChangeable) {
-        handleInputChangeable();
-      }
     }
+  };
+  const handleIntroFocus = () => {
+    setIsTextInputActive(true);
   };
 
   return (
     <ProjectCardUnit>
-      <ProjectCardBgImg $dynamic_url={projectImgUrl} href={projectId}>
-        {}
-      </ProjectCardBgImg>
+      <ProjectCardBgImg $dynamic_url={projectImgUrl} href={projectId} />
       <ProjectIconContainer
         projectId={projectId}
         fetchProjectData={fetchProjectData}
       />
-      <ProjectCardInfo className="project-card-info">
-        {isNameChangeable ? (
-          <ProjectCardNameInput
-            $dynamicWidth="160px"
-            value={inputNameValue}
-            onChange={(e) => setInputNameValue(e.target.value)}
-            onKeyDown={handleEnterPress}
-          />
-        ) : (
-          <ProjectCardName onClick={handleNameChangeable}>
-            {inputNameValue || "제목을 입력해주세요"}
-          </ProjectCardName>
-        )}
+      <ProjectCardInfo
+        className="project-card-info"
+        isTextInputActive={isTextInputActive}
+      >
+        <CommonInputLayout
+          $isHover
+          $dynamicWidth="10rem"
+          $dynamicPadding="2px 4px"
+          placeholder="제목을 입력해주세요"
+          style={{
+            zIndex: "5",
+            position: "absolute",
+            top: "-26px",
+            left: "30px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            fontWeight: "700",
+            fontSize: "1rem",
+            backgroundColor: "#eaeaea",
+          }}
+          onChange={(e) => setInputNameValue(e.target.value)}
+          onBlur={handleTitleBlur}
+          value={inputNameValue}
+        />
         <ProjectCardTag
           className="project-card-tag"
           src={rectangle}
           alt={rectangle}
         />
-        {isIntroChangeable ? (
-          <ProjectCardIntroInput
-            $dynamicWidth="99%"
-            value={inputIntroValue}
-            onChange={(e) => setInputIntroValue(e.target.value)}
-            onKeyDown={handleEnterPress}
-          />
-        ) : (
-          <ProjectCardIntro onClick={handleInputChangeable}>
-            {inputIntroValue || "프로젝트 소개를 입력해주세요"}
-          </ProjectCardIntro>
-        )}
+        <CommonTextArea
+          $dynamicWidth="97%"
+          placeholder="프로젝트 소개를 입력해주세요"
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "6px",
+            height: "85px",
+            fontSize: "0.9rem",
+          }}
+          onChange={(e) => setInputIntroValue(e.target.value)}
+          onBlur={handleIntroBlur}
+          onFocus={handleIntroFocus}
+          value={inputIntroValue}
+        />
       </ProjectCardInfo>
     </ProjectCardUnit>
   );
