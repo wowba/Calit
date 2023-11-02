@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useRecoilValue } from "recoil";
 import userData from "../recoil/atoms/login/userDataState";
 
-import ShrikhandRegular from "../assets/fonts/Shrikhand-Regular.ttf";
+import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
 
 // 모달 아이콘
 import memberIcon from "../assets/icons/headerMemberIcon.svg";
@@ -31,17 +31,6 @@ const HeaderLayout = styled.div`
   border-bottom: 1.5px solid #ebebeb;
 `;
 
-const HeaderLogoParagraph = styled.p`
-  @font-face {
-    font-family: "ShrikhandRegular";
-    src: local("ShrikhandRegular"), url(${ShrikhandRegular});
-  }
-
-  font-family: "ShrikhandRegular";
-  font-weight: 500;
-  font-size: 2rem;
-`;
-
 const HeaderIconBox = styled.div`
   display: flex;
   align-items: center;
@@ -57,6 +46,10 @@ const HeaderIconBox = styled.div`
 
 const HeaderModalBox = styled.div`
   height: 100%;
+`;
+
+const HeaderLogo = styled(headerLogo)`
+  height: 1.8rem;
 `;
 
 const modals = [
@@ -113,7 +106,7 @@ export default function Header() {
 
   return (
     <HeaderLayout>
-      <HeaderLogoParagraph>Calit!</HeaderLogoParagraph>
+      <HeaderLogo />
       <HeaderIconBox>
         {(currentHeaderState === "list" ? listPageModals : modals).map(
           (modal, index) => (

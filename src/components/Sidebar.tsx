@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 
-import RobotoRegular from "../assets/fonts/Roboto-Regular.ttf";
 import trashIcon from "../assets/icons/trashIcon.svg";
 import sidebarTestImg from "../assets/images/sidebarTestImg.png";
 import projectState from "../recoil/atoms/project/projectState";
@@ -25,13 +24,8 @@ const ProjectInfoBox = styled.div`
 `;
 
 const ProjectTitleParagraph = styled.p`
-  @font-face {
-    font-family: "RobotoRegular";
-    src: local("RobotoRegular"), url(${RobotoRegular});
-  }
-
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 900;
   margin-bottom: 0.25rem;
 `;
 

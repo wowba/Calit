@@ -124,7 +124,6 @@ const CalendarBox = styled.div`
     border: solid 0.1rem #121212 !important;
     border-radius: 50%;
 
-    font-family: sans-serif;
     padding: 0.2rem 0 0 0;
     font-weight: 900;
   }
