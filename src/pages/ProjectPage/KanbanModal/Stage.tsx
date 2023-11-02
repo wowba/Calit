@@ -12,6 +12,7 @@ import {
   where,
 } from "firebase/firestore";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { createTodo } from "../../../api/CreateCollection";
 import todoState from "../../../recoil/atoms/todo/todoState";
@@ -218,39 +219,114 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
     });
   };
 
+  const onDragEnd = (result: any) => {
+    console.log(result);
+  };
   return (
     <StageLayout>
-      {isStage.map((stage: any) => (
-        <StageBox key={stage.name}>
-          <StageInfoBox>
-            {stage.name}
-            <StageIconBox>
-              <StageInfoTrashIcon src={trashIcon} alt="스테이지 삭제" />
-              <StageInfoPlusIcon
-                src={icon_plus_circle}
-                alt="투두 추가"
-                onClick={() => handleTodoAddClick(stage.order, stage.name)}
-              />
-            </StageIconBox>
-          </StageInfoBox>
-          <StageContentBox>
-            {todoLists
-              ?.filter((stageTodo: any) => stageTodo.stageID === stage.name)
-              .map((todo: any, index: number) => (
-                <StageContent
-                  key={`${todo.stageID}-${index.toString()}`}
-                  onClick={() => handleGoTodoClick(todo)}
+      <DragDropContext onDragEnd={onDragEnd}>
+        {isStage.map((stage: any, index: number) => (
+          <Droppable
+            droppableId={stage.name}
+            key={stage.name}
+            direction="horizontal"
+            type="STAGE"
+          >
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...provided.droppableProps}
+              >
+                <Draggable
+                  draggableId={stage.order.toString()}
+                  index={index}
+                  key={stage.order.toString()}
                 >
-                  <StageContentParagraph>
-                    {todo.name}
-                    {todo.info}
-                  </StageContentParagraph>
-                </StageContent>
-              ))}
-          </StageContentBox>
-        </StageBox>
-      ))}
-
+                  {(draggableProvided) => (
+                    <div
+                      ref={draggableProvided.innerRef}
+                      // eslint-disable-next-line react/jsx-props-no-spreading
+                      {...draggableProvided.dragHandleProps}
+                      // eslint-disable-next-line react/jsx-props-no-spreading
+                      {...draggableProvided.draggableProps}
+                    >
+                      <StageBox key={stage.name}>
+                        <StageInfoBox>
+                          {stage.name}
+                          <StageIconBox>
+                            <StageInfoTrashIcon
+                              src={trashIcon}
+                              alt="스테이지 삭제"
+                            />
+                            <StageInfoPlusIcon
+                              src={icon_plus_circle}
+                              alt="투두 추가"
+                              onClick={() =>
+                                handleTodoAddClick(stage.order, stage.name)
+                              }
+                            />
+                          </StageIconBox>
+                        </StageInfoBox>
+                        <Droppable
+                          droppableId={`inner-${stage.name}`}
+                          key={`inner-${stage.name}`}
+                          type="TODO"
+                        >
+                          {(innerProvided) => (
+                            <div
+                              ref={innerProvided.innerRef}
+                              // eslint-disable-next-line react/jsx-props-no-spreading
+                              {...innerProvided.droppableProps}
+                            >
+                              <StageContentBox>
+                                {todoLists
+                                  ?.filter(
+                                    (stageTodo: any) =>
+                                      stageTodo.stageID === stage.name,
+                                  )
+                                  .map((todo: any, innerIndex: number) => (
+                                    <Draggable
+                                      draggableId={`${todo.stageID}-${todo.created_date.seconds}`}
+                                      index={innerIndex}
+                                      key={`${todo.stageID}-${todo.created_date}`}
+                                    >
+                                      {(innerDraggableProvided) => (
+                                        <div
+                                          ref={innerDraggableProvided.innerRef}
+                                          // eslint-disable-next-line react/jsx-props-no-spreading
+                                          {...innerDraggableProvided.dragHandleProps}
+                                          // eslint-disable-next-line react/jsx-props-no-spreading
+                                          {...innerDraggableProvided.draggableProps}
+                                        >
+                                          <StageContent
+                                            onClick={() =>
+                                              handleGoTodoClick(todo)
+                                            }
+                                          >
+                                            <StageContentParagraph>
+                                              {todo.name}
+                                            </StageContentParagraph>
+                                          </StageContent>
+                                        </div>
+                                      )}
+                                    </Draggable>
+                                  ))}
+                              </StageContentBox>
+                              {innerProvided.placeholder}
+                            </div>
+                          )}
+                        </Droppable>
+                      </StageBox>
+                    </div>
+                  )}
+                </Draggable>
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        ))}
+      </DragDropContext>
       <StageBox>
         <StageInfoBox>
           스테이지 추가하기
