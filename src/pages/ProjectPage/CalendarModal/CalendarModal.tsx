@@ -16,6 +16,7 @@ import interactionPlugin, {
 import { useRecoilValue } from "recoil";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { SetURLSearchParams } from "react-router-dom";
+import _ from "lodash";
 
 import {
   ProjectModalLayout,
@@ -429,6 +430,10 @@ export default function CalendarModal({
     );
   };
 
+  const throttle = _.throttle((e: React.ChangeEvent<HTMLInputElement>) => {
+    handleColorModalChange(e);
+  }, 1000);
+
   const handleModalCloseClick = () => {
     setColorModalInfo((prev) => ({
       ...prev,
@@ -514,7 +519,7 @@ export default function CalendarModal({
         $left={colorModalInfo.left}
         type="color"
         value={colorModalInfo.color}
-        onChange={handleColorModalChange}
+        onChange={throttle}
         onBlur={handleColorModalBlur}
       />
       <ColorModalBackground

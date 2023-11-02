@@ -18,6 +18,7 @@
     "@uiw/react-md-editor": "^3.23.6",
     "date-fns": "^2.30.0",
     "firebase": "^10.4.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-datepicker": "^4.21.0",
@@ -51,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.200",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "eslint": "^8.51.0",
