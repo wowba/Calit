@@ -237,7 +237,6 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
             </DeadlineContainer>
             <TagContainer>
               <TodoSubtitle>태그</TodoSubtitle>
-              {/* 여기 쓰는중 */}
               <TagSelectLayout
                 kanbanId={kanbanId}
                 kanbanRef={kanbanRef}

@@ -39,8 +39,8 @@ const UpdateContent = styled.div`
 `;
 
 const ChangeUpdateModal = styled(CommonSettingModal)`
-  bottom: -2rem;
-  right: 0;
+  bottom: -2.5rem;
+  right: -0.2rem;
   height: 2rem;
 `;
 
