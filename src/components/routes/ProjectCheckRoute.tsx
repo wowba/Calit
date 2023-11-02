@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import {
   collection,
   doc,
@@ -18,6 +18,7 @@ import { db } from "../../firebaseSDK";
 import projectState from "../../recoil/atoms/project/projectState";
 import userState from "../../recoil/atoms/login/userDataState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
+import ErrorPage from "../ErrorPage";
 
 const ProjectLayout = styled.div`
   display: flex;
@@ -26,12 +27,14 @@ const ProjectLayout = styled.div`
 
 export default function ProjectCheckRoute() {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const [isProjectLoaded, setIsProjectLoaded] = useState(false);
   const [isKanbanLoaded, setIsKanbanLoaded] = useState(false);
   const setProjectDataState = useSetRecoilState(projectState);
   const setKanbanDataState = useSetRecoilState(kanbanState);
   const { email } = useRecoilValue(userState).userData;
+
+  const [is403, setIs403] = useState(false);
+  const [is404, setIs404] = useState(false);
 
   useEffect(() => {
     // 프로젝트 문서 onSnapshot
@@ -76,9 +79,12 @@ export default function ProjectCheckRoute() {
         setProjectDataState({
           projectData: projectDoc.data(),
         });
+      } else if (!projectDoc.exists()) {
+        unsubProject();
+        setIs404(true);
       } else {
         unsubProject();
-        navigate("/");
+        setIs403(true);
       }
     });
     // 칸반 컬렉션 onSnapshot
@@ -122,10 +128,20 @@ export default function ProjectCheckRoute() {
       setProjectDataState({
         projectData: null,
       });
+      setIs403(false);
+      setIs404(false);
       unsubProject();
       unsubKanban();
     };
   }, [pathname]);
+
+  if (is404) {
+    return <ErrorPage isProject404 />;
+  }
+
+  if (is403) {
+    return <ErrorPage isProject403 />;
+  }
 
   return isProjectLoaded && isKanbanLoaded ? (
     <ProjectLayout>
