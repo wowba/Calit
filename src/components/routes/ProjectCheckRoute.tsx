@@ -19,6 +19,7 @@ import projectState from "../../recoil/atoms/project/projectState";
 import userState from "../../recoil/atoms/login/userDataState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import ErrorPage from "../ErrorPage";
+import headerState from "../../recoil/atoms/header/headerState";
 
 const ProjectLayout = styled.div`
   display: flex;
@@ -35,6 +36,8 @@ export default function ProjectCheckRoute() {
 
   const [is403, setIs403] = useState(false);
   const [is404, setIs404] = useState(false);
+
+  const setHeaderState = useSetRecoilState(headerState);
 
   useEffect(() => {
     // 프로젝트 문서 onSnapshot
@@ -79,6 +82,7 @@ export default function ProjectCheckRoute() {
         setProjectDataState({
           projectData: projectDoc.data(),
         });
+        setHeaderState("project");
       } else if (!projectDoc.exists()) {
         unsubProject();
         setIs404(true);
@@ -132,6 +136,7 @@ export default function ProjectCheckRoute() {
       setIs404(false);
       unsubProject();
       unsubKanban();
+      setHeaderState("list");
     };
   }, [pathname]);
 
