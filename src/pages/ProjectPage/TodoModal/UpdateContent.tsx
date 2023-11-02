@@ -51,7 +51,6 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const [markdownContent, setMarkdownContent] = useState(data.detail);
   const [isEditing, setIsEditing] = useState(false);
   const [isSettingOpened, setIsSettingOpened] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [originalMarkdownContent, setOriginalMarkdownContent] = useState(
     data.detail,
   );

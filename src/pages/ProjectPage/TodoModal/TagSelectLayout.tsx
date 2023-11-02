@@ -28,9 +28,6 @@ export default function TagSelectLayout({
   const targetKanbanData = data.filter((item) => item[0] === kanbanId);
   const tagData = targetKanbanData[0][1].tag_list;
   const [optionList, setOptionList] = useState(tagData);
-  const [tagList, setTagList] = useState(todoDataState.todoData.todo_tag_list);
-
-  const [isTagListModified, setIsTagListModified] = useState(false);
   const [isOptionListModified, setIsOptionListModified] = useState(false);
 
   function getNewOptionData(inputValue: any, optionLabel: any) {
@@ -52,8 +49,11 @@ export default function TagSelectLayout({
         setIsOptionListModified(true);
       }
     }
-    setTagList(newValue);
-    setIsTagListModified(true);
+    // firestore : todo 컬렉션의 todo_tag_list db 업데이트
+    await updateDoc(todoRef, {
+      todo_tag_list: newValue,
+      modified_date: serverTimestamp(),
+    });
   };
 
   // firestore : kanban의 tag_list db 업데이트
@@ -70,20 +70,6 @@ export default function TagSelectLayout({
     }
   }, [optionList]);
 
-  // firestore : todo의 todo_tag_list db 업데이트
-  useEffect(() => {
-    const updateTodoTagList = async () => {
-      await updateDoc(todoRef, {
-        todo_tag_list: tagList,
-        modified_date: serverTimestamp(),
-      });
-    };
-    if (isTagListModified) {
-      updateTodoTagList();
-    }
-    setIsTagListModified(false);
-  }, [tagList]);
-
   return (
     <CreatableSelect
       closeMenuOnSelect={false}
@@ -93,7 +79,7 @@ export default function TagSelectLayout({
       formatOptionLabel={(option: any) => (
         <TagContainer $dynamicBg={option.color}>{option.label}</TagContainer>
       )}
-      value={tagList}
+      value={todoDataState.todoData.todo_tag_list}
       // eslint-disable-next-line react/jsx-no-bind
       getNewOptionData={getNewOptionData}
       onChange={handleSelectChange}
