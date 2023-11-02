@@ -94,9 +94,10 @@ const StageInfoPlusIcon = styled.img`
 
 interface Props {
   stageLists: any;
+  isKanbanShow: boolean;
 }
 
-export default function Stage({ stageLists }: Props) {
+export default function Stage({ stageLists, isKanbanShow }: Props) {
   const [searchParams] = useSearchParams();
   const [todoLists, setTodoLists] = useState<any[]>();
   const projectID = window.location.pathname.substring(1)!;
@@ -106,66 +107,67 @@ export default function Stage({ stageLists }: Props) {
   const setKanbanDataState = useSetRecoilState(kanbanState);
   console.log(todoDataState);
   // const [todoData, setTodoData] = useState(todoDataState);
+  const addedMap = todoDataState?.todoData?.size
+    ? todoDataState.todoData
+    : new Map();
+  const todoData1 = { todoData: addedMap };
+  console.log(addedMap, todoData1, todoLists);
+
+  const todoQuery = query(
+    collection(db, "project", projectID, "kanban", kanbanID, "todo"),
+    where("is_deleted", "==", false),
+  );
 
   useEffect(() => {
-    const todoQuery = query(
-      collection(db, "project", projectID, "kanban", kanbanID, "todo"),
-      where("is_deleted", "==", false),
-    );
+    if (!isKanbanShow) {
+      return;
+    }
 
     // setTodoDataState({ todoData: new Map() });
     const unsubTodo = onSnapshot(todoQuery, (todoSnapshot) => {
       console.log("before", todoDataState);
       // const addedMap = new Map();
       // const todoData = {"todoData": todoDataState?.todoData?.size ? todoDataState.todoData: addedMap}
-      const addedMap = todoDataState?.todoData?.size
-        ? todoDataState.todoData
-        : new Map();
-      const todoData1 = { todoData: addedMap };
-      console.log(addedMap, todoData1);
 
       const todos: any[] = [];
       todoSnapshot.docChanges().forEach((change) => {
-        todos.push(change.doc.data());
+        // todos.push(change.doc.data());
         if (change.type === "added") {
-          console.log("@add");
           addedMap.set(change.doc.id, change.doc.data());
         }
 
         if (change.type === "modified") {
-          console.log(change);
-          console.log("modified@@@@@");
-          console.log(todoDataState);
           addedMap.set(change.doc.id, change.doc.data());
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           setTodoDataState((todoData: any | Map<any, any>) => {
-            // eslint-disable-next-line no-param-reassign
-            // todoData = new Map();
             addedMap.set(change.doc.id, change.doc.data());
-            return addedMap;
+            return todoData1;
           });
-          // setTodoDataState((prev) => {
-          // prev.set(change.doc.id, change.doc.data());
-          // return new Map([...prev]);
-          // });
         }
-        // // 칸반이 삭제된 경우 (is_deleted 수정 시 쿼리 결과 변경)
         if (change.type === "removed") {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           setTodoDataState((todoData: any | Map<any, any>) => {
             addedMap.delete(change.doc.id);
-            return addedMap;
+            return todoData1;
           });
         }
 
-        setTodoDataState(todoData1);
-        setTodoLists(todos);
-      });
-    });
+        // if (addedMap.size > 0) {
+        //     // setTodoDataState((todoData) => new Map([...prev, ...addedMap]));
+        //     setTodoDataState(todoData1);
+        //   }
 
-    return () => {
-      unsubTodo();
-    };
+        // [...addedMap].map((xx: any) => todos.push(xx[1]))
+        setTodoDataState(todoData1);
+      });
+      addedMap.forEach((value: any) => {
+        todos.push(value);
+      });
+      setTodoLists(todos);
+      return () => {
+        unsubTodo();
+      };
+    });
   }, [kanbanID]);
 
   const handleTodoAddClick = async (stageOrder: number, stageName: string) => {
@@ -219,7 +221,7 @@ export default function Stage({ stageLists }: Props) {
   return (
     <StageLayout>
       {isStage.map((stage: any) => (
-        <StageBox>
+        <StageBox key={stage.name}>
           <StageInfoBox>
             {stage.name}
             <StageIconBox>
@@ -234,8 +236,11 @@ export default function Stage({ stageLists }: Props) {
           <StageContentBox>
             {todoLists
               ?.filter((stageTodo: any) => stageTodo.stageID === stage.name)
-              .map((todo: any) => (
-                <StageContent onClick={() => handleGoTodoClick(todo)}>
+              .map((todo: any, index: number) => (
+                <StageContent
+                  key={`${todo.stageID}-${index.toString()}`}
+                  onClick={() => handleGoTodoClick(todo)}
+                >
                   <StageContentParagraph>
                     {todo.name}
                     {todo.info}

@@ -5,6 +5,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebaseSDK";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import todoState from "../../../recoil/atoms/todo/todoState";
 import Stage from "./Stage";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
@@ -49,8 +50,12 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const navigate = useNavigate();
   const kanbanDataState = useRecoilState(kanbanState);
   const setKanbanDataState = useSetRecoilState(kanbanState);
+  const todoDataState = useRecoilState(todoState);
   const projectID = window.location.pathname.substring(1);
   const kanbanID = searchParams.get("kanbanID")!;
+  const [todoSize, setTodoSize] = useState();
+  console.log(kanbanDataState, kanbanID);
+  // console.log(todoDataState[0].todoData.size)
 
   const ProjectKanbanBox = styled.div`
     display: flex;
@@ -122,11 +127,15 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
     }
 
     const targetKanban = kanbanDataState[0]?.get(kanbanID);
+    console.log(targetKanban);
     setKanbanDataState((prev) => {
+      console.log(prev);
       targetKanban.stage_list = DEFAULT_STAGES;
       prev.set(kanbanID, targetKanban);
       return new Map([...prev]);
     });
+    console.log("프로젝트 내 칸반 정보", kanbanDataState);
+    setTodoSize(todoDataState[0]?.todoData?.size);
     setStageLists(targetKanban.stage_list);
     setIsLoaded(true);
   }, [kanbanID]);
@@ -150,7 +159,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
           <TestBtn type="button" onClick={() => handleTodoCLick()}>
             todo
           </TestBtn>
-          <div>kanban</div>
+          <div>kanbannnnn</div>
         </ProjectModalContentBox>
       </ProjectModalLayout>
     );
@@ -179,15 +188,18 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
             </ProjectKanbanInfoInnerBox>
             <ProjectKanbanDateParagraph>
               {`${yearMonthDayFormat(
-                kanbanDataState[0].get(kanbanID).created_date.seconds,
+                kanbanDataState[0]?.get(kanbanID).created_date.seconds,
               )} - ${yearMonthDayFormat(
-                kanbanDataState[0].get(kanbanID).end_date.seconds,
+                kanbanDataState[0]?.get(kanbanID).end_date.seconds,
               )}`}
             </ProjectKanbanDateParagraph>
           </ProjectKanbanInfoBox>
-          <ProjectKanbanProgressBox />
+          <ProjectKanbanProgressBox>
+            progress bar 들어갈 공간
+            {`  ${todoSize} / ${todoSize} `}
+          </ProjectKanbanProgressBox>
         </ProjectKanbanBox>
-        <Stage stageLists={stageLists} />
+        <Stage stageLists={stageLists} isKanbanShow={isKanbanShow} />
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );
