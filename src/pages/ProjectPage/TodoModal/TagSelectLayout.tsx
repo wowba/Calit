@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
 import { serverTimestamp, updateDoc } from "firebase/firestore";
@@ -27,8 +27,6 @@ export default function TagSelectLayout({
   const data = [...kanbanDataState];
   const targetKanbanData = data.filter((item) => item[0] === kanbanId);
   const tagData = targetKanbanData[0][1].tag_list;
-  const [optionList, setOptionList] = useState(tagData);
-  const [isOptionListModified, setIsOptionListModified] = useState(false);
 
   function getNewOptionData(inputValue: any, optionLabel: any) {
     return {
@@ -41,12 +39,15 @@ export default function TagSelectLayout({
     // option 목록 업데이트 (중복 금지)
     if (actionMeta.action === "create-option") {
       const resultValue = newValue.filter(
-        (item: any) =>
-          !optionList.some((list: any) => list.value === item.value),
+        (item: any) => !tagData.some((list: any) => list.value === item.value),
       );
-      setOptionList([...optionList, ...resultValue]);
+      const updatedOptionList = [...tagData, ...resultValue];
       if (resultValue) {
-        setIsOptionListModified(true);
+        // firestore : kanban의 tag_list db 업데이트
+        await updateDoc(kanbanRef, {
+          tag_list: updatedOptionList,
+          modified_date: serverTimestamp(),
+        });
       }
     }
     // firestore : todo 컬렉션의 todo_tag_list db 업데이트
@@ -56,25 +57,11 @@ export default function TagSelectLayout({
     });
   };
 
-  // firestore : kanban의 tag_list db 업데이트
-  useEffect(() => {
-    const updateOptionList = async () => {
-      await updateDoc(kanbanRef, {
-        tag_list: optionList,
-        modified_date: serverTimestamp(),
-      });
-    };
-    if (isOptionListModified) {
-      updateOptionList();
-      setIsOptionListModified(false);
-    }
-  }, [optionList]);
-
   return (
     <CreatableSelect
       closeMenuOnSelect={false}
       isMulti
-      options={optionList}
+      options={tagData}
       // eslint-disable-next-line react/no-unstable-nested-components
       formatOptionLabel={(option: any) => (
         <TagContainer $dynamicBg={option.color}>{option.label}</TagContainer>
