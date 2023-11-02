@@ -7,6 +7,7 @@ import { db } from "../../firebaseSDK";
 import Header from "../Header";
 import loginState from "../../recoil/atoms/login/loginState";
 import userDataState from "../../recoil/atoms/login/userDataState";
+import LoadingPage from "../LoadingPage";
 
 export default function PrivateRoute() {
   const navigate = useNavigate();
@@ -34,10 +35,12 @@ export default function PrivateRoute() {
     }, []);
   }
 
-  return isLogin === true ? (
+  return isLogin ? (
     <>
       <Header />
       <Outlet />
     </>
-  ) : null;
+  ) : (
+    <LoadingPage />
+  );
 }
