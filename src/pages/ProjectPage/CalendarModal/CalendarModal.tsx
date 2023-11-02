@@ -30,7 +30,7 @@ import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import { db } from "../../../firebaseSDK";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
-import pencilIcon from "../../../assets/icons/pencilIcon.svg";
+import paint from "../../../assets/icons/paint.svg";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -216,7 +216,12 @@ const CalendarBox = styled.div`
   .fc-event-main {
     margin: 0 0 0 0.25rem;
     display: flex;
+    align-items: center;
     gap: 1rem;
+    > div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     &:hover {
       img {
         display: block;
@@ -387,7 +392,8 @@ export default function CalendarModal({
     EventTitle.innerText = eventInfo.title;
 
     const ModifyIcon = document.createElement("img");
-    ModifyIcon.setAttribute("src", pencilIcon);
+    ModifyIcon.setAttribute("src", paint);
+    ModifyIcon.setAttribute("style", "width: 1rem; height: 1rem;");
     ModifyIcon.addEventListener("click", (e: MouseEvent) => {
       e.stopPropagation();
       setColorModalInfo({
