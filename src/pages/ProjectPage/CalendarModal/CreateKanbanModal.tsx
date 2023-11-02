@@ -152,6 +152,7 @@ export default function CreateKanbanModal(props: Props) {
       stageID: "dummyTodo",
       deadline: new Date(),
       info: "dummy",
+      todo_tag_list: [],
     });
     resetCreateKanbanModalState();
     return true;

@@ -24,6 +24,7 @@ interface TodoData {
   stageID: string;
   deadline: Date;
   info: string;
+  todo_tag_list: Array<Object>;
 }
 
 export const createKanban = async (
