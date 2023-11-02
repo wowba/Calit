@@ -22,10 +22,10 @@ import trashIcon from "../../../assets/icons/trashIcon.svg";
 import { db } from "../../../firebaseSDK";
 
 const StageLayout = styled.div`
-  display: flex;
+  display: inline-flex;
   overflow: scroll;
   height: 75vh;
-  width: 100vw;
+  width: 10000px;
 `;
 
 const StageBox = styled.div`
@@ -124,15 +124,10 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
       return;
     }
 
-    // setTodoDataState({ todoData: new Map() });
     const unsubTodo = onSnapshot(todoQuery, (todoSnapshot) => {
-      console.log("before", todoDataState);
-      // const addedMap = new Map();
-      // const todoData = {"todoData": todoDataState?.todoData?.size ? todoDataState.todoData: addedMap}
+      const todos: any = [];
 
-      const todos: any[] = [];
       todoSnapshot.docChanges().forEach((change) => {
-        // todos.push(change.doc.data());
         if (change.type === "added") {
           addedMap.set(change.doc.id, change.doc.data());
         }
@@ -158,12 +153,30 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
         //     setTodoDataState(todoData1);
         //   }
 
-        // [...addedMap].map((xx: any) => todos.push(xx[1]))
         setTodoDataState(todoData1);
       });
-      addedMap.forEach((value: any) => {
-        todos.push(value);
-      });
+      // addedMap.forEach((value: any) => {
+      // todos.push(value);
+      // if (!todos[value.stageID]) {
+      //   todos[value.stageID] = [value];
+      // } else {
+      //   todos[value.stageID].push(value);
+      // }
+      // });
+
+      if (todoLists) {
+        console.log("enter");
+        console.log(todoLists);
+        todoLists.map((singleTodo: any) => {
+          if (!todos[singleTodo.stageID]) {
+            todos[singleTodo.stageID] = [singleTodo];
+          } else {
+            todos[singleTodo.stageID].push(singleTodo);
+          }
+          return todos;
+        });
+        console.log(todos);
+      }
       setTodoLists(todos);
       return () => {
         unsubTodo();
@@ -219,25 +232,96 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
     });
   };
 
-  const onDragEnd = (result: any) => {
-    console.log(result);
+  const getStageListStyle = (isDraggingOver: any) => ({
+    background: isDraggingOver ? "lightblue" : "lightgrey",
+    display: "flex",
+    padding: "8px",
+    margin: "12px",
+    overflow: "auto",
+  });
+
+  // const getStageItemStyle = (isDragging: any, draggableStyle: any) => ({
+  //   userSelect: "none",
+  //   padding: "16px",
+  //   margin: `0 8px 0 0`,
+
+  //   // change background colour if dragging
+  //   background: isDragging ? "lightgreen" : "grey",
+
+  //   // styles we need to apply on draggables
+  //   ...draggableStyle,
+  // });
+
+  const onDragUpdate = (result: any) => {
+    console.log("중간 업데이트", result.source, result.destination);
+  };
+
+  const onDragEnd = async (result: any) => {
+    // drop이 불가능한 공간으로 드래그한 경우
+    if (!result.destination) return;
+
+    // 출발지와 목적지가 같은 경우
+    if (
+      result.destination.droppableId === result.source.droppableId &&
+      result.destination.index === result.source.index
+    )
+      return;
+
+    if (result.destination) {
+      console.log(result);
+      console.log(isStage);
+      const beforeDragIndex = result.source.index;
+      const beforeDragDroppableId = result.source.droppableId;
+      const afterDragIndex = result.destination.index;
+      const afterDragDroppableId = result.destination.droppableId;
+      console.log(beforeDragIndex, afterDragIndex);
+      console.log(beforeDragDroppableId, afterDragDroppableId);
+
+      // 스테이지의 배열 이동
+      if (
+        beforeDragDroppableId.indexOf("inner") === -1 ||
+        afterDragDroppableId.indexOf("inner") === -1
+      ) {
+        console.log("before", isStage);
+        // const [selectedStage] = isStage[beforeDragIndex];
+        const [selectedStage] = isStage.splice(beforeDragIndex, 1);
+        // isStage.splice(beforeDragIndex, 1);
+        isStage.splice(afterDragIndex, 0, selectedStage);
+        console.log("after", isStage);
+        setIsStage(isStage);
+        const kanbanRef = doc(db, "project", projectID, "kanban", kanbanID);
+        await updateDoc(kanbanRef, {
+          stage_list: isStage,
+        });
+        const targetDoc = await getDoc(kanbanRef);
+        console.log(targetDoc.data());
+        setKanbanDataState((prev) => {
+          prev.set(targetDoc.id, targetDoc.data());
+          return new Map([...prev]);
+        });
+      } else {
+        // 투두의 배열 이동
+        console.log("before", todoLists);
+      }
+    }
   };
   return (
     <StageLayout>
-      <DragDropContext onDragEnd={onDragEnd}>
-        {isStage.map((stage: any, index: number) => (
-          <Droppable
-            droppableId={stage.name}
-            key={stage.name}
-            direction="horizontal"
-            type="STAGE"
-          >
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...provided.droppableProps}
-              >
+      <DragDropContext onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
+        <Droppable
+          droppableId="stageDroppable"
+          key="stageDroppable"
+          direction="horizontal"
+        >
+          {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              style={getStageListStyle(snapshot.isDraggingOver)}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...provided.droppableProps}
+            >
+              {isStage.map((stage: any, index: number) => (
                 <Draggable
                   draggableId={stage.order.toString()}
                   index={index}
@@ -271,7 +355,6 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
                         <Droppable
                           droppableId={`inner-${stage.name}`}
                           key={`inner-${stage.name}`}
-                          type="TODO"
                         >
                           {(innerProvided) => (
                             <div
@@ -289,7 +372,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
                                     <Draggable
                                       draggableId={`${todo.stageID}-${todo.created_date.seconds}`}
                                       index={innerIndex}
-                                      key={`${todo.stageID}-${todo.created_date}`}
+                                      key={`${todo.stageID}-${todo.created_date.seconds}`}
                                     >
                                       {(innerDraggableProvided) => (
                                         <div
@@ -321,11 +404,11 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
                     </div>
                   )}
                 </Draggable>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ))}
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
       </DragDropContext>
       <StageBox>
         <StageInfoBox>

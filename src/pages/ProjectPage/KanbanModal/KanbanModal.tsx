@@ -127,10 +127,10 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
     }
 
     const targetKanban = kanbanDataState[0]?.get(kanbanID);
-    console.log(targetKanban);
     setKanbanDataState((prev) => {
-      console.log(prev);
-      targetKanban.stage_list = DEFAULT_STAGES;
+      if (targetKanban.stage_list.length === 0) {
+        targetKanban.stage_list = DEFAULT_STAGES;
+      }
       prev.set(kanbanID, targetKanban);
       return new Map([...prev]);
     });
