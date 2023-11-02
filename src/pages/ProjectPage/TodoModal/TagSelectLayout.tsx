@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
+import { ActionMeta, MultiValue } from "react-select";
 import { serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
@@ -28,18 +29,22 @@ export default function TagSelectLayout({
   const targetKanbanData = data.filter((item) => item[0] === kanbanId);
   const tagData = targetKanbanData[0][1].tag_list;
 
-  function getNewOptionData(inputValue: any, optionLabel: any) {
+  function getNewOptionData(inputValue: string, optionLabel: React.ReactNode) {
     return {
       label: optionLabel,
       value: inputValue,
       color: "#fff229",
     };
   }
-  const handleSelectChange = async (newValue: any, actionMeta: any) => {
+  const handleSelectChange = async (
+    newValue: MultiValue<any>,
+    actionMeta: ActionMeta<any>,
+  ) => {
     // option 목록 업데이트 (중복 금지)
     if (actionMeta.action === "create-option") {
       const resultValue = newValue.filter(
-        (item: any) => !tagData.some((list: any) => list.value === item.value),
+        (item) =>
+          !tagData.some((list: { value: string }) => list.value === item.value),
       );
       const updatedOptionList = [...tagData, ...resultValue];
       if (resultValue) {
