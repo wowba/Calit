@@ -7,11 +7,10 @@ import styled from "styled-components";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseSDK";
 import loginState from "../../recoil/atoms/login/loginState";
-import ShrikhandRegular from "../../assets/fonts/Shrikhand-Regular.ttf";
-import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import loginBackground from "../../assets/images/loginBackground.svg";
 import googleLoginIcon from "../../assets/icons/googleLoginIcon.svg";
 import userDataState from "../../recoil/atoms/login/userDataState";
+import { ReactComponent as loginLogo } from "../../assets/logo/loginLogo.svg";
 
 const LoginLayout = styled.div`
   height: 100vh;
@@ -25,31 +24,15 @@ const LoginLayout = styled.div`
   background-size: 100%;
 `;
 
-const LoginTitleParagraph = styled.p`
-  @font-face {
-    font-family: "ShrikhandRegular";
-    src: local("ShrikhandRegular"), url(${ShrikhandRegular});
-  }
-
-  font-family: "ShrikhandRegular";
-  font-weight: 500;
-  font-size: 12.5rem;
-  line-height: 100%;
-
-  margin-bottom: 1rem;
+const LoginLogo = styled(loginLogo)`
+  width: 32rem;
 `;
 
 const LoginIntroParagraph = styled.p`
-  @font-face {
-    font-family: "RobotoRegular";
-    src: local("RobotoRegular"), url(${RobotoRegular});
-  }
-
-  font-family: "RobotoRegular";
-  font-weight: 700;
+  font-weight: 900;
   font-size: 1.5rem;
 
-  margin-bottom: 3rem;
+  margin: 0 0 5rem 0;
 `;
 
 const GoogleLoginBtn = styled.button`
@@ -61,6 +44,8 @@ const GoogleLoginBtn = styled.button`
   padding: 0.5rem 1rem 0.5rem 1rem;
   border-radius: 0.5rem;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.24);
+
+  margin: 0 0 2rem 0;
 `;
 
 const GoogleLoginImg = styled.img`
@@ -69,12 +54,6 @@ const GoogleLoginImg = styled.img`
 `;
 
 const GoogleLoginText = styled.span`
-  @font-face {
-    font-family: "RobotoRegular";
-    src: local("RobotoRegular"), url(${RobotoRegular});
-  }
-
-  font-family: "RobotoRegular";
   font-weight: 400;
   font-size: 1.5rem;
 `;
@@ -143,7 +122,7 @@ export default function Login() {
 
   return (
     <LoginLayout>
-      <LoginTitleParagraph>Calit!</LoginTitleParagraph>
+      <LoginLogo />
       <LoginIntroParagraph>
         세상에서 가장 쉬운 애자일 협업 툴
       </LoginIntroParagraph>
