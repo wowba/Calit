@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
 import loginState from "../../recoil/atoms/login/loginState";
+import LoadingPage from "../LoadingPage";
 
 export default function PublicRoute() {
   const navigate = useNavigate();
@@ -15,5 +16,5 @@ export default function PublicRoute() {
     }
   }, []);
 
-  return isLogin === true ? null : <Outlet />;
+  return isLogin ? <LoadingPage /> : <Outlet />;
 }

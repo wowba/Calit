@@ -124,9 +124,29 @@ export default function CreateKanbanModal(props: Props) {
       alert("담당자를 최소 한 명 이상 할당해주세요.");
       return false;
     }
+    const DEFAULT_STAGES = [
+      {
+        name: "완료",
+        order: 0,
+        created_date: new Date(),
+        modified_date: new Date(),
+      },
+      {
+        name: "작업 중",
+        order: 1,
+        created_date: new Date(),
+        modified_date: new Date(),
+      },
+      {
+        name: "작업 전",
+        order: 2,
+        created_date: new Date(),
+        modified_date: new Date(),
+      },
+    ];
     const kanbanID = await createKanban(location.pathname, {
       user_list: userList,
-      stage_list: [],
+      stage_list: DEFAULT_STAGES,
       name: kanbanName,
       start_date: startDate,
       end_date: endDate,
