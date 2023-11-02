@@ -154,6 +154,12 @@ export default function CreateKanbanModal(props: Props) {
       modified_date: serverTimestamp(),
       is_deleted: false,
       color,
+      tag_list: [
+        { label: "긴급🔥", value: "긴급🔥", color: "#f92f66" },
+        { label: "FE✨", value: "FE✨", color: "#ddafff" },
+        { label: "BE🛠️", value: "FE✨", color: "#F5F3BB" },
+        { label: "UX/UI🎨", value: "FE✨", color: "#00FFF5" },
+      ],
     });
     await createTodo(location.pathname, kanbanID, {
       update_list: [],
@@ -166,6 +172,7 @@ export default function CreateKanbanModal(props: Props) {
       stageID: "dummyTodo",
       deadline: new Date(),
       info: "dummy",
+      todo_tag_list: [],
     });
     resetCreateKanbanModalState();
     return true;

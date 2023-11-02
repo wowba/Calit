@@ -22,6 +22,7 @@ import MarkdownEditor from "./MarkdownEditor";
 import DatePicker from "../../../components/DatePicker";
 import todoState from "../../../recoil/atoms/todo/todoState";
 import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
+import TagSelectLayout from "./TagSelectLayout";
 
 type Props = {
   todoTabColor: string;
@@ -85,6 +86,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const kanbanId = isTodoShow ? String(urlQueryString.get("kanbanID")) : "null";
   const todoId = isTodoShow ? String(urlQueryString.get("todoID")) : "null";
 
+  const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
   const todoRef = doc(
     db,
     "project",
@@ -174,6 +176,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     }
   };
 
+  // isLoaded===false일 때 tag만 렌더링
   if (!isLoaded) {
     return (
       <ProjectModalLayout $isShow={isTodoShow}>
@@ -234,6 +237,12 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
             </DeadlineContainer>
             <TagContainer>
               <TodoSubtitle>태그</TodoSubtitle>
+              <TagSelectLayout
+                kanbanId={kanbanId}
+                kanbanRef={kanbanRef}
+                todoRef={todoRef}
+                todoDataState={todoDataState}
+              />
             </TagContainer>
             <InfoContainer>
               <TodoSubtitle>설명</TodoSubtitle>

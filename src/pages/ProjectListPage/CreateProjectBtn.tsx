@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  FieldValue,
   addDoc,
   arrayUnion,
   collection,
@@ -35,8 +36,8 @@ interface ProjectData {
   name: string;
   project_intro: string;
   project_img_URL: string;
-  created_date: any;
-  modified_date: any;
+  created_date: FieldValue;
+  modified_date: FieldValue;
   creater: string;
   is_deleted: boolean;
 }
@@ -71,6 +72,12 @@ export default function CreateProjectBtn() {
       name: "dummyKanban",
       is_deleted: true,
       color: "#3888d8",
+      tag_list: [
+        { label: "긴급🔥", value: "긴급🔥", color: "#f92f66" },
+        { label: "FE✨", value: "FE✨", color: "#ddafff" },
+        { label: "BE🛠️", value: "FE✨", color: "#F5F3BB" },
+        { label: "UX/UI🎨", value: "FE✨", color: "#00FFF5" },
+      ],
     });
     // 유저의 project_list 업데이트
     if (userCredential) {

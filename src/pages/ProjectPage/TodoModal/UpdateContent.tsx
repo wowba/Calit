@@ -39,8 +39,8 @@ const UpdateContent = styled.div`
 `;
 
 const ChangeUpdateModal = styled(CommonSettingModal)`
-  bottom: -2rem;
-  right: 0;
+  bottom: -2.5rem;
+  right: -0.2rem;
   height: 2rem;
 `;
 
@@ -51,7 +51,6 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const [markdownContent, setMarkdownContent] = useState(data.detail);
   const [isEditing, setIsEditing] = useState(false);
   const [isSettingOpened, setIsSettingOpened] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [originalMarkdownContent, setOriginalMarkdownContent] = useState(
     data.detail,
   );
