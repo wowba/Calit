@@ -11,6 +11,7 @@ interface KanbanData {
   modified_date: FieldValue;
   is_deleted: boolean;
   color: string;
+  tag_list: Array<Object>;
 }
 interface TodoData {
   update_list: Array<Object>;
