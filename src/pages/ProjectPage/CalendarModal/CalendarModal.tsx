@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useRef, useState } from "react";
 import {
   DateSelectArg,
   EventClickArg,
   CalendarOptions,
   EventDropArg,
+  EventInput,
+  EventContentArg,
 } from "@fullcalendar/core";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, {
@@ -14,6 +17,7 @@ import interactionPlugin, {
 import { useRecoilValue } from "recoil";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { SetURLSearchParams } from "react-router-dom";
+import _ from "lodash";
 
 import {
   ProjectModalLayout,
@@ -28,6 +32,7 @@ import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import { db } from "../../../firebaseSDK";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
+import paint from "../../../assets/icons/paint.svg";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -209,11 +214,79 @@ const CalendarBox = styled.div`
   td:last-child {
     border-right: none;
   }
+  // 이벤트
+  .fc-event-main {
+    margin: 0 0 0 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    > div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    &:hover {
+      img {
+        display: block;
+      }
+    }
+    img {
+      display: none;
+    }
+  }
+`;
+
+const ColorModal = styled.input<{
+  $isShow: boolean;
+  $top: number;
+  $left: number;
+}>`
+  position: fixed;
+  background-color: white;
+
+  box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  top: ${(props) => `${props.$top}px`};
+  left: ${(props) => `${props.$left}px`};
+
+  ${(props) =>
+    !props.$isShow &&
+    css`
+      display: none;
+    `}
+`;
+
+const ColorModalBackground = styled.button<{ $isShow: boolean }>`
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: transparent;
+  z-index: 998;
+
+  cursor: default;
+  ${(props) =>
+    !props.$isShow &&
+    css`
+      display: none;
+    `}
 `;
 
 type Props = {
   calendarTabColor: string;
   setSearchParams: SetURLSearchParams;
+};
+
+type ColorModalInfo = {
+  top: number;
+  left: number;
+  color: string;
+  selectedKanbanId: string;
+  selectedEvent: EventContentArg | null;
 };
 
 export default function CalendarModal({
@@ -224,12 +297,20 @@ export default function CalendarModal({
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [colorModalInfo, setColorModalInfo] = useState<ColorModalInfo>({
+    top: 0,
+    left: 0,
+    color: "",
+    selectedKanbanId: "",
+    selectedEvent: null,
+  });
+  const [isColorModalShow, setIsColorModalShow] = useState(false);
 
-  const [kanbanEvents, setKanbanEvents] = useState(Array<any>);
+  const [kanbanEvents, setKanbanEvents] = useState(Array<EventInput>);
 
   useEffect(() => {
     const data = [...kanbanDataState];
-    const result = data.map((item) => ({
+    const result: EventInput[] = data.map((item) => ({
       id: item[0],
       start: yearMonthDayFormat(item[1].start_date.seconds),
       end: yearMonthDayFormat(item[1].end_date.seconds),
@@ -304,6 +385,80 @@ export default function CalendarModal({
     });
   };
 
+  function CustomEventContent(eventArg: EventContentArg) {
+    const {
+      event: { _def: eventInfo },
+    } = eventArg;
+
+    const EventTitle = document.createElement("div");
+    EventTitle.innerText = eventInfo.title;
+
+    const ModifyIcon = document.createElement("img");
+    ModifyIcon.setAttribute("src", paint);
+    ModifyIcon.setAttribute("style", "width: 1rem; height: 1rem;");
+    ModifyIcon.addEventListener("click", (e: MouseEvent) => {
+      e.stopPropagation();
+      setColorModalInfo({
+        top: ModifyIcon.getBoundingClientRect().top - 16,
+        left: ModifyIcon.getBoundingClientRect().left - 16,
+        color: eventArg.backgroundColor,
+        selectedKanbanId: eventInfo.publicId,
+        selectedEvent: eventArg,
+      });
+      setIsColorModalShow(true);
+    });
+
+    const arrayOfDomNodes = [EventTitle, ModifyIcon];
+    return { domNodes: arrayOfDomNodes };
+  }
+
+  const handleColorModalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setColorModalInfo((prev) => {
+      prev.selectedEvent!.event.setProp("backgroundColor", e.target.value);
+      prev.selectedEvent!.event.setProp(
+        "textColor",
+        getTextColorByBackgroundColor(e.target.value),
+      );
+
+      prev.selectedEvent!.event.setProp(
+        "borderColor",
+        getBorderColorByBackgroundColor(e.target.value),
+      );
+      return {
+        ...prev,
+        color: e.target.value,
+      };
+    });
+  };
+
+  const handleColorModalthrottle = useRef(
+    _.throttle((e: React.ChangeEvent<HTMLInputElement>) => {
+      handleColorModalChange(e);
+    }, 100),
+  );
+
+  const handleModalCloseClick = () => {
+    setColorModalInfo((prev) => ({
+      ...prev,
+    }));
+    setIsColorModalShow(false);
+  };
+
+  const handleColorModalBlur = async () => {
+    const kanbanRef = doc(
+      db,
+      "project",
+      window.location.pathname,
+      "kanban",
+      colorModalInfo.selectedKanbanId,
+    );
+    await updateDoc(kanbanRef, {
+      color: colorModalInfo.color,
+      modified_date: serverTimestamp(),
+    });
+    handleModalCloseClick();
+  };
+
   const fullCalendarSetting: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     selectable: true,
@@ -325,10 +480,12 @@ export default function CalendarModal({
     editable: true,
     fixedWeekCount: false,
     events: kanbanEvents,
+    fixedMirrorParent: document.body,
     select: handleSelect,
     eventClick: handleEventClick,
     eventDrop: handleEventDrop,
     eventResize: handleEventResize,
+    eventContent: CustomEventContent,
   };
 
   return (
@@ -359,6 +516,20 @@ export default function CalendarModal({
           setEndDate={setEndDate}
         />
       </ProjectModalContentBox>
+      <ColorModal
+        $isShow={isColorModalShow}
+        $top={colorModalInfo.top}
+        $left={colorModalInfo.left}
+        type="color"
+        value={colorModalInfo.color}
+        onChange={handleColorModalthrottle.current}
+        // onChange={handleColorModalChange}
+        onBlur={handleColorModalBlur}
+      />
+      <ColorModalBackground
+        $isShow={isColorModalShow}
+        onClick={handleModalCloseClick}
+      />
     </ProjectModalLayout>
   );
 }
