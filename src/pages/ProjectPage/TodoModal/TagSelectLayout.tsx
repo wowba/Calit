@@ -25,9 +25,8 @@ export default function TagSelectLayout({
   todoDataState,
 }: any) {
   const kanbanDataState = useRecoilValue(kanbanState);
-  const data = [...kanbanDataState];
-  const targetKanbanData = data.filter((item) => item[0] === kanbanId);
-  const tagData = targetKanbanData[0][1].tag_list;
+  const targetKanbanData = kanbanDataState.get(kanbanId);
+  const tagData = targetKanbanData.tag_list;
 
   function getNewOptionData(inputValue: string, optionLabel: React.ReactNode) {
     return {
