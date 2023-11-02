@@ -20,6 +20,7 @@ import userState from "../../recoil/atoms/login/userDataState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import ErrorPage from "../ErrorPage";
 import headerState from "../../recoil/atoms/header/headerState";
+import LoadingPage from "../LoadingPage";
 
 const ProjectLayout = styled.div`
   display: flex;
@@ -153,5 +154,7 @@ export default function ProjectCheckRoute() {
       <Sidebar />
       <Outlet />
     </ProjectLayout>
-  ) : null;
+  ) : (
+    <LoadingPage />
+  );
 }
