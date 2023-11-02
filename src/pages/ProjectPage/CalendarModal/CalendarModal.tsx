@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useRef, useState } from "react";
 import {
   DateSelectArg,
   EventClickArg,
@@ -412,27 +413,29 @@ export default function CalendarModal({
   }
 
   const handleColorModalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setColorModalInfo((prev) => ({
-      ...prev,
-      color: e.target.value,
-    }));
-    colorModalInfo.selectedEvent?.event.setProp(
-      "backgroundColor",
-      e.target.value,
-    );
-    colorModalInfo.selectedEvent?.event.setProp(
-      "textColor",
-      getTextColorByBackgroundColor(e.target.value),
-    );
-    colorModalInfo.selectedEvent?.event.setProp(
-      "borderColor",
-      getBorderColorByBackgroundColor(e.target.value),
-    );
+    setColorModalInfo((prev) => {
+      prev.selectedEvent!.event.setProp("backgroundColor", e.target.value);
+      prev.selectedEvent!.event.setProp(
+        "textColor",
+        getTextColorByBackgroundColor(e.target.value),
+      );
+
+      prev.selectedEvent!.event.setProp(
+        "borderColor",
+        getBorderColorByBackgroundColor(e.target.value),
+      );
+      return {
+        ...prev,
+        color: e.target.value,
+      };
+    });
   };
 
-  const throttle = _.throttle((e: React.ChangeEvent<HTMLInputElement>) => {
-    handleColorModalChange(e);
-  }, 1000);
+  const handleColorModalthrottle = useRef(
+    _.throttle((e: React.ChangeEvent<HTMLInputElement>) => {
+      handleColorModalChange(e);
+    }, 100),
+  );
 
   const handleModalCloseClick = () => {
     setColorModalInfo((prev) => ({
@@ -519,7 +522,8 @@ export default function CalendarModal({
         $left={colorModalInfo.left}
         type="color"
         value={colorModalInfo.color}
-        onChange={throttle}
+        onChange={handleColorModalthrottle.current}
+        // onChange={handleColorModalChange}
         onBlur={handleColorModalBlur}
       />
       <ColorModalBackground
