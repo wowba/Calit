@@ -12,7 +12,12 @@ import {
   where,
 } from "firebase/firestore";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+} from "@hello-pangea/dnd";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { createTodo } from "../../../api/CreateCollection";
 import todoState from "../../../recoil/atoms/todo/todoState";
@@ -22,10 +27,9 @@ import trashIcon from "../../../assets/icons/trashIcon.svg";
 import { db } from "../../../firebaseSDK";
 
 const StageLayout = styled.div`
-  display: inline-flex;
+  display: flex;
   overflow: scroll;
-  height: 75vh;
-  width: 10000px;
+  height: 70vh;
 `;
 
 const StageBox = styled.div`
@@ -100,13 +104,14 @@ interface Props {
 
 export default function Stage({ stageLists, isKanbanShow }: Props) {
   const [searchParams] = useSearchParams();
-  const [todoLists, setTodoLists] = useState<any[]>();
+  const [todoLists, setTodoLists] = useState([]);
   const projectID = window.location.pathname.substring(1)!;
   const kanbanID = searchParams.get("kanbanID")!;
   const [todoDataState, setTodoDataState] = useRecoilState(todoState);
   const [isStage, setIsStage] = useState(stageLists);
   const setKanbanDataState = useSetRecoilState(kanbanState);
   console.log(todoDataState);
+
   // const [todoData, setTodoData] = useState(todoDataState);
   const addedMap = todoDataState?.todoData?.size
     ? todoDataState.todoData
@@ -126,7 +131,6 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
 
     const unsubTodo = onSnapshot(todoQuery, (todoSnapshot) => {
       const todos: any = [];
-
       todoSnapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
           addedMap.set(change.doc.id, change.doc.data());
@@ -155,29 +159,30 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
 
         setTodoDataState(todoData1);
       });
-      // addedMap.forEach((value: any) => {
-      // todos.push(value);
-      // if (!todos[value.stageID]) {
-      //   todos[value.stageID] = [value];
-      // } else {
-      //   todos[value.stageID].push(value);
-      // }
-      // });
+      addedMap.forEach((value: any) => {
+        todos.push(value);
+        if (!todos[value.stageID]) {
+          todos[value.stageID] = [value];
+        } else {
+          todos[value.stageID].push(value);
+        }
+      });
 
-      if (todoLists) {
-        console.log("enter");
-        console.log(todoLists);
-        todoLists.map((singleTodo: any) => {
-          if (!todos[singleTodo.stageID]) {
-            todos[singleTodo.stageID] = [singleTodo];
-          } else {
-            todos[singleTodo.stageID].push(singleTodo);
-          }
-          return todos;
-        });
-        console.log(todos);
+      if (addedMap) {
+        // const todos: any = [];
+        // stageLists.forEach((singleStage: any) => {
+        //   todos[singleStage.name] = [];
+        // });
+
+        // console.log(todos);
+        // addedMap.forEach((ad: any) => {
+        //   console.log(todos);
+        //   todos[ad.stageID].push(ad);
+        // });
+
+        // console.log(todos);
+        setTodoLists(todos);
       }
-      setTodoLists(todos);
       return () => {
         unsubTodo();
       };
@@ -240,23 +245,11 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
     overflow: "auto",
   });
 
-  // const getStageItemStyle = (isDragging: any, draggableStyle: any) => ({
-  //   userSelect: "none",
-  //   padding: "16px",
-  //   margin: `0 8px 0 0`,
-
-  //   // change background colour if dragging
-  //   background: isDragging ? "lightgreen" : "grey",
-
-  //   // styles we need to apply on draggables
-  //   ...draggableStyle,
-  // });
-
   const onDragUpdate = (result: any) => {
-    console.log("중간 업데이트", result.source, result.destination);
+    console.log(result);
   };
 
-  const onDragEnd = async (result: any) => {
+  const onDragEnd = async (result: DropResult) => {
     // drop이 불가능한 공간으로 드래그한 경우
     if (!result.destination) return;
 
@@ -283,9 +276,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
         afterDragDroppableId.indexOf("inner") === -1
       ) {
         console.log("before", isStage);
-        // const [selectedStage] = isStage[beforeDragIndex];
         const [selectedStage] = isStage.splice(beforeDragIndex, 1);
-        // isStage.splice(beforeDragIndex, 1);
         isStage.splice(afterDragIndex, 0, selectedStage);
         console.log("after", isStage);
         setIsStage(isStage);
@@ -307,7 +298,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
   };
   return (
     <StageLayout>
-      <DragDropContext onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
         <Droppable
           droppableId="stageDroppable"
           key="stageDroppable"
