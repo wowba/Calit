@@ -15,6 +15,7 @@ import {
   ProjectModalTabBox,
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
+import ErrorPage from "../../../components/ErrorPage";
 
 const ProjectKanbanBox = styled.div`
   display: flex;
@@ -134,7 +135,9 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
             Kanban
           </ProjectModalTabText>
         </ProjectModalTabBox>
-        <ProjectModalContentBox>에러페이지 추가 예정</ProjectModalContentBox>
+        <ProjectModalContentBox>
+          <ErrorPage isKanban404 />
+        </ProjectModalContentBox>
       </ProjectModalLayout>
     );
   }
