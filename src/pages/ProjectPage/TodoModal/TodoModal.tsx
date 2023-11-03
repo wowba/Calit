@@ -242,6 +242,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
                 kanbanRef={kanbanRef}
                 todoRef={todoRef}
                 todoDataState={todoDataState}
+                isTodoShow={isTodoShow}
               />
             </TagContainer>
             <InfoContainer>

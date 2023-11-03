@@ -23,10 +23,11 @@ export default function TagSelectLayout({
   kanbanRef,
   todoRef,
   todoDataState,
+  isTodoShow,
 }: any) {
   const kanbanDataState = useRecoilValue(kanbanState);
   const targetKanbanData = kanbanDataState.get(kanbanId);
-  const tagData = targetKanbanData.tag_list;
+  const tagData = isTodoShow ? targetKanbanData.tag_list : null;
 
   function getNewOptionData(inputValue: string, optionLabel: React.ReactNode) {
     return {
