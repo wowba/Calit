@@ -5,7 +5,6 @@ import { useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebaseSDK";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
-// import todoState from "../../../recoil/atoms/todo/todoState";
 import Stage from "./Stage";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
@@ -56,7 +55,6 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
   const navigate = useNavigate();
 
   const kanbanDataState = useRecoilValue(kanbanState);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [lastKanbanId, setLastkanbanId] = useState("");
 
   const projectID = window.location.pathname.substring(1);
@@ -67,13 +65,11 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
 
   const currentKanban = kanbanDataState.get(kanbanId);
 
-  // 후에 todo onSnapshot 로직 추가하기.
   useEffect(() => {
     if (!isKanbanShow) {
       return;
     }
     setLastkanbanId(kanbanId);
-    setIsLoaded(true);
   }, [kanbanId, isKanbanShow]);
 
   const handleDelete = async () => {
@@ -83,19 +79,6 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
     });
     navigate(`/${projectID}`);
   };
-
-  if (!isLoaded) {
-    return (
-      <ProjectModalLayout $isShow={isKanbanShow}>
-        <ProjectModalTabBox $marginLeft={10.75}>
-          <ProjectModalTabBackground $color={kanbanTabColor} />
-          <ProjectModalTabText $top={0.4} $left={2.8}>
-            Kanban
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
-      </ProjectModalLayout>
-    );
-  }
 
   if (!isKanbanShow) {
     return (
@@ -111,7 +94,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
             <ProjectKanbanInfoBox>
               <ProjectKanbanInfoInnerBox>
                 <ProjectKanbanInfoParagraph>
-                  {kanbanDataState.get(lastKanbanId).name}
+                  {kanbanDataState.get(lastKanbanId)?.name}
                 </ProjectKanbanInfoParagraph>
                 <ProjectKanbanTrashIcon
                   src={trashIcon}
@@ -121,9 +104,9 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
               </ProjectKanbanInfoInnerBox>
               <ProjectKanbanDateParagraph>
                 {`${yearMonthDayFormat(
-                  kanbanDataState.get(lastKanbanId).created_date.seconds,
+                  kanbanDataState.get(lastKanbanId)?.created_date.seconds,
                 )} - ${yearMonthDayFormat(
-                  kanbanDataState.get(lastKanbanId).end_date.seconds,
+                  kanbanDataState.get(lastKanbanId)?.end_date.seconds,
                 )}`}
               </ProjectKanbanDateParagraph>
             </ProjectKanbanInfoBox>
@@ -131,11 +114,27 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
               progress bar 들어갈 공간
             </ProjectKanbanProgressBox>
           </ProjectKanbanBox>
-          <Stage
-            stageLists={kanbanDataState.get(lastKanbanId).stage_list}
-            isKanbanShow={isKanbanShow}
-          />
+          {kanbanDataState.get(lastKanbanId) ? (
+            <Stage
+              stageLists={kanbanDataState.get(lastKanbanId).stage_list}
+              isKanbanShow={isKanbanShow}
+            />
+          ) : null}
         </ProjectModalContentBox>
+      </ProjectModalLayout>
+    );
+  }
+
+  if (!currentKanban) {
+    return (
+      <ProjectModalLayout $isShow={isKanbanShow}>
+        <ProjectModalTabBox $marginLeft={10.75}>
+          <ProjectModalTabBackground $color={kanbanTabColor} />
+          <ProjectModalTabText $top={0.4} $left={2.8}>
+            Kanban
+          </ProjectModalTabText>
+        </ProjectModalTabBox>
+        <ProjectModalContentBox>에러페이지 추가 예정</ProjectModalContentBox>
       </ProjectModalLayout>
     );
   }
