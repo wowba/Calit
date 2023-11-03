@@ -182,7 +182,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
       <ProjectModalLayout $isShow={isTodoShow}>
         <ProjectModalTabBox $marginLeft={19.5}>
           <ProjectModalTabBackground $color={todoTabColor} />
-          <ProjectModalTabText $top={0.4} $left={3.3}>
+          <ProjectModalTabText $top={0.28} $left={3.3}>
             Todo
           </ProjectModalTabText>
         </ProjectModalTabBox>
@@ -194,7 +194,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     <ProjectModalLayout $isShow={isTodoShow}>
       <ProjectModalTabBox $marginLeft={19.5} $isShow={isTodoShow}>
         <ProjectModalTabBackground $color={todoTabColor} />
-        <ProjectModalTabText $top={0.4} $left={3.3}>
+        <ProjectModalTabText $top={0.28} $left={3.3}>
           Todo
         </ProjectModalTabText>
       </ProjectModalTabBox>

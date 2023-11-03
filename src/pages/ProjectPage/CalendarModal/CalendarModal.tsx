@@ -124,7 +124,7 @@ const CalendarBox = styled.div`
     border: solid 0.1rem #121212 !important;
     border-radius: 50%;
 
-    padding: 0.2rem 0 0 0;
+    padding: 0.125rem 0 0 0;
     font-weight: 900;
   }
   // prev, next button

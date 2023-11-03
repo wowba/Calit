@@ -85,7 +85,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
       <ProjectModalLayout $isShow={isKanbanShow}>
         <ProjectModalTabBox $marginLeft={10.75}>
           <ProjectModalTabBackground $color={kanbanTabColor} />
-          <ProjectModalTabText $top={0.4} $left={2.8}>
+          <ProjectModalTabText $top={0.28} $left={2.8}>
             Kanban
           </ProjectModalTabText>
         </ProjectModalTabBox>
@@ -130,7 +130,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
       <ProjectModalLayout $isShow={isKanbanShow}>
         <ProjectModalTabBox $marginLeft={10.75}>
           <ProjectModalTabBackground $color={kanbanTabColor} />
-          <ProjectModalTabText $top={0.4} $left={2.8}>
+          <ProjectModalTabText $top={0.28} $left={2.8}>
             Kanban
           </ProjectModalTabText>
         </ProjectModalTabBox>
@@ -141,9 +141,9 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
 
   return (
     <ProjectModalLayout $isShow={isKanbanShow}>
-      <ProjectModalTabBox $marginLeft={10.75}>
+      <ProjectModalTabBox $marginLeft={10.75} $isShow={isKanbanShow}>
         <ProjectModalTabBackground $color={kanbanTabColor} />
-        <ProjectModalTabText $top={0.4} $left={2.8}>
+        <ProjectModalTabText $top={0.28} $left={2.8}>
           Kanban
         </ProjectModalTabText>
       </ProjectModalTabBox>
