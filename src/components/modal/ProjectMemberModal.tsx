@@ -328,6 +328,7 @@ export default function ProjectMemberModal() {
                 setUserList={setNameList}
                 onBlur={() => false}
                 customUserData={filteredUserList}
+                isCustomUserData
               />
               <ConfirmBtn
                 $dynamicWidth="3rem"
