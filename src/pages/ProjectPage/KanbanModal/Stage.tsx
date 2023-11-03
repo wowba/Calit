@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import {
   collection,
   doc,
@@ -11,7 +11,6 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
   DragDropContext,
   Draggable,
@@ -98,36 +97,37 @@ const StageInfoPlusIcon = styled.img`
 `;
 
 interface Props {
-  stageLists: any;
+  stageLists: any; // 삭제예정
   isKanbanShow: boolean;
 }
 
 export default function Stage({ stageLists, isKanbanShow }: Props) {
-  const [searchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
   const [todoLists, setTodoLists] = useState([]);
-  const projectID = window.location.pathname.substring(1)!;
-  const kanbanID = searchParams.get("kanbanID")!;
+  const urlQueryString = new URLSearchParams(window.location.search);
+  const projectID = window.location.pathname.substring(1);
+  const kanbanID = isKanbanShow
+    ? String(urlQueryString.get("kanbanID"))
+    : "null";
   const [todoDataState, setTodoDataState] = useRecoilState(todoState);
-  const [isStage, setIsStage] = useState(stageLists);
+  const [isStage, setIsStage] = useState(stageLists); // 삭제 예정
   const setKanbanDataState = useSetRecoilState(kanbanState);
-  console.log(todoDataState);
 
   // const [todoData, setTodoData] = useState(todoDataState);
   const addedMap = todoDataState?.todoData?.size
     ? todoDataState.todoData
     : new Map();
   const todoData1 = { todoData: addedMap };
-  console.log(addedMap, todoData1, todoLists);
-
-  const todoQuery = query(
-    collection(db, "project", projectID, "kanban", kanbanID, "todo"),
-    where("is_deleted", "==", false),
-  );
 
   useEffect(() => {
     if (!isKanbanShow) {
       return;
     }
+
+    const todoQuery = query(
+      collection(db, "project", projectID, "kanban", kanbanID, "todo"),
+      where("is_deleted", "==", false),
+    );
 
     const unsubTodo = onSnapshot(todoQuery, (todoSnapshot) => {
       const todos: any = [];
@@ -202,14 +202,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
       deadline: new Date(),
       info: "내용",
     });
-    console.log("todo created");
-  };
-
-  const handleGoTodoClick = (todo: any) => {
-    console.log("clicked info: ", todo);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const todoData = todoDataState;
-    console.log([todoData][0].todoData);
+    // console.log("todo created");
   };
 
   const handleAddStageClick = async () => {
@@ -222,15 +215,12 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
         modified_date: new Date(),
       })
       .sort((a: any, b: any) => b.order - a.order);
-    console.log(kanbanRef);
     await updateDoc(kanbanRef, {
       stage_list: newStage,
     });
     setIsStage(newStage);
-    console.log(newStage);
 
     const targetDoc = await getDoc(kanbanRef);
-    console.log(targetDoc.data());
     setKanbanDataState((prev) => {
       prev.set(targetDoc.id, targetDoc.data());
       return new Map([...prev]);
@@ -245,10 +235,6 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
     overflow: "auto",
   });
 
-  const onDragUpdate = (result: any) => {
-    console.log(result);
-  };
-
   const onDragEnd = async (result: DropResult) => {
     // drop이 불가능한 공간으로 드래그한 경우
     if (!result.destination) return;
@@ -261,44 +247,37 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
       return;
 
     if (result.destination) {
-      console.log(result);
-      console.log(isStage);
       const beforeDragIndex = result.source.index;
       const beforeDragDroppableId = result.source.droppableId;
       const afterDragIndex = result.destination.index;
       const afterDragDroppableId = result.destination.droppableId;
-      console.log(beforeDragIndex, afterDragIndex);
-      console.log(beforeDragDroppableId, afterDragDroppableId);
 
       // 스테이지의 배열 이동
       if (
         beforeDragDroppableId.indexOf("inner") === -1 ||
         afterDragDroppableId.indexOf("inner") === -1
       ) {
-        console.log("before", isStage);
         const [selectedStage] = isStage.splice(beforeDragIndex, 1);
         isStage.splice(afterDragIndex, 0, selectedStage);
-        console.log("after", isStage);
         setIsStage(isStage);
         const kanbanRef = doc(db, "project", projectID, "kanban", kanbanID);
         await updateDoc(kanbanRef, {
           stage_list: isStage,
         });
         const targetDoc = await getDoc(kanbanRef);
-        console.log(targetDoc.data());
         setKanbanDataState((prev) => {
           prev.set(targetDoc.id, targetDoc.data());
           return new Map([...prev]);
         });
       } else {
         // 투두의 배열 이동
-        console.log("before", todoLists);
+        // console.log("before", todoLists);
       }
     }
   };
   return (
     <StageLayout>
-      <DragDropContext onDragEnd={onDragEnd} onDragUpdate={onDragUpdate}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <Droppable
           droppableId="stageDroppable"
           key="stageDroppable"
@@ -346,6 +325,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
                         <Droppable
                           droppableId={`inner-${stage.name}`}
                           key={`inner-${stage.name}`}
+                          type="sub"
                         >
                           {(innerProvided) => (
                             <div
@@ -373,11 +353,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
                                           // eslint-disable-next-line react/jsx-props-no-spreading
                                           {...innerDraggableProvided.draggableProps}
                                         >
-                                          <StageContent
-                                            onClick={() =>
-                                              handleGoTodoClick(todo)
-                                            }
-                                          >
+                                          <StageContent>
                                             <StageContentParagraph>
                                               {todo.name}
                                             </StageContentParagraph>

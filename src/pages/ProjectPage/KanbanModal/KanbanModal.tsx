@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebaseSDK";
@@ -17,111 +17,72 @@ import {
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
 
+const ProjectKanbanBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+`;
+
+const ProjectKanbanInfoBox = styled.div``;
+
+const ProjectKanbanInfoInnerBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const ProjectKanbanTrashIcon = styled.img`
+  z-index: 2;
+  cursor: pointer;
+  padding: 0 1rem;
+`;
+
+const ProjectKanbanProgressBox = styled.div``;
+
+const ProjectKanbanInfoParagraph = styled.p`
+  font-weight: bold;
+  font-size: 1.5rem;
+`;
+
+const ProjectKanbanDateParagraph = styled.p`
+  font-size: 0.75rem;
+`;
+
 type Props = {
   kanbanTabColor: string;
   isKanbanShow: boolean;
 };
 
-// const DEFAULT_STAGES = [
-//   {
-//     name: "완료",
-//     order: 0,
-//     created_date: new Date(),
-//     modified_date: new Date(),
-//   },
-//   {
-//     name: "작업 중",
-//     order: 1,
-//     created_date: new Date(),
-//     modified_date: new Date(),
-//   },
-//   {
-//     name: "작업 전",
-//     order: 2,
-//     created_date: new Date(),
-//     modified_date: new Date(),
-//   },
-// ];
-
 export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [stageLists, setStageLists] = useState([]);
   const navigate = useNavigate();
+
   const kanbanDataState = useRecoilValue(kanbanState);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [lastKanbanId, setLastkanbanId] = useState("");
+
   const projectID = window.location.pathname.substring(1);
-  const kanbanID = searchParams.get("kanbanID")!;
-  console.log(kanbanDataState, kanbanID);
+  const urlQueryString = new URLSearchParams(window.location.search);
+  const kanbanId = isKanbanShow
+    ? String(urlQueryString.get("kanbanID"))
+    : "null";
 
-  const ProjectKanbanBox = styled.div`
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-  `;
+  const currentKanban = kanbanDataState.get(kanbanId);
 
-  const ProjectKanbanInfoBox = styled.div``;
-
-  const ProjectKanbanInfoInnerBox = styled.div`
-    display: flex;
-    justify-content: space-between;
-  `;
-
-  const ProjectKanbanTrashIcon = styled.img`
-    z-index: 2;
-    cursor: pointer;
-    padding: 0 1rem;
-  `;
-
-  const ProjectKanbanProgressBox = styled.div``;
-
-  const ProjectKanbanInfoParagraph = styled.p`
-    font-weight: bold;
-    font-size: 1.5rem;
-  `;
-
-  const ProjectKanbanDateParagraph = styled.p`
-    font-size: 0.75rem;
-  `;
-
-  const TestBtn = styled.button`
-    margin: 10px;
-    border: 1px solid black;
-    background-color: beige;
-  `;
-
-  const handleCalClick = () => {
-    setSearchParams();
-  };
-
-  const handlekanbanCLick = () => {
-    setSearchParams({ kanbanID: "1234" });
-  };
-
-  const handleTodoCLick = () => {
-    setSearchParams({
-      kanbanID: searchParams.get("kanbanID")!,
-      todoID: "5678",
-    });
-  };
-
-  const handleDelete = async () => {
-    const kanbanRef = doc(db, "project", projectID, "kanban", kanbanID);
-    await updateDoc(kanbanRef, {
-      is_deleted: true,
-    });
-    navigate("/");
-  };
-
+  // 후에 todo onSnapshot 로직 추가하기.
   useEffect(() => {
     if (!isKanbanShow) {
       return;
     }
-
-    const targetKanban = kanbanDataState.get(kanbanID);
-    console.log("프로젝트 내 칸반 정보", kanbanDataState);
-    setStageLists(targetKanban.stage_list);
+    setLastkanbanId(kanbanId);
     setIsLoaded(true);
-  }, [kanbanID]);
+  }, [kanbanId, isKanbanShow]);
+
+  const handleDelete = async () => {
+    const kanbanRef = doc(db, "project", projectID, "kanban", kanbanId);
+    await updateDoc(kanbanRef, {
+      is_deleted: true,
+    });
+    navigate(`/${projectID}`);
+  };
 
   if (!isLoaded) {
     return (
@@ -132,17 +93,48 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
             Kanban
           </ProjectModalTabText>
         </ProjectModalTabBox>
+      </ProjectModalLayout>
+    );
+  }
+
+  if (!isKanbanShow) {
+    return (
+      <ProjectModalLayout $isShow={isKanbanShow}>
+        <ProjectModalTabBox $marginLeft={10.75}>
+          <ProjectModalTabBackground $color={kanbanTabColor} />
+          <ProjectModalTabText $top={0.4} $left={2.8}>
+            Kanban
+          </ProjectModalTabText>
+        </ProjectModalTabBox>
         <ProjectModalContentBox>
-          <TestBtn type="button" onClick={() => handleCalClick()}>
-            calender
-          </TestBtn>
-          <TestBtn type="button" onClick={() => handlekanbanCLick()}>
-            kanban
-          </TestBtn>
-          <TestBtn type="button" onClick={() => handleTodoCLick()}>
-            todo
-          </TestBtn>
-          <div>kanbannnnn</div>
+          <ProjectKanbanBox>
+            <ProjectKanbanInfoBox>
+              <ProjectKanbanInfoInnerBox>
+                <ProjectKanbanInfoParagraph>
+                  {kanbanDataState.get(lastKanbanId).name}
+                </ProjectKanbanInfoParagraph>
+                <ProjectKanbanTrashIcon
+                  src={trashIcon}
+                  alt="칸반 삭제"
+                  onClick={() => handleDelete()}
+                />
+              </ProjectKanbanInfoInnerBox>
+              <ProjectKanbanDateParagraph>
+                {`${yearMonthDayFormat(
+                  kanbanDataState.get(lastKanbanId).created_date.seconds,
+                )} - ${yearMonthDayFormat(
+                  kanbanDataState.get(lastKanbanId).end_date.seconds,
+                )}`}
+              </ProjectKanbanDateParagraph>
+            </ProjectKanbanInfoBox>
+            <ProjectKanbanProgressBox>
+              progress bar 들어갈 공간
+            </ProjectKanbanProgressBox>
+          </ProjectKanbanBox>
+          <Stage
+            stageLists={kanbanDataState.get(lastKanbanId).stage_list}
+            isKanbanShow={isKanbanShow}
+          />
         </ProjectModalContentBox>
       </ProjectModalLayout>
     );
@@ -161,7 +153,7 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
           <ProjectKanbanInfoBox>
             <ProjectKanbanInfoInnerBox>
               <ProjectKanbanInfoParagraph>
-                {kanbanDataState.get(kanbanID).name}
+                {currentKanban.name}
               </ProjectKanbanInfoParagraph>
               <ProjectKanbanTrashIcon
                 src={trashIcon}
@@ -171,17 +163,18 @@ export default function KanbanModal({ kanbanTabColor, isKanbanShow }: Props) {
             </ProjectKanbanInfoInnerBox>
             <ProjectKanbanDateParagraph>
               {`${yearMonthDayFormat(
-                kanbanDataState.get(kanbanID).created_date.seconds,
-              )} - ${yearMonthDayFormat(
-                kanbanDataState.get(kanbanID).end_date.seconds,
-              )}`}
+                currentKanban.created_date.seconds,
+              )} - ${yearMonthDayFormat(currentKanban.end_date.seconds)}`}
             </ProjectKanbanDateParagraph>
           </ProjectKanbanInfoBox>
           <ProjectKanbanProgressBox>
             progress bar 들어갈 공간
           </ProjectKanbanProgressBox>
         </ProjectKanbanBox>
-        <Stage stageLists={stageLists} isKanbanShow={isKanbanShow} />
+        <Stage
+          stageLists={currentKanban.stage_list}
+          isKanbanShow={isKanbanShow}
+        />
       </ProjectModalContentBox>
     </ProjectModalLayout>
   );
