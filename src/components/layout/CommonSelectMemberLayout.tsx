@@ -27,19 +27,21 @@ interface Props {
   setUserList: React.Dispatch<React.SetStateAction<any[]>>;
   onBlur: any;
   customUserData?: Array<any>;
+  isCustomUserData?: boolean;
 }
 
 export default function CommonSelectMemberLayout(props: Props) {
-  const { userList, setUserList, onBlur, customUserData } = props;
+  const { userList, setUserList, onBlur, customUserData, isCustomUserData } =
+    props;
   const { user_list: projectUserList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
 
   // user_list 통해 user 데이터 가져오기
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (list: any) => {
       const data = await Promise.all(
-        projectUserList.map(async (id: string) => {
+        list.map(async (id: string) => {
           const userRef = doc(db, "user", id);
           const userSnap: any = await getDoc(userRef);
           return {
@@ -51,10 +53,11 @@ export default function CommonSelectMemberLayout(props: Props) {
       );
       setUserData(data);
     };
-    if (customUserData) {
-      setUserData(customUserData);
+
+    if (isCustomUserData) {
+      fetchData(customUserData);
     } else {
-      fetchData();
+      fetchData(projectUserList);
     }
   }, [projectUserList]);
 
@@ -109,4 +112,5 @@ export default function CommonSelectMemberLayout(props: Props) {
 
 CommonSelectMemberLayout.defaultProps = {
   customUserData: [],
+  isCustomUserData: false,
 };

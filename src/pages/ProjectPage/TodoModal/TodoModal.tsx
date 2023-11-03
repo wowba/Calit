@@ -20,7 +20,7 @@ import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import CommonTextArea from "../../../components/layout/CommonTextArea";
 import MarkdownEditor from "./MarkdownEditor";
 import DatePicker from "../../../components/DatePicker";
-import todoState from "../../../recoil/atoms/todo/todoState";
+import singleTodoState from "../../../recoil/atoms/todo/singleTodoState";
 import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
 import TagSelectLayout from "./TagSelectLayout";
 
@@ -69,7 +69,7 @@ const Contour = styled.div`
 
 export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [todoDataState, setTodoDataState] = useRecoilState(todoState);
+  const [todoDataState, setTodoDataState] = useRecoilState(singleTodoState);
   const navigate = useNavigate();
   const [userList, setUserList] = useState<any[]>([]);
 
@@ -242,6 +242,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
                 kanbanRef={kanbanRef}
                 todoRef={todoRef}
                 todoDataState={todoDataState}
+                isTodoShow={isTodoShow}
               />
             </TagContainer>
             <InfoContainer>

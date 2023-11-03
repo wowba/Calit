@@ -6,12 +6,13 @@ import { useRecoilValue } from "recoil";
 import { db } from "../../firebaseSDK";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import rightArrow from "../../assets/icons/rightArrow.svg";
-import InputCommon from "../layout/InputCommonLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import projectState from "../../recoil/atoms/project/projectState";
 import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import userState from "../../recoil/atoms/login/userDataState";
+import CommonSelectMemberLayout from "../layout/CommonSelectMemberLayout";
+import CommonInputLayout from "../layout/CommonInputLayout";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -22,6 +23,15 @@ const ModalScrollContainer = styled.div`
   height: 13rem;
   width: 100%;
   overflow: scroll;
+  &::-webkit-scrollbar {
+    width: 8px;
+    overflow-y: scroll;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
 `;
 const ModalTeamMembers = styled.div`
   display: grid;
@@ -42,8 +52,9 @@ const ModalMemberContainer = styled.div`
 
 const UserImage = styled.img`
   border-radius: 50%;
-  width: 80%;
-  height: 80%;
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: cover;
 `;
 
 const UserName = styled.div`
@@ -62,16 +73,19 @@ const GetOutBtn = styled.button`
   display: flex;
   margin: 1rem 0 0;
 `;
-const SelectInput = styled.select`
-  background: #fafafa;
-  border: 0.2px solid #ededed;
-  -webkit-border-radius: 4px;
-`;
+// const SelectInput = styled.select`
+//   background: #fafafa;
+//   border: 0.2px solid #ededed;
+//   -webkit-border-radius: 4px;
+// `;
 
 const BtnActionContainer = styled.div`
   padding: 1.5rem 0 1rem;
 `;
-const InviteContainer = styled.div``;
+const InviteContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const GetOutContainer = styled.div`
   display: flex;
   justify-content: space-around;
@@ -96,13 +110,14 @@ export default function ProjectMemberModal() {
     invited_list: invitedList,
     creater,
   } = useRecoilValue(projectState).projectData;
+  const filteredUserList = userList.filter((item: string) => item !== creater);
+
   const [userData, setUserData] = useState<any[]>([]);
   const [inputEmailValue, setInputEmailValue] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
-
   const [modalIndex, setModalIndex] = useState(0);
 
   const { email: userId } = useRecoilValue(userState).userData;
+  const [nameList, setNameList] = useState<any[]>([]);
 
   // 모달 열고 닫기
   const handleInviteClick = () => {
@@ -162,6 +177,21 @@ export default function ProjectMemberModal() {
       }
     }
   };
+  const handleBtnClick = async () => {
+    if (inputEmailValue.includes("@gmail.com")) {
+      const curInvitedList = [...invitedList];
+      curInvitedList.push(inputEmailValue);
+      await updateDoc(docRef, {
+        invited_list: curInvitedList,
+        modified_date: serverTimestamp(),
+      });
+      setInputEmailValue("");
+    } else {
+      setInputEmailValue("");
+      // eslint-disable-next-line no-alert
+      alert("Gmail 주소를 입력해주세요");
+    }
+  };
 
   // 삭제 버튼
   const handleDelete = async (email: string) => {
@@ -176,29 +206,31 @@ export default function ProjectMemberModal() {
 
   // 내보내기
   const handleUserList = async () => {
-    if (selectedUser) {
+    if (nameList) {
       // 유저의 project_list에서 프로젝트 삭제
-      const userRef = doc(db, "user", selectedUser);
-      const userSnap: any = await getDoc(userRef);
-      const projectList = userSnap.data().project_list;
-      if (projectList.includes(projectId)) {
-        const updateProjectList = projectList.filter(
-          (project: string) => project !== projectId,
-        );
-        await updateDoc(userRef, {
-          project_list: updateProjectList,
-        });
-      }
-
+      nameList.map(async (selected: any) => {
+        const userRef = doc(db, "user", selected.value);
+        const userSnap: any = await getDoc(userRef);
+        const projectList = userSnap.data().project_list;
+        if (projectList.includes(projectId)) {
+          const updateProjectList = projectList.filter(
+            (project: string) => project !== projectId,
+          );
+          await updateDoc(userRef, {
+            project_list: updateProjectList,
+          });
+        }
+      });
       // 프로젝트의 user_list에서 유저 삭제
-      const updateUserList = userList.filter(
-        (curUser: string) => curUser !== selectedUser,
+      const valuesArray = nameList.map((item) => item.value);
+      const updatedUsers = userList.filter(
+        (curUser: string) => !valuesArray.includes(curUser),
       );
       await updateDoc(docRef, {
-        user_list: updateUserList,
+        user_list: updatedUsers,
         modified_date: serverTimestamp(),
       });
-      setSelectedUser("");
+      setNameList([]);
     }
   };
 
@@ -229,22 +261,34 @@ export default function ProjectMemberModal() {
       </BtnBox>
       <BtnActionContainer>
         {modalIndex === 1 && (
-          <InviteContainer>
-            <InputCommon
-              style={{ height: "2rem" }}
-              $dynamicWidth="100%"
-              placeholder="팀원의 Gmail을 입력해주세요"
-              value={inputEmailValue}
-              onChange={(e) => setInputEmailValue(e.target.value)}
-              onKeyDown={handleEnterPress}
-            />
+          <>
+            <InviteContainer>
+              <CommonInputLayout
+                placeholder="팀원의 Gmail을 입력해주세요"
+                $dynamicWidth="100%"
+                $dynamicHeight="2rem"
+                $dynamicFontSize="0.9rem"
+                $dynamicPadding="0px 4px"
+                style={{ backgroundColor: "#efefef" }}
+                value={inputEmailValue}
+                onChange={(e) => setInputEmailValue(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
+              <ConfirmBtn
+                $dynamicWidth="4rem"
+                $dynamicHeight="2rem"
+                $dynamicMargin="2px"
+                onClick={handleBtnClick}
+              >
+                확인
+              </ConfirmBtn>
+            </InviteContainer>
             <div style={{ fontWeight: 700, margin: "1.5rem 0 0.3rem" }}>
               초대 대기열
             </div>
             <WaitingList>
               {invitedList.map((email: string) => (
                 <WaitingContainer key={email}>
-                  {" "}
                   <WaitingName>{email.split("@")[0]}</WaitingName>
                   <button type="button" onClick={() => handleDelete(email)}>
                     <img src={closeIcon} alt="삭제" />
@@ -259,13 +303,13 @@ export default function ProjectMemberModal() {
             >
               🔗 Copy Link
             </button>
-          </InviteContainer>
+          </>
         )}
         {modalIndex === 2 && (
           <GetOutContainer>
-            <div>
-              <SelectInput
-                style={{ height: "100%" }}
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {/* <SelectInput
+                style={{ height: "100%", display: "inline-block" }}
                 onChange={(e) => setSelectedUser(e.target.value)}
                 value={selectedUser}
               >
@@ -278,11 +322,19 @@ export default function ProjectMemberModal() {
                       </option>
                     ),
                 )}
-              </SelectInput>
+              </SelectInput> */}
+              <CommonSelectMemberLayout
+                userList={nameList}
+                setUserList={setNameList}
+                onBlur={() => false}
+                customUserData={filteredUserList}
+                isCustomUserData
+              />
               <ConfirmBtn
-                $dynamicWidth="4rem"
+                $dynamicWidth="3rem"
                 $dynamicHeight="2rem"
                 onClick={handleUserList}
+                style={{ margin: "2px" }}
               >
                 확인
               </ConfirmBtn>

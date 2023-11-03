@@ -23,10 +23,11 @@ export default function TagSelectLayout({
   kanbanRef,
   todoRef,
   todoDataState,
+  isTodoShow,
 }: any) {
   const kanbanDataState = useRecoilValue(kanbanState);
   const targetKanbanData = kanbanDataState.get(kanbanId);
-  const tagData = targetKanbanData.tag_list;
+  const tagData = isTodoShow ? targetKanbanData.tag_list : null;
 
   function getNewOptionData(inputValue: string, optionLabel: React.ReactNode) {
     return {
@@ -92,9 +93,9 @@ export default function TagSelectLayout({
           width: "auto",
           transition: "all 0.3s",
           boxShadow: "none",
-          border: "1px solid transparent",
-          ":hover": { border: "1px solid black" },
-          ":focus": { border: "1px solid black" },
+          border: "1px solid #eaeaea",
+          ":hover": { border: "1px solid gray" },
+          ":focus": { border: "1px solid #eaeaea" },
         }),
         valueContainer: (baseStyles) => ({
           ...baseStyles,
