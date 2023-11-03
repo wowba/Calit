@@ -93,9 +93,9 @@ export default function TagSelectLayout({
           width: "auto",
           transition: "all 0.3s",
           boxShadow: "none",
-          border: "1px solid transparent",
-          ":hover": { border: "1px solid black" },
-          ":focus": { border: "1px solid black" },
+          border: "1px solid #eaeaea",
+          ":hover": { border: "1px solid gray" },
+          ":focus": { border: "1px solid #eaeaea" },
         }),
         valueContainer: (baseStyles) => ({
           ...baseStyles,
