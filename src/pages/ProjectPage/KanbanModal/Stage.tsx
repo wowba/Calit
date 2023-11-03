@@ -161,11 +161,11 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
       });
       addedMap.forEach((value: any) => {
         todos.push(value);
-        if (!todos[value.stageID]) {
-          todos[value.stageID] = [value];
-        } else {
-          todos[value.stageID].push(value);
-        }
+        // if (!todos[value.stageID]) {
+        //   todos[value.stageID] = [value];
+        // } else {
+        //   todos[value.stageID].push(value);
+        // }
       });
 
       if (addedMap) {
