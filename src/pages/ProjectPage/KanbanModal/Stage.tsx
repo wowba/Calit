@@ -201,6 +201,7 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
       stageID: stageName,
       deadline: new Date(),
       info: "내용",
+      todo_tag_list: [],
     });
     // console.log("todo created");
   };
