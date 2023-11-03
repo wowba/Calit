@@ -26,10 +26,11 @@ interface Props {
   userList: Array<string>;
   setUserList: React.Dispatch<React.SetStateAction<any[]>>;
   onBlur: any;
+  customUserData?: Array<any>;
 }
 
 export default function CommonSelectMemberLayout(props: Props) {
-  const { userList, setUserList, onBlur } = props;
+  const { userList, setUserList, onBlur, customUserData } = props;
   const { user_list: projectUserList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
@@ -50,8 +51,11 @@ export default function CommonSelectMemberLayout(props: Props) {
       );
       setUserData(data);
     };
-
-    fetchData();
+    if (customUserData) {
+      setUserData(customUserData);
+    } else {
+      fetchData();
+    }
   }, [projectUserList]);
 
   return (
@@ -102,3 +106,7 @@ export default function CommonSelectMemberLayout(props: Props) {
     />
   );
 }
+
+CommonSelectMemberLayout.defaultProps = {
+  customUserData: [],
+};
