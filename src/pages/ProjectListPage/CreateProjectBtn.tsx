@@ -18,12 +18,22 @@ import { createKanban } from "../../api/CreateCollection";
 
 const CreateBtn = styled.button`
   display: inline;
-  width: 400px;
+  max-width: 400px;
   min-width: 230px;
   height: 226px;
+  border: 1px solid transparent;
   border-radius: 13px;
   background-color: #ededed;
   margin: 20px;
+  transition:
+    box-shadow 0.7s,
+    border 0.7s;
+  &:hover {
+    box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    -webkit-box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    -moz-box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    border: 1px solid #c9c9c9;
+  }
 `;
 
 const PlusIcon = styled.img`
