@@ -83,6 +83,7 @@ export default function Login() {
 
         if (!userSnap.exists()) {
           await setDoc(doc(db, "user", user.email as string), {
+            bookmark_list: [],
             project_list: [],
             profile_img_URL: user.photoURL,
             name: user.displayName,
