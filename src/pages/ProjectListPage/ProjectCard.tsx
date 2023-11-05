@@ -48,13 +48,13 @@ const ProjectCardBgImg = styled.a<Props>`
   object-fit: cover;
 `;
 
-const ProjectCardInfo = styled.div<{ isTextInputActive: boolean }>`
+const ProjectCardInfo = styled.div<{ $isTextInputActive: boolean }>`
   width: 100%;
-  height: ${(props) => (props.isTextInputActive ? "110px" : "0px")};
+  height: ${(props) => (props.$isTextInputActive ? "110px" : "0px")};
   background-color: #ededed;
   border-radius: 3px 3px 13px 13px;
   position: absolute;
-  bottom: ${(props) => (props.isTextInputActive ? "-5px" : "0px")};
+  bottom: ${(props) => (props.$isTextInputActive ? "-5px" : "0px")};
   justify-contents: center;
   box-shadow:
     5px -1px 86px -1px rgba(0, 0, 0, 0.8),
@@ -115,7 +115,7 @@ export default function ProjectCard({
       />
       <ProjectCardInfo
         className="project-card-info"
-        isTextInputActive={isTextInputActive}
+        $isTextInputActive={isTextInputActive}
       >
         <CommonInputLayout
           $isHover
