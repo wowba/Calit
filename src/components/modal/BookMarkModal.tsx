@@ -1,11 +1,14 @@
 import React, { useState, KeyboardEvent, useEffect } from "react";
 import styled from "styled-components";
-import { doc, getDoc } from "firebase/firestore";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { useRecoilValue } from "recoil";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import { db } from "../../firebaseSDK";
+import userData from "../../recoil/atoms/login/userDataState";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -33,9 +36,14 @@ const BookMarkLinksDeleteIconBox = styled.img`
 `;
 
 export default function Bookmark() {
+  const userDataState = useRecoilValue(userData)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { email, bookmark_list: bookmarkList }: any = userDataState.userData;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const userRef = doc(db, "user", email);
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  const [bookMarkList, setBookMarkList] = useState<any>(new Map())
+  const [bookMarkData, setBookMarkData] = useState<any>(new Map())
   const [bookMarkName, setBookMarkName] = useState("");
   const urlQueryString = new URLSearchParams(window.location.search);
   const projectId = window.location.pathname.substring(1);
@@ -70,10 +78,16 @@ export default function Bookmark() {
   const handleBtnClick = async () => {
     if (inputUrlValue) {
 
-      bookMarkList.set(!inputTextValue ? bookMarkName : inputTextValue, inputUrlValue)
-      setBookMarkList(bookMarkList)
-      console.log(bookMarkList)
+      bookMarkData.set(!inputTextValue ? bookMarkName : inputTextValue, inputUrlValue)
+      setBookMarkData(bookMarkData)
+      console.log(bookMarkData)
 
+
+      // 추가되게끔 고치기
+      // 처음에 저장된거 가져오기
+      // await updateDoc(userRef, {
+      //   bookmark_list: bookMarkData
+      // });
 
       setInputUrlValue("");
     } else {
@@ -86,10 +100,10 @@ export default function Bookmark() {
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputUrlValue) {
-        const URLList = [...bookMarkList]
+        const URLList = [...bookMarkData]
         URLList.push(inputUrlValue)
 
-        setBookMarkList(URLList)
+        setBookMarkData(URLList)
         setInputUrlValue("");
       } else {
         setInputUrlValue("");
@@ -100,8 +114,8 @@ export default function Bookmark() {
   };
 
   const handleClickDelete = async(path: string) => {
-    bookMarkList.delete(path)
-    setBookMarkList(bookMarkList)
+    bookMarkData.delete(path)
+    setBookMarkData(bookMarkData)
   }
 
 
@@ -146,7 +160,7 @@ export default function Bookmark() {
         </ConfirmBtn>
       </BookMarkInputBox>
       <BookMarkLinksBox>
-        {[...bookMarkList].map((bo: any) => (
+        {[...bookMarkData].map((bo: any) => (
           <BookMarkLinksContentBox>
             {bo[0]}
             <BookMarkLinksDeleteIconBox src={closeIcon} onClick={() => handleClickDelete(bo[0])}/>
