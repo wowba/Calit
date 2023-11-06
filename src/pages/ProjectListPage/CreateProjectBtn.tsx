@@ -82,12 +82,6 @@ export default function CreateProjectBtn() {
       name: "dummyKanban",
       is_deleted: true,
       color: "#3888d8",
-      tag_list: [
-        { label: "긴급🔥", value: "긴급🔥", color: "#f92f66" },
-        { label: "FE✨", value: "FE✨", color: "#ddafff" },
-        { label: "BE🛠️", value: "BE🛠️", color: "#F5F3BB" },
-        { label: "UX/UI🎨", value: "UX/UI🎨", color: "#00FFF5" },
-      ],
     });
     // 유저의 project_list 업데이트
     if (userCredential) {

@@ -11,7 +11,6 @@ interface KanbanData {
   modified_date: FieldValue;
   is_deleted: boolean;
   color: string;
-  tag_list: Array<Object>;
 }
 interface TodoData {
   update_list: Array<Object>;
@@ -25,6 +24,7 @@ interface TodoData {
   deadline: Date;
   info: string;
   todo_tag_list: Array<Object>;
+  todo_option_list: Array<Object>;
 }
 
 export const createKanban = async (
