@@ -54,10 +54,18 @@ const Container = styled.div`
   grid-template-columns: 4.5rem 1fr;
   grid-template-rows: 1fr;
 `;
-const UserListContainer = styled(Container)``;
-const DeadlineContainer = styled(Container)``;
-const TagContainer = styled(Container)``;
-const InfoContainer = styled(Container)``;
+const UserListContainer = styled(Container)`
+  margin: 0.5rem 0 0 0;
+`;
+const DeadlineContainer = styled(Container)`
+  margin: 0.5rem 0 0 0;
+`;
+const TagContainer = styled(Container)`
+  margin: 0.5rem 0 0 0;
+`;
+const InfoContainer = styled(Container)`
+  margin: 0.5rem 0 0 0;
+`;
 
 const Contour = styled.div`
   background-color: #eaeaea;

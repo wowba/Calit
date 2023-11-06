@@ -1,62 +1,11 @@
 import React from "react";
-import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
 import { ActionMeta, MultiValue } from "react-select";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
-import closeIcon from "../../../assets/icons/closeIcon.svg";
-import { db } from "../../../firebaseSDK";
-
-interface Props {
-  $dynamicBg: string;
-}
-export const TagContainer = styled.div<Props>`
-  display: inline-block;
-  background-color: ${(props) =>
-    props.$dynamicBg ? props.$dynamicBg : "#ffffff"};
-  border-radius: 10px;
-  white-space: nowrap;
-  padding: 2px 10px;
-`;
-
-function MyOption({
-  innerRef,
-  innerProps,
-  data: { label, color, title },
-}: any) {
-  const kanbanDataState = useRecoilValue(kanbanState);
-  const urlQueryString = new URLSearchParams(window.location.search);
-  const kanbanId = String(urlQueryString.get("kanbanID"));
-  const targetKanbanData = kanbanDataState.get(kanbanId);
-  const tagData = targetKanbanData.tag_list;
-  const projectId = window.location.pathname.substring(1);
-  const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
-
-  const handleOptionDelete = async (e: any) => {
-    e.stopPropagation();
-
-    const selectedLabel = label;
-    const updatedTagData = tagData.filter(
-      (item: { label: string }) => item.label !== selectedLabel,
-    );
-    await updateDoc(kanbanRef, {
-      tag_list: updatedTagData,
-      modified_date: serverTimestamp(),
-    });
-  };
-
-  return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <article ref={innerRef} {...innerProps} className="custom-option">
-      <TagContainer $dynamicBg={color}>{label}</TagContainer>
-      <button type="button" onClick={handleOptionDelete}>
-        <img src={closeIcon} alt="삭제" />
-      </button>
-      <div className="sub">{title} </div>
-    </article>
-  );
-}
+import MyOption from "./CustomOptions";
+import TagContainer from "./TagContainer";
 
 export default function TagSelectLayout({
   kanbanId,
