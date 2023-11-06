@@ -167,7 +167,6 @@ export default function Bookmark() {
           style={{ border: "1px solid black", marginBottom: "4px" }}
           value={inputUrlValue}
           onChange={(e) => setInputUrlValue(e.target.value)}
-          readOnly
         />
         <CommonInputLayout
           placeholder="대체 텍스트를 입력해주세요"
