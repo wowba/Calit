@@ -31,10 +31,11 @@ const BookMarkLinksContentBox = styled.li`
   padding: 0px 0px 2px 10px;
 `;
 
-const BookmarkLinksParagraph = styled.p`
+const BookMarkLinksParagraph = styled.p`
   display: inline;
   cursor: pointer;
 `;
+
 const BookMarkLinksDeleteIconBox = styled.img`
   display: inline;
   padding-left: 10px;
@@ -91,9 +92,7 @@ export default function Bookmark() {
   }, [window.location.href]);
 
   const bookmarkCheck = (path: string) => {
-    const check = bookMarkData.findIndex(
-      (item: any) => item.inputUrlValue === path,
-    );
+    const check = bookMarkData.findIndex((item: any) => item.value === path);
     const result: boolean = check > -1;
     return result;
   };
@@ -130,9 +129,7 @@ export default function Bookmark() {
   };
 
   const handleClickDelete = async (path: string) => {
-    const target = bookMarkData.findIndex(
-      (item: any) => item.inputUrlValue === path,
-    );
+    const target = bookMarkData.findIndex((item: any) => item.value === path);
 
     bookMarkData.splice(target, 1);
     setBookMarkData(bookMarkData);
@@ -195,11 +192,11 @@ export default function Bookmark() {
       <BookMarkLinksBox>
         {bookMarkData.map((singleBookMark: any) => (
           <BookMarkLinksContentBox key={singleBookMark.value}>
-            <BookmarkLinksParagraph
+            <BookMarkLinksParagraph
               onClick={() => handleClickNavigate(singleBookMark.value)}
             >
               {lengthChecker(singleBookMark.name)}
-            </BookmarkLinksParagraph>
+            </BookMarkLinksParagraph>
             <BookMarkLinksDeleteIconBox
               src={closeIcon}
               onClick={() => handleClickDelete(singleBookMark.value)}
