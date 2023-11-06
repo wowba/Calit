@@ -144,7 +144,8 @@ export default function ProjectCard({
           alt={rectangle}
         />
         <CommonTextArea
-          $dynamicWidth="97%"
+          $dynamicWidth="96%"
+          $dynamicPadding="3px"
           placeholder="프로젝트 소개를 입력해주세요"
           style={{
             position: "absolute",
