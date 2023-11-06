@@ -1,12 +1,7 @@
 import React, { useState, KeyboardEvent, useEffect } from "react";
 import styled from "styled-components";
-import {
-  // arrayUnion,
-  doc,
-  getDoc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
@@ -28,15 +23,20 @@ const BookMarkInputBox = styled.div`
 
 const BookMarkLinksBox = styled.ul`
   overflow: auto;
-  // height: auto;
   height: 100%;
+  padding-top: 5px;
 `;
 const BookMarkLinksContentBox = styled.li`
-  // display: flex;
   list-style-position: inside;
+  padding: 0px 0px 2px 10px;
+`;
+
+const BookmarkLinksParagraph = styled.p`
+  display: inline;
+  cursor: pointer;
 `;
 const BookMarkLinksDeleteIconBox = styled.img`
-  display: inline-block;
+  display: inline;
   padding-left: 10px;
 `;
 
@@ -45,129 +45,116 @@ export default function Bookmark() {
     useRecoilValue(projectState).projectData;
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  // const [bookMarkData, setBookMarkData] = useState<any>(new Map());
-  const [bookMarkData, setBookMarkData] = useState<any>([]);
+  const [bookMarkData, setBookMarkData] = useState<any[]>([]);
   const [bookMarkName, setBookMarkName] = useState("");
   const urlQueryString = new URLSearchParams(window.location.search);
   const projectId = window.location.pathname.substring(1);
   const kanbanId = String(urlQueryString.get("kanbanID"));
   const todoId = String(urlQueryString.get("todoID"));
   const projectRef = doc(db, "project", projectId);
+  const navigate = useNavigate();
+
+  const fetchBookMarkNameData = async () => {
+    if (todoId !== "null") {
+      const todoRef = doc(
+        db,
+        "project",
+        projectId,
+        "kanban",
+        kanbanId,
+        "todo",
+        todoId,
+      );
+      const todoSnap = await getDoc(todoRef);
+      console.log("todo ", todoSnap.data());
+      setBookMarkName(!inputTextValue ? todoSnap.data()?.name : inputTextValue);
+    } else if (kanbanId !== "null") {
+      const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
+      const kanbanSnap = await getDoc(kanbanRef);
+      console.log("kanban ", kanbanSnap.data());
+      setBookMarkName(
+        !inputTextValue ? kanbanSnap.data()?.name : inputTextValue,
+      );
+    } else {
+      // const projectRef = doc(db, "project", projectId);
+      const projectSnap = await getDoc(projectRef);
+      console.log("project ", projectSnap.data());
+      setBookMarkName(
+        !inputTextValue ? projectSnap.data()?.name : inputTextValue,
+      );
+    }
+    console.log("setname", inputTextValue);
+  };
 
   useEffect(() => {
     setInputUrlValue(window.location.href);
-
-    async function fetchBookMarkName() {
-      if (todoId !== "null") {
-        const todoRef = doc(
-          db,
-          "project",
-          projectId,
-          "kanban",
-          kanbanId,
-          "todo",
-          todoId,
-        );
-        const todoSnap = await getDoc(todoRef);
-        console.log("todo ", todoSnap.data());
-        setBookMarkName(
-          !inputTextValue ? todoSnap.data()?.name : inputTextValue,
-        );
-      } else if (kanbanId !== "null") {
-        const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
-        const kanbanSnap = await getDoc(kanbanRef);
-        console.log("kanban ", kanbanSnap.data());
-        setBookMarkName(
-          !inputTextValue ? kanbanSnap.data()?.name : inputTextValue,
-        );
-      } else {
-        // const projectRef = doc(db, "project", projectId);
-        const projectSnap = await getDoc(projectRef);
-        console.log("project ", projectSnap.data());
-        setBookMarkName(
-          !inputTextValue ? projectSnap.data()?.name : inputTextValue,
-        );
-      }
+    console.log(bookMarkList);
+    if (bookMarkList) {
+      setBookMarkData([...bookMarkList]);
     }
-    fetchBookMarkName();
-  }, [window.location.pathname]);
 
-  useEffect(() => {}, [bookMarkName]);
+    fetchBookMarkNameData();
+  }, [window.location.href]);
 
-  // const bookmarkCheck = (path: string) => {
-  //   const result = Object.values(bookMarkData).find(
-  //     (singleBookMarkPath) => singleBookMarkPath === path,
-  //   );
-  //   return result;
-  // };
+  const bookmarkCheck = (path: string) => {
+    const check = bookMarkData.findIndex(
+      (item: any) => item.inputUrlValue === path,
+    );
+    const result: boolean = check > -1;
+    return result;
+  };
 
   const handleBtnClick = async () => {
-    if (inputUrlValue) {
-      // if (bookmarkCheck(inputUrlValue)) {
-      //   console.log("hi");
-      // }
+    fetchBookMarkNameData();
+    if (bookmarkCheck(inputUrlValue)) {
+      // eslint-disable-next-line no-alert
+      alert("이미 등록된 주소입니다.");
+      return;
+    }
+
+    const curBookMarkList = [...bookMarkData];
+    curBookMarkList.push({ bookMarkName, inputUrlValue });
+    console.log(curBookMarkList);
+    setBookMarkData(curBookMarkList);
+
+    await updateDoc(projectRef, {
+      bookmark_list: curBookMarkList,
+      modified_date: serverTimestamp(),
+    });
+
+    setInputTextValue("");
+  };
+
+  const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (bookmarkCheck(inputUrlValue)) {
+        // eslint-disable-next-line no-alert
+        alert("이미 등록된 주소입니다.");
+        return;
+      }
 
       if (inputTextValue) {
         setBookMarkName(inputTextValue);
       }
 
-      const curBookMarkList = [...bookMarkList];
+      const curBookMarkList = [...bookMarkData];
       curBookMarkList.push({ bookMarkName, inputUrlValue });
       console.log(curBookMarkList);
-
-      const booklist = Object.values(curBookMarkList);
-      console.log(booklist);
-
       setBookMarkData(curBookMarkList);
-      // console.log(bookMarkData);
-      // const stringifyBookMarkData = JSON.stringify([...bookMarkData]);
-      // console.log(stringifyBookMarkData);
-      // const parseBookMarkData = JSON.parse(stringifyBookMarkData);
-      // console.log(parseBookMarkData);
-
-      // 추가되게끔 고치기
-
-      curBookMarkList.map((cu: any) =>
-        console.log(cu.bookMarkName, cu.inputUrlValue),
-      );
 
       await updateDoc(projectRef, {
         bookmark_list: curBookMarkList,
         modified_date: serverTimestamp(),
       });
 
-      setInputUrlValue("");
       setInputTextValue("");
-    } else {
-      setInputUrlValue("");
-      // eslint-disable-next-line no-alert
-      alert("URL을 입력해주세요");
-    }
-  };
-
-  const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      if (inputUrlValue) {
-        const URLList = [...bookMarkData];
-        // URLList.push(inputUrlValue);
-
-        setBookMarkData(URLList);
-        setInputUrlValue("");
-      } else {
-        setInputUrlValue("");
-        // eslint-disable-next-line no-alert
-        alert("URL을 입력해주세요");
-      }
     }
   };
 
   const handleClickDelete = async (path: string) => {
-    // const target = bookMarkData
-    console.log(bookMarkData, path);
     const target = bookMarkData.findIndex(
       (item: any) => item.inputUrlValue === path,
     );
-    console.log(target);
 
     bookMarkData.splice(target, 1);
     setBookMarkData(bookMarkData);
@@ -176,6 +163,11 @@ export default function Bookmark() {
       bookmark_list: bookMarkData,
       modified_date: serverTimestamp(),
     });
+  };
+
+  const handleClickNavigate = (path: string) => {
+    const url = path.split("/");
+    navigate(`/${url[url.length - 1]}`);
   };
 
   return (
@@ -191,8 +183,7 @@ export default function Bookmark() {
           style={{ backgroundColor: "#efefef", marginBottom: "4px" }}
           value={inputUrlValue}
           onChange={(e) => setInputUrlValue(e.target.value)}
-          // onKeyDown={handleEnterPress}
-          // readOnly
+          readOnly
         />
         <CommonInputLayout
           placeholder="대체 텍스트를 입력해주세요"
@@ -217,7 +208,11 @@ export default function Bookmark() {
       <BookMarkLinksBox>
         {bookMarkData.map((singleBookMark: any) => (
           <BookMarkLinksContentBox key={singleBookMark.inputUrlValue}>
-            {singleBookMark.bookMarkName}
+            <BookmarkLinksParagraph
+              onClick={() => handleClickNavigate(singleBookMark.inputUrlValue)}
+            >
+              {singleBookMark.bookMarkName}
+            </BookmarkLinksParagraph>
             <BookMarkLinksDeleteIconBox
               src={closeIcon}
               onClick={() => handleClickDelete(singleBookMark.inputUrlValue)}
