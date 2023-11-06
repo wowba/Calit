@@ -47,12 +47,12 @@ export default function Bookmark() {
   const [inputTextValue, setInputTextValue] = useState("");
   const [bookMarkData, setBookMarkData] = useState<any[]>([]);
   const [bookMarkName, setBookMarkName] = useState("");
+  const navigate = useNavigate();
   const urlQueryString = new URLSearchParams(window.location.search);
   const projectId = window.location.pathname.substring(1);
   const kanbanId = String(urlQueryString.get("kanbanID"));
   const todoId = String(urlQueryString.get("todoID"));
   const projectRef = doc(db, "project", projectId);
-  const navigate = useNavigate();
 
   const fetchBookMarkNameData = async () => {
     if (todoId !== "null") {
@@ -66,29 +66,23 @@ export default function Bookmark() {
         todoId,
       );
       const todoSnap = await getDoc(todoRef);
-      console.log("todo ", todoSnap.data());
       setBookMarkName(!inputTextValue ? todoSnap.data()?.name : inputTextValue);
     } else if (kanbanId !== "null") {
       const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
       const kanbanSnap = await getDoc(kanbanRef);
-      console.log("kanban ", kanbanSnap.data());
       setBookMarkName(
         !inputTextValue ? kanbanSnap.data()?.name : inputTextValue,
       );
     } else {
-      // const projectRef = doc(db, "project", projectId);
       const projectSnap = await getDoc(projectRef);
-      console.log("project ", projectSnap.data());
       setBookMarkName(
         !inputTextValue ? projectSnap.data()?.name : inputTextValue,
       );
     }
-    console.log("setname", inputTextValue);
   };
 
   useEffect(() => {
     setInputUrlValue(window.location.href);
-    console.log(bookMarkList);
     if (bookMarkList) {
       setBookMarkData([...bookMarkList]);
     }
@@ -105,7 +99,7 @@ export default function Bookmark() {
   };
 
   const handleBtnClick = async () => {
-    fetchBookMarkNameData();
+    // 같은 주소가 중복해서 북마크 등록되지 않게 검증
     if (bookmarkCheck(inputUrlValue)) {
       // eslint-disable-next-line no-alert
       alert("이미 등록된 주소입니다.");
@@ -113,8 +107,12 @@ export default function Bookmark() {
     }
 
     const curBookMarkList = [...bookMarkData];
-    curBookMarkList.push({ bookMarkName, inputUrlValue });
-    console.log(curBookMarkList);
+
+    if (inputTextValue) {
+      curBookMarkList.push({ name: inputTextValue, value: inputUrlValue });
+    } else {
+      curBookMarkList.push({ name: bookMarkName, value: inputUrlValue });
+    }
     setBookMarkData(curBookMarkList);
 
     await updateDoc(projectRef, {
@@ -127,27 +125,7 @@ export default function Bookmark() {
 
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (bookmarkCheck(inputUrlValue)) {
-        // eslint-disable-next-line no-alert
-        alert("이미 등록된 주소입니다.");
-        return;
-      }
-
-      if (inputTextValue) {
-        setBookMarkName(inputTextValue);
-      }
-
-      const curBookMarkList = [...bookMarkData];
-      curBookMarkList.push({ bookMarkName, inputUrlValue });
-      console.log(curBookMarkList);
-      setBookMarkData(curBookMarkList);
-
-      await updateDoc(projectRef, {
-        bookmark_list: curBookMarkList,
-        modified_date: serverTimestamp(),
-      });
-
-      setInputTextValue("");
+      handleBtnClick();
     }
   };
 
@@ -170,8 +148,17 @@ export default function Bookmark() {
     navigate(`/${url[url.length - 1]}`);
   };
 
+  const lengthChecker = (word: string) => {
+    const returnWord = word.length > 20 ? `${word.substring(0, 20)}...` : word;
+    return returnWord;
+  };
+
   return (
-    <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
+    <ModalArea
+      $dynamicWidth="25rem"
+      $dynamicHeight="auto"
+      onClick={handleClick}
+    >
       <ModalTitle>Links</ModalTitle>
       <BookMarkInputBox>
         <CommonInputLayout
@@ -180,7 +167,7 @@ export default function Bookmark() {
           $dynamicHeight="2rem"
           $dynamicFontSize="0.9rem"
           $dynamicPadding="4px 4px"
-          style={{ backgroundColor: "#efefef", marginBottom: "4px" }}
+          style={{ border: "1px solid black", marginBottom: "4px" }}
           value={inputUrlValue}
           onChange={(e) => setInputUrlValue(e.target.value)}
           readOnly
@@ -191,7 +178,7 @@ export default function Bookmark() {
           $dynamicHeight="2rem"
           $dynamicFontSize="0.9rem"
           $dynamicPadding="4px 4px"
-          style={{ backgroundColor: "#efefef", marginBottom: "4px" }}
+          style={{ border: "1px solid black", marginBottom: "4px" }}
           value={inputTextValue}
           onChange={(e) => setInputTextValue(e.target.value)}
           onKeyDown={handleEnterPress}
@@ -207,15 +194,15 @@ export default function Bookmark() {
       </BookMarkInputBox>
       <BookMarkLinksBox>
         {bookMarkData.map((singleBookMark: any) => (
-          <BookMarkLinksContentBox key={singleBookMark.inputUrlValue}>
+          <BookMarkLinksContentBox key={singleBookMark.value}>
             <BookmarkLinksParagraph
-              onClick={() => handleClickNavigate(singleBookMark.inputUrlValue)}
+              onClick={() => handleClickNavigate(singleBookMark.value)}
             >
-              {singleBookMark.bookMarkName}
+              {lengthChecker(singleBookMark.name)}
             </BookmarkLinksParagraph>
             <BookMarkLinksDeleteIconBox
               src={closeIcon}
-              onClick={() => handleClickDelete(singleBookMark.inputUrlValue)}
+              onClick={() => handleClickDelete(singleBookMark.value)}
             />
           </BookMarkLinksContentBox>
         ))}
