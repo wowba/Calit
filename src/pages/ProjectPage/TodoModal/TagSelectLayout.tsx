@@ -7,15 +7,16 @@ import TagContainer from "./TagContainer";
 
 export default function TagSelectLayout({ todoRef, todoDataState }: any) {
   const optionData = todoDataState.todoData.todo_option_list;
-  // 유저의 임의 옵션 추가
-  function getNewOptionData(inputValue: string, optionLabel: React.ReactNode) {
-    return {
-      label: optionLabel,
-      value: inputValue,
-      color: "#fff229",
-      canDelete: true,
-    };
-  }
+  // 유저의 임의 옵션 추가 기능
+  const getNewOptionData = (
+    inputValue: string,
+    optionLabel: React.ReactNode,
+  ) => ({
+    label: optionLabel,
+    value: inputValue,
+    color: "#fff229",
+    canDelete: true,
+  });
   const handleSelectChange = async (
     newValue: MultiValue<any>,
     actionMeta: ActionMeta<any>,
@@ -54,7 +55,6 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
         <TagContainer $dynamicBg={option.color}>{option.label}</TagContainer>
       )}
       value={todoDataState.todoData.todo_tag_list}
-      // eslint-disable-next-line react/jsx-no-bind
       getNewOptionData={getNewOptionData}
       onChange={handleSelectChange}
       components={{ Option: CustomOptions }}
