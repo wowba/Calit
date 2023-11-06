@@ -6,7 +6,7 @@ import closeIcon from "../../../assets/icons/closeIcon.svg";
 import { db } from "../../../firebaseSDK";
 import singleTodoState from "../../../recoil/atoms/todo/singleTodoState";
 
-export default function MyOption({
+export default function CustomOptions({
   innerRef,
   innerProps,
   data: { label, color, canDelete },

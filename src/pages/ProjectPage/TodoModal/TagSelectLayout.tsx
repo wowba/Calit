@@ -2,7 +2,7 @@ import React from "react";
 import CreatableSelect from "react-select/creatable";
 import { ActionMeta, MultiValue } from "react-select";
 import { serverTimestamp, updateDoc } from "firebase/firestore";
-import MyOption from "./CustomOptions";
+import CustomOptions from "./CustomOptions";
 import TagContainer from "./TagContainer";
 
 export default function TagSelectLayout({ todoRef, todoDataState }: any) {
@@ -57,7 +57,7 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
       // eslint-disable-next-line react/jsx-no-bind
       getNewOptionData={getNewOptionData}
       onChange={handleSelectChange}
-      components={{ Option: MyOption }}
+      components={{ Option: CustomOptions }}
       styles={{
         multiValue: (baseStyles) => ({
           ...baseStyles,
