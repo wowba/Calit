@@ -13,15 +13,25 @@ interface Props {
 
 export const ProjectCardUnit = styled.div`
   display: inline;
-  width: 400px;
+  max-width: 400px;
   min-width: 230px;
   height: 226px;
+  border: 1px solid transparent;
   border-radius: 13px;
   position: relative;
   background-repeat: no-repeat;
   background-size: 100%;
   margin: 20px;
   overflow: hidden;
+  transition:
+    box-shadow 0.7s,
+    border 0.7s;
+  &:hover {
+    box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    -webkit-box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    -moz-box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
+    border: 1px solid #c9c9c9;
+  }
 `;
 const ProjectCardBgImg = styled.a<Props>`
   background-image: url(${(props) =>
@@ -29,26 +39,26 @@ const ProjectCardBgImg = styled.a<Props>`
       ? props.$dynamic_url
       : "https://i.pinimg.com/564x/ad/36/d7/ad36d788f88de7de91122c7317449371.jpg"});
   display: inline-block;
-  width: 400px;
-  min-width: 230px;
+  width: 100%;
   height: 226px;
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
+  object-fit: cover;
 `;
 
-const ProjectCardInfo = styled.div<{ isTextInputActive: boolean }>`
-  width: 400px;
-  height: ${(props) => (props.isTextInputActive ? "110px" : "0px")};
+const ProjectCardInfo = styled.div<{ $isTextInputActive: boolean }>`
+  width: 100%;
+  height: ${(props) => (props.$isTextInputActive ? "110px" : "0px")};
   background-color: #ededed;
   border-radius: 3px 3px 13px 13px;
   position: absolute;
-  bottom: ${(props) => (props.isTextInputActive ? "-5px" : "0px")};
+  bottom: ${(props) => (props.$isTextInputActive ? "-5px" : "0px")};
   justify-contents: center;
-  box-shadow: -1px -3px 76px -18px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: -1px -3px 76px -18px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: -1px -3px 76px -18px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    5px -1px 86px -1px rgba(0, 0, 0, 0.8),
+    0px 25px 16px 0px rgba(0, 0, 0, 0.6);
   transition: all 0.5s ease;
   &:hover {
     height: 110px;
@@ -105,7 +115,7 @@ export default function ProjectCard({
       />
       <ProjectCardInfo
         className="project-card-info"
-        isTextInputActive={isTextInputActive}
+        $isTextInputActive={isTextInputActive}
       >
         <CommonInputLayout
           $isHover
@@ -134,7 +144,8 @@ export default function ProjectCard({
           alt={rectangle}
         />
         <CommonTextArea
-          $dynamicWidth="97%"
+          $dynamicWidth="96%"
+          $dynamicPadding="3px"
           placeholder="프로젝트 소개를 입력해주세요"
           style={{
             position: "absolute",

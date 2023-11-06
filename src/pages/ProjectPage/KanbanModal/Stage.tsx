@@ -202,6 +202,22 @@ export default function Stage({ stageLists, isKanbanShow }: Props) {
       deadline: new Date(),
       info: "내용",
       todo_tag_list: [],
+      todo_option_list: [
+        {
+          label: "긴급🔥",
+          value: "긴급🔥",
+          color: "#f92f66",
+          canDelete: false,
+        },
+        { label: "FE✨", value: "FE✨", color: "#ddafff", canDelete: false },
+        { label: "BE🛠️", value: "BE🛠️", color: "#F5F3BB", canDelete: false },
+        {
+          label: "UX/UI🎨",
+          value: "UX/UI🎨",
+          color: "#00FFF5",
+          canDelete: false,
+        },
+      ],
     });
     // console.log("todo created");
   };

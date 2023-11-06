@@ -1,41 +1,22 @@
 import React from "react";
-import styled from "styled-components";
 import CreatableSelect from "react-select/creatable";
 import { ActionMeta, MultiValue } from "react-select";
 import { serverTimestamp, updateDoc } from "firebase/firestore";
-import { useRecoilValue } from "recoil";
-import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import CustomOptions from "./CustomOptions";
+import TagContainer from "./TagContainer";
 
-interface Props {
-  $dynamicBg: string;
-}
-const TagContainer = styled.div<Props>`
-  display: inline-block;
-  background-color: ${(props) =>
-    props.$dynamicBg ? props.$dynamicBg : "#ffffff"};
-  border-radius: 10px;
-  white-space: nowrap;
-  padding: 2px 10px;
-`;
-
-export default function TagSelectLayout({
-  kanbanId,
-  kanbanRef,
-  todoRef,
-  todoDataState,
-  isTodoShow,
-}: any) {
-  const kanbanDataState = useRecoilValue(kanbanState);
-  const targetKanbanData = kanbanDataState.get(kanbanId);
-  const tagData = isTodoShow ? targetKanbanData.tag_list : null;
-
-  function getNewOptionData(inputValue: string, optionLabel: React.ReactNode) {
-    return {
-      label: optionLabel,
-      value: inputValue,
-      color: "#fff229",
-    };
-  }
+export default function TagSelectLayout({ todoRef, todoDataState }: any) {
+  const optionData = todoDataState.todoData.todo_option_list;
+  // 유저의 임의 옵션 추가 기능
+  const getNewOptionData = (
+    inputValue: string,
+    optionLabel: React.ReactNode,
+  ) => ({
+    label: optionLabel,
+    value: inputValue,
+    color: "#fff229",
+    canDelete: true,
+  });
   const handleSelectChange = async (
     newValue: MultiValue<any>,
     actionMeta: ActionMeta<any>,
@@ -44,13 +25,15 @@ export default function TagSelectLayout({
     if (actionMeta.action === "create-option") {
       const resultValue = newValue.filter(
         (item) =>
-          !tagData.some((list: { value: string }) => list.value === item.value),
+          !optionData.some(
+            (list: { value: string }) => list.value === item.value,
+          ),
       );
-      const updatedOptionList = [...tagData, ...resultValue];
+      const updatedOptionList = [...optionData, ...resultValue];
       if (resultValue) {
-        // firestore : kanban의 tag_list db 업데이트
-        await updateDoc(kanbanRef, {
-          tag_list: updatedOptionList,
+        // firestore : todo 컬렉션의 todo_option_list db 업데이트
+        await updateDoc(todoRef, {
+          todo_option_list: updatedOptionList,
           modified_date: serverTimestamp(),
         });
       }
@@ -66,15 +49,15 @@ export default function TagSelectLayout({
     <CreatableSelect
       closeMenuOnSelect={false}
       isMulti
-      options={tagData}
+      options={optionData}
       // eslint-disable-next-line react/no-unstable-nested-components
       formatOptionLabel={(option: any) => (
         <TagContainer $dynamicBg={option.color}>{option.label}</TagContainer>
       )}
       value={todoDataState.todoData.todo_tag_list}
-      // eslint-disable-next-line react/jsx-no-bind
       getNewOptionData={getNewOptionData}
       onChange={handleSelectChange}
+      components={{ Option: CustomOptions }}
       styles={{
         multiValue: (baseStyles) => ({
           ...baseStyles,

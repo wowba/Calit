@@ -7,12 +7,21 @@ import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
 import CreateProjectBtn from "./CreateProjectBtn";
+import ProjectListIcon from "../../assets/logo/ProjectlistLogo.svg";
 
+const ProjectListTitle = styled.div`
+  font-size: 2rem;
+  font-weight: 900;
+  > img {
+    scale: 85%;
+    margin: 0 0 0 0.6rem;
+  }
+`;
 const ProjectListContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(33%, auto));
   justify-content: center;
-  margin: 20px;
+  margin: 20px 0px;
 `;
 
 export default function ProjectList() {
@@ -52,8 +61,10 @@ export default function ProjectList() {
   }, [name, projectImgUrl, projectIntro, projectList]);
 
   return (
-    <div>
-      <h1>ProjectList</h1>
+    <div style={{ margin: "2.5rem 8%" }}>
+      <ProjectListTitle>
+        <img src={ProjectListIcon} alt="Project List" />
+      </ProjectListTitle>
       <InvitationBtn />
       <ProjectListContainer>
         <CreateProjectBtn />
