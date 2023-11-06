@@ -33,6 +33,7 @@ const PlusIcon = styled.img`
 interface ProjectData {
   user_list: string[];
   invited_list: string[];
+  bookmark_list: [];
   name: string;
   project_intro: string;
   project_img_URL: string;
@@ -51,6 +52,7 @@ export default function CreateProjectBtn() {
     const projectData: ProjectData = {
       user_list: [email],
       invited_list: [],
+      bookmark_list: [],
       name: "",
       project_intro: "",
       project_img_URL: "",

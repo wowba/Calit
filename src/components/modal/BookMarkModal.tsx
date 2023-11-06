@@ -1,19 +1,24 @@
 import React, { useState, KeyboardEvent, useEffect } from "react";
 import styled from "styled-components";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  // arrayUnion,
+  doc,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import { db } from "../../firebaseSDK";
-import userData from "../../recoil/atoms/login/userDataState";
+import projectState from "../../recoil/atoms/project/projectState";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
-  event.stopPropagation()
-}
+  event.stopPropagation();
+};
 
 const BookMarkInputBox = styled.div`
   display: flex;
@@ -36,60 +41,103 @@ const BookMarkLinksDeleteIconBox = styled.img`
 `;
 
 export default function Bookmark() {
-  const userDataState = useRecoilValue(userData)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { email, bookmark_list: bookmarkList }: any = userDataState.userData;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const userRef = doc(db, "user", email);
+  const { bookmark_list: bookMarkList } =
+    useRecoilValue(projectState).projectData;
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  const [bookMarkData, setBookMarkData] = useState<any>(new Map())
+  // const [bookMarkData, setBookMarkData] = useState<any>(new Map());
+  const [bookMarkData, setBookMarkData] = useState<any>([]);
   const [bookMarkName, setBookMarkName] = useState("");
   const urlQueryString = new URLSearchParams(window.location.search);
   const projectId = window.location.pathname.substring(1);
   const kanbanId = String(urlQueryString.get("kanbanID"));
-  const todoId = String(urlQueryString.get("todoID")) ;
-  
+  const todoId = String(urlQueryString.get("todoID"));
+  const projectRef = doc(db, "project", projectId);
+
   useEffect(() => {
-    setInputUrlValue(window.location.href)
+    setInputUrlValue(window.location.href);
 
     async function fetchBookMarkName() {
       if (todoId !== "null") {
-        const todoRef = doc(db, "project", projectId, "kanban", kanbanId, "todo", todoId)
-        const todoSnap = await getDoc(todoRef)
-        console.log("todo ", todoSnap.data())
-        setBookMarkName(!inputTextValue ? todoSnap.data()?.name : inputTextValue) 
+        const todoRef = doc(
+          db,
+          "project",
+          projectId,
+          "kanban",
+          kanbanId,
+          "todo",
+          todoId,
+        );
+        const todoSnap = await getDoc(todoRef);
+        console.log("todo ", todoSnap.data());
+        setBookMarkName(
+          !inputTextValue ? todoSnap.data()?.name : inputTextValue,
+        );
       } else if (kanbanId !== "null") {
-        const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId)
-        const kanbanSnap = await getDoc(kanbanRef)
-        console.log("kanban ", kanbanSnap.data())
-        setBookMarkName(!inputTextValue ? kanbanSnap.data()?.name : inputTextValue)
+        const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
+        const kanbanSnap = await getDoc(kanbanRef);
+        console.log("kanban ", kanbanSnap.data());
+        setBookMarkName(
+          !inputTextValue ? kanbanSnap.data()?.name : inputTextValue,
+        );
       } else {
-        const projectRef = doc(db, "project", projectId)
-        const projectSnap = await getDoc(projectRef)
-        console.log("project ", projectSnap.data())
-        setBookMarkName(!inputTextValue ? projectSnap.data()?.name : inputTextValue)
+        // const projectRef = doc(db, "project", projectId);
+        const projectSnap = await getDoc(projectRef);
+        console.log("project ", projectSnap.data());
+        setBookMarkName(
+          !inputTextValue ? projectSnap.data()?.name : inputTextValue,
+        );
       }
     }
-    fetchBookMarkName()
+    fetchBookMarkName();
+  }, [window.location.pathname]);
 
-  }, [window.location.pathname])
+  useEffect(() => {}, [bookMarkName]);
+
+  // const bookmarkCheck = (path: string) => {
+  //   const result = Object.values(bookMarkData).find(
+  //     (singleBookMarkPath) => singleBookMarkPath === path,
+  //   );
+  //   return result;
+  // };
 
   const handleBtnClick = async () => {
     if (inputUrlValue) {
+      // if (bookmarkCheck(inputUrlValue)) {
+      //   console.log("hi");
+      // }
 
-      bookMarkData.set(!inputTextValue ? bookMarkName : inputTextValue, inputUrlValue)
-      setBookMarkData(bookMarkData)
-      console.log(bookMarkData)
+      if (inputTextValue) {
+        setBookMarkName(inputTextValue);
+      }
 
+      const curBookMarkList = [...bookMarkList];
+      curBookMarkList.push({ bookMarkName, inputUrlValue });
+      console.log(curBookMarkList);
+
+      const booklist = Object.values(curBookMarkList);
+      console.log(booklist);
+
+      setBookMarkData(curBookMarkList);
+      // console.log(bookMarkData);
+      // const stringifyBookMarkData = JSON.stringify([...bookMarkData]);
+      // console.log(stringifyBookMarkData);
+      // const parseBookMarkData = JSON.parse(stringifyBookMarkData);
+      // console.log(parseBookMarkData);
 
       // 추가되게끔 고치기
-      // 처음에 저장된거 가져오기
-      // await updateDoc(userRef, {
-      //   bookmark_list: bookMarkData
-      // });
+
+      curBookMarkList.map((cu: any) =>
+        console.log(cu.bookMarkName, cu.inputUrlValue),
+      );
+
+      await updateDoc(projectRef, {
+        bookmark_list: curBookMarkList,
+        modified_date: serverTimestamp(),
+      });
 
       setInputUrlValue("");
+      setInputTextValue("");
     } else {
       setInputUrlValue("");
       // eslint-disable-next-line no-alert
@@ -100,10 +148,10 @@ export default function Bookmark() {
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputUrlValue) {
-        const URLList = [...bookMarkData]
-        URLList.push(inputUrlValue)
+        const URLList = [...bookMarkData];
+        // URLList.push(inputUrlValue);
 
-        setBookMarkData(URLList)
+        setBookMarkData(URLList);
         setInputUrlValue("");
       } else {
         setInputUrlValue("");
@@ -113,18 +161,25 @@ export default function Bookmark() {
     }
   };
 
-  const handleClickDelete = async(path: string) => {
-    bookMarkData.delete(path)
-    setBookMarkData(bookMarkData)
-  }
+  const handleClickDelete = async (path: string) => {
+    // const target = bookMarkData
+    console.log(bookMarkData, path);
+    const target = bookMarkData.findIndex(
+      (item: any) => item.inputUrlValue === path,
+    );
+    console.log(target);
 
+    bookMarkData.splice(target, 1);
+    setBookMarkData(bookMarkData);
+
+    await updateDoc(projectRef, {
+      bookmark_list: bookMarkData,
+      modified_date: serverTimestamp(),
+    });
+  };
 
   return (
-    <ModalArea
-      $dynamicWidth=""
-      $dynamicHeight="auto"
-      onClick={handleClick}
-    >
+    <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
       <ModalTitle>Links</ModalTitle>
       <BookMarkInputBox>
         <CommonInputLayout
@@ -160,10 +215,13 @@ export default function Bookmark() {
         </ConfirmBtn>
       </BookMarkInputBox>
       <BookMarkLinksBox>
-        {[...bookMarkData].map((bo: any) => (
-          <BookMarkLinksContentBox>
-            {bo[0]}
-            <BookMarkLinksDeleteIconBox src={closeIcon} onClick={() => handleClickDelete(bo[0])}/>
+        {bookMarkData.map((singleBookMark: any) => (
+          <BookMarkLinksContentBox key={singleBookMark.inputUrlValue}>
+            {singleBookMark.bookMarkName}
+            <BookMarkLinksDeleteIconBox
+              src={closeIcon}
+              onClick={() => handleClickDelete(singleBookMark.inputUrlValue)}
+            />
           </BookMarkLinksContentBox>
         ))}
       </BookMarkLinksBox>
