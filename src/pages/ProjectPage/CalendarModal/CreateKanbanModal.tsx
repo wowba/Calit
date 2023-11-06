@@ -157,8 +157,8 @@ export default function CreateKanbanModal(props: Props) {
       tag_list: [
         { label: "긴급🔥", value: "긴급🔥", color: "#f92f66" },
         { label: "FE✨", value: "FE✨", color: "#ddafff" },
-        { label: "BE🛠️", value: "FE✨", color: "#F5F3BB" },
-        { label: "UX/UI🎨", value: "FE✨", color: "#00FFF5" },
+        { label: "BE🛠️", value: "BE🛠️", color: "#F5F3BB" },
+        { label: "UX/UI🎨", value: "UX/UI🎨", color: "#00FFF5" },
       ],
     });
     await createTodo(location.pathname, kanbanID, {
