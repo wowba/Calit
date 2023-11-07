@@ -20,8 +20,8 @@ const ProjectListTitle = styled.div`
 const ProjectListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(33%, auto));
-  justify-content: center;
   margin: 20px 0px;
+  justify-content: start;
 `;
 
 export default function ProjectList() {
