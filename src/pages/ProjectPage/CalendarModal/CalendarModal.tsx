@@ -234,7 +234,7 @@ const CalendarBox = styled.div`
   }
 `;
 
-const ColorModal = styled.input<{
+export const ColorModal = styled.input<{
   $isShow: boolean;
   $top: number;
   $left: number;
@@ -255,7 +255,7 @@ const ColorModal = styled.input<{
     `}
 `;
 
-const ColorModalBackground = styled.button<{ $isShow: boolean }>`
+export const ColorModalBackground = styled.button<{ $isShow: boolean }>`
   position: fixed;
 
   top: 0;

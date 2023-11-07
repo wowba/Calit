@@ -4,6 +4,7 @@ import { ActionMeta, MultiValue } from "react-select";
 import { serverTimestamp, updateDoc } from "firebase/firestore";
 import CustomOptions from "./CustomOptions";
 import TagContainer from "./TagContainer";
+import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 
 export default function TagSelectLayout({ todoRef, todoDataState }: any) {
   const optionData = todoDataState.todoData.todo_option_list;
@@ -52,7 +53,12 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
       options={optionData}
       // eslint-disable-next-line react/no-unstable-nested-components
       formatOptionLabel={(option: any) => (
-        <TagContainer $dynamicBg={option.color}>{option.label}</TagContainer>
+        <TagContainer
+          $dynamicBg={option.color}
+          $dynamicColor={getTextColorByBackgroundColor(option.color)}
+        >
+          {option.label}
+        </TagContainer>
       )}
       value={todoDataState.todoData.todo_tag_list}
       getNewOptionData={getNewOptionData}
