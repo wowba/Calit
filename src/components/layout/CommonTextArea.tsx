@@ -33,6 +33,9 @@ const CommonTextArea = styled.textarea<Props>`
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
   }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 `;
 
 export default CommonTextArea;

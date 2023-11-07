@@ -29,6 +29,9 @@ const UpdateContainer = styled.div`
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
   }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 `;
 const UpdateList = styled.div`
   max-height: 23rem;
