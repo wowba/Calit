@@ -18,6 +18,12 @@ const TodoColorModal = styled(ColorModal)`
   position: relative;
   z-index: 1000;
 `;
+// 여기는 css 수정되어야 정상 적용될 예정입니다.
+const TodoColorModalBackground = styled(ColorModalBackground)`
+  width: 100vw;
+  height: 100vh;
+  background-color: transparent;
+`;
 
 export default function CustomOptions({
   innerRef,
@@ -126,7 +132,7 @@ export default function CustomOptions({
           onClick={handleStopPropagation}
         />
       ) : null}
-      <ColorModalBackground
+      <TodoColorModalBackground
         $isShow={isColorModalShow}
         onClick={handleModalCloseClick}
       />
