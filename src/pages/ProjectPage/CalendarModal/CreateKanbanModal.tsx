@@ -126,22 +126,19 @@ export default function CreateKanbanModal(props: Props) {
     }
     const DEFAULT_STAGES = [
       {
-        name: "완료",
-        order: 0,
-        created_date: new Date(),
-        modified_date: new Date(),
-      },
-      {
+        id: "default-1",
         name: "작업 중",
-        order: 1,
-        created_date: new Date(),
-        modified_date: new Date(),
+        todoIds: [],
       },
       {
+        id: "default-2",
         name: "작업 전",
-        order: 2,
-        created_date: new Date(),
-        modified_date: new Date(),
+        todoIds: [],
+      },
+      {
+        id: "default-3",
+        name: "완료",
+        todoIds: [],
       },
     ];
     const kanbanID = await createKanban(location.pathname, {
@@ -159,11 +156,9 @@ export default function CreateKanbanModal(props: Props) {
       update_list: [],
       user_list: [],
       name: "dummyTodo",
-      order: -1,
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
       is_deleted: true,
-      stageID: "dummyTodo",
       deadline: new Date(),
       info: "dummy",
       todo_tag_list: [],

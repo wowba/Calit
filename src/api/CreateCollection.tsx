@@ -16,11 +16,9 @@ interface TodoData {
   update_list: Array<Object>;
   user_list: Array<string>;
   name: string;
-  order: number;
   created_date: FieldValue;
   modified_date: FieldValue;
   is_deleted: boolean;
-  stageID: string;
   deadline: Date;
   info: string;
   todo_tag_list: Array<Object>;
@@ -44,10 +42,12 @@ export const createTodo = async (
   documentId: string,
   kanbanId: string,
   data: TodoData,
-): Promise<void> => {
-  await addDoc(
+): Promise<string> => {
+  const docRef = await addDoc(
     collection(db, "project", documentId, "kanban", kanbanId, "todo"),
     data,
   );
   // alert("투두를 생성했습니다");
+  const newTodoId = docRef.id;
+  return newTodoId;
 };
