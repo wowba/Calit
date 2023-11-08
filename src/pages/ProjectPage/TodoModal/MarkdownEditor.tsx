@@ -29,6 +29,9 @@ const UpdateContainer = styled.div`
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
   }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 `;
 const UpdateList = styled.div`
   max-height: 23rem;
@@ -101,7 +104,7 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
           업데이트 내역
         </span>
         <UpdateList>
-          {todoDataState.todoData.update_list.map(
+          {todoDataState.update_list.map(
             (updateContent: any, index: number) => (
               <UpdateContentBox
                 key={updateContent.created_date.seconds}

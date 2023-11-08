@@ -6,13 +6,13 @@ import _ from "lodash";
 import TagContainer from "./TagContainer";
 import closeIcon from "../../../assets/icons/closeIcon.svg";
 import { db } from "../../../firebaseSDK";
-import singleTodoState from "../../../recoil/atoms/todo/singleTodoState";
 import {
   ColorModal,
   ColorModalBackground,
 } from "../CalendarModal/CalendarModal";
 import paintIcon from "../../../assets/icons/paint.svg";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
+import todoState from "../../../recoil/atoms/todo/todoState";
 
 const TodoColorModal = styled(ColorModal)`
   position: relative;
@@ -43,8 +43,9 @@ export default function CustomOptions({
     "todo",
     todoId,
   );
-  const todoDataState = useRecoilValue(singleTodoState);
-  const optionData = todoDataState.todoData.todo_option_list;
+  const todoDataState = useRecoilValue(todoState);
+  const currentTodo = todoDataState.get(todoId);
+  const optionData = currentTodo.todo_option_list;
   const [isColorModalShow, setIsColorModalShow] = useState(false);
   const [tagBgColor, setTagBgColor] = useState(color);
 

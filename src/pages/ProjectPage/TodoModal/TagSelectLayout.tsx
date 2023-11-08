@@ -7,7 +7,7 @@ import TagContainer from "./TagContainer";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 
 export default function TagSelectLayout({ todoRef, todoDataState }: any) {
-  const optionData = todoDataState.todoData.todo_option_list;
+  const optionData = todoDataState.todo_option_list;
   // 유저의 임의 옵션 추가 기능
   const getNewOptionData = (
     inputValue: string,
@@ -60,7 +60,7 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
           {option.label}
         </TagContainer>
       )}
-      value={todoDataState.todoData.todo_tag_list}
+      value={todoDataState.todo_tag_list}
       getNewOptionData={getNewOptionData}
       onChange={handleSelectChange}
       components={{ Option: CustomOptions }}

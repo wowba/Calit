@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import {
-  doc,
-  onSnapshot,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
-import { useRecoilState } from "recoil";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { useRecoilValue } from "recoil";
 import { db } from "../../../firebaseSDK";
 import {
   ProjectModalLayout,
@@ -20,9 +15,12 @@ import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import CommonTextArea from "../../../components/layout/CommonTextArea";
 import MarkdownEditor from "./MarkdownEditor";
 import DatePicker from "../../../components/DatePicker";
-import singleTodoState from "../../../recoil/atoms/todo/singleTodoState";
+import todoState from "../../../recoil/atoms/todo/todoState";
 import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
 import TagSelectLayout from "./TagSelectLayout";
+import ErrorPage from "../../../components/ErrorPage";
+import trashIcon from "../../../assets/icons/trashIcon.svg";
+import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 
 type Props = {
   todoTabColor: string;
@@ -76,20 +74,7 @@ const Contour = styled.div`
 `;
 
 export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [todoDataState, setTodoDataState] = useRecoilState(singleTodoState);
-  const navigate = useNavigate();
-  const [userList, setUserList] = useState<any[]>([]);
-
-  const [inputTodoName, setInputTodoName] = useState("");
-  const [inputTodoInfo, setInputTodoInfo] = useState("");
-
-  const textarea = useRef<HTMLTextAreaElement | null>(null);
-
-  const [startDate, setStartDate] = useState(new Date());
-
   const projectId = window.location.pathname.substring(1);
-
   const urlQueryString = new URLSearchParams(window.location.search);
   const kanbanId = isTodoShow ? String(urlQueryString.get("kanbanID")) : "null";
   const todoId = isTodoShow ? String(urlQueryString.get("todoID")) : "null";
@@ -105,33 +90,33 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     todoId,
   );
 
-  // todo 문서 snapshot
+  const navigate = useNavigate();
+
+  const [lastTodoId, setLastTodoId] = useState("");
+
+  const todoDataState = useRecoilValue(todoState);
+  const kanbanDataState = useRecoilValue(kanbanState);
+
+  const currentTodo =
+    todoDataState.get(todoId) || todoDataState.get(lastTodoId);
+
+  const [inputTodoName, setInputTodoName] = useState("");
+  const [inputTodoInfo, setInputTodoInfo] = useState("");
+  const [userList, setUserList] = useState<any[]>([]);
+
   useEffect(() => {
-    if (!isTodoShow) {
+    if (!isTodoShow || todoId === "null" || !currentTodo) {
       return;
     }
-    const unsub = onSnapshot(todoRef, async (todoDoc) => {
-      if (todoDoc.exists() && !todoDoc.data().is_deleted) {
-        setTodoDataState({ todoData: todoDoc.data() });
-        setIsLoaded(true);
-        setInputTodoName(todoDoc.data().name);
-        setInputTodoInfo(todoDoc.data().info);
-        setStartDate(todoDoc.data().deadline.toDate());
-        setUserList(todoDoc.data().user_list);
-      } else {
-        unsub();
-        navigate(`/${projectId}?kanbanID=${kanbanId}`);
-      }
-    });
+    setLastTodoId(todoId);
+    setInputTodoName(currentTodo.name);
+    setInputTodoInfo(currentTodo.info);
+    setUserList(currentTodo.user_list);
+  }, [todoId, isTodoShow, currentTodo]);
 
-    // eslint-disable-next-line consistent-return
-    return () => {
-      unsub();
-      setIsLoaded(false);
-    };
-  }, [todoId, isTodoShow]);
+  const textarea = useRef<HTMLTextAreaElement | null>(null);
 
-  // textarea height 자동 조절 (debouncing하기)
+  // textarea height 자동 조절
   useEffect(() => {
     if (textarea.current) {
       textarea.current.style.height = "auto";
@@ -173,9 +158,28 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     setInputTodoInfo(e.target.value);
   };
 
+  // 투두 삭제
+  const handleDelete = async () => {
+    const updatedStageList = kanbanDataState
+      .get(kanbanId)
+      .stage_list.map((stage: { id: string; todoIds: string[] }) => {
+        if (stage.id === currentTodo.stage_id) {
+          const updatedTodoIds = stage.todoIds.filter((id) => id !== todoId);
+          return { ...stage, todoIds: updatedTodoIds };
+        }
+        return stage;
+      });
+    await updateDoc(kanbanRef, {
+      stage_list: updatedStageList,
+    });
+    await updateDoc(todoRef, {
+      is_deleted: true,
+    });
+    navigate(`/${projectId}?kanbanID=${kanbanId}`);
+  };
+
   // 마감일 업데이트
   const handleUpdateDatePicker = async (selectedDate: Date) => {
-    setStartDate(selectedDate);
     if (selectedDate) {
       await updateDoc(todoRef, {
         deadline: selectedDate,
@@ -184,8 +188,8 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     }
   };
 
-  // isLoaded===false일 때 tag만 렌더링
-  if (!isLoaded) {
+  // 에러 페이지
+  if (!currentTodo) {
     return (
       <ProjectModalLayout $isShow={isTodoShow}>
         <ProjectModalTabBox $marginLeft={19.5}>
@@ -194,6 +198,9 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
             Todo
           </ProjectModalTabText>
         </ProjectModalTabBox>
+        <ProjectModalContentBox>
+          <ErrorPage isTodo404 />
+        </ProjectModalContentBox>
       </ProjectModalLayout>
     );
   }
@@ -221,6 +228,9 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
               onBlur={handleFocus}
             />
           </TodoTitle>
+          <button type="button" onClick={handleDelete}>
+            <img src={trashIcon} alt="삭제" />
+          </button>
           <div>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
@@ -234,7 +244,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
             <DeadlineContainer>
               <TodoSubtitle>마감일</TodoSubtitle>
               <DatePicker
-                date={startDate}
+                date={currentTodo.deadline.toDate()}
                 onChange={(arg: Date) => handleUpdateDatePicker(arg)}
                 $width="10rem"
                 $height="1.5rem"
@@ -249,7 +259,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
                 kanbanId={kanbanId}
                 kanbanRef={kanbanRef}
                 todoRef={todoRef}
-                todoDataState={todoDataState}
+                todoDataState={currentTodo}
                 isTodoShow={isTodoShow}
               />
             </TagContainer>
@@ -269,7 +279,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         <div>
           <TodoTitle>업데이트</TodoTitle>
           <Contour />
-          <MarkdownEditor todoRef={todoRef} todoDataState={todoDataState} />
+          <MarkdownEditor todoRef={todoRef} todoDataState={currentTodo} />
         </div>
       </TodoContainer>
     </ProjectModalLayout>
