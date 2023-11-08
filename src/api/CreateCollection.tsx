@@ -59,7 +59,7 @@ export const createTodo = async (
   return newTodoId;
 };
 
-export const createTodoUpdate = async (
+export const createUpdate = async (
   documentId: string,
   kanbanId: string,
   todoId: string,
