@@ -160,6 +160,7 @@ export default function CreateKanbanModal(props: Props) {
       modified_date: serverTimestamp(),
       is_deleted: true,
       deadline: new Date(),
+      stage_id: "dummy",
       info: "dummy",
       todo_tag_list: [],
       todo_option_list: [

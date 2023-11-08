@@ -10,82 +10,38 @@ import { v4 as uuid } from "uuid";
 
 import { createTodo } from "../../../api/CreateCollection";
 import todoDataState from "../../../recoil/atoms/todo/todoState";
-import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
-import trashIcon from "../../../assets/icons/trashIcon.svg";
 import { db } from "../../../firebaseSDK";
 import Stage from "./Stage";
 
 const StageLayout = styled.div`
   display: flex;
-`;
 
-const StageBox = styled.div`
-  height: 20rem;
-  width: 10rem;
-  margin: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
+  overflow-x: scroll;
 
-const StageInfoBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 10rem;
-  border-bottom: 2px solid #eaeaea;
-  margin-bottom: 0.5rem;
-`;
-const StageContentBox = styled.div`
-  box-sizing: border-box;
-
-  height: 60vh;
-  width: 10vw;
-  padding: 0 0.5rem;
-
-  background: #ededed;
-  border: 1px solid #d5d5d5;
-  box-shadow: 3px 4px 9px -2px rgba(0, 0, 0, 0.13);
-  border-radius: 10px;
-  overflow: scroll;
-`;
-
-const StageContent = styled.div`
-  height: 4rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-
-  border-radius: 10px;
-  border: 1px solid #d5d5d5;
-  background: #fff;
-`;
-
-const StageContentParagraph = styled.p`
-  &.title {
-    font-weight: bold;
+  &::-webkit-scrollbar {
+    height: 0.25rem;
+    border-radius: 6px;
   }
-`;
-
-const StageIconBox = styled.div`
-  display: flex;
-`;
-
-const StageInfoTrashIcon = styled.img`
-  height: 1rem;
-  width: 1rem;
-  cursor: pointer;
-  display: none;
-`;
-
-const StageInfoPlusIcon = styled.img`
-  height: 1rem;
-  width: 1rem;
-  cursor: pointer;
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 `;
 
 const Container = styled.div`
   display: flex;
+`;
+
+const AddStageBtn = styled.button`
+  width: 3rem;
+  margin-top: auto;
+
+  background-color: #ededed;
+  border: 1px solid #d5d5d5;
+  border-radius: 0.5rem;
 `;
 
 interface Props {
@@ -93,7 +49,7 @@ interface Props {
   isKanbanShow: boolean;
 }
 
-export interface InitialData {
+interface InitialData {
   todos: {
     [key: string]: { id: string; name: string };
   };
@@ -142,9 +98,6 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
     setData(updatedData);
   }, [todoState, stageList, isKanbanShow]);
 
-  // 변경시 업데이트 해야할 것
-  // 1. stageList 배열 순서
-  // 2. stage 내 todoIds 순서
   const handleOnDragEnd = useCallback(
     async (result: DropResult) => {
       // 업데이트 시 사용할 StageList
@@ -193,13 +146,13 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
 
       // stage 내에서 todo의 index가 변경될 경우
       if (startStage === finishStage) {
-        const newTaskIds = Array.from(startStage.todoIds);
-        newTaskIds.splice(source.index, 1);
-        newTaskIds.splice(destination.index, 0, draggableId);
+        const newTodoIds = Array.from(startStage.todoIds);
+        newTodoIds.splice(source.index, 1);
+        newTodoIds.splice(destination.index, 0, draggableId);
 
         const newStage = {
           ...startStage,
-          todoIds: newTaskIds,
+          todoIds: newTodoIds,
         };
 
         const newData = {
@@ -227,11 +180,11 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
           todoIds: startTodoIds,
         };
 
-        const finishTaskIds = Array.from(finishStage.todoIds);
-        finishTaskIds.splice(destination.index, 0, draggableId);
+        const finishTodoIds = Array.from(finishStage.todoIds);
+        finishTodoIds.splice(destination.index, 0, draggableId);
         const newFinishStage = {
           ...finishStage,
-          todoIds: finishTaskIds,
+          todoIds: finishTodoIds,
         };
 
         const newData = {
@@ -242,14 +195,27 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
             [newFinishStage.id]: newFinishStage,
           },
         };
-
         setData(newData);
+
         // newData를 이용해 stage_list 최신화
         data.stageOrder.forEach((stageId) => {
           updatedStageList.push(newData.stages[stageId]);
         });
         await updateDoc(kanbanRef, {
           stage_list: updatedStageList,
+        });
+        // todo의 stage_id 최신화
+        const todoRef = doc(
+          db,
+          "project",
+          projectID,
+          "kanban",
+          kanbanID,
+          "todo",
+          draggableId,
+        );
+        await updateDoc(todoRef, {
+          stage_id: newFinishStage.id,
         });
       }
     },
@@ -261,6 +227,7 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
       update_list: [],
       user_list: [],
       name: "테스트투두",
+      stage_id: stageId,
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
       is_deleted: false,
@@ -336,18 +303,9 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
           )}
         </Droppable>
       </DragDropContext>
-      <StageBox>
-        <StageInfoBox>
-          스테이지 추가하기
-          <StageInfoTrashIcon src={trashIcon} alt="스테이지 삭제" />
-          <StageInfoPlusIcon
-            src={icon_plus_circle}
-            alt="스테이지 추가"
-            onClick={handleAddStageClick}
-          />
-        </StageInfoBox>
-        <StageContentBox />
-      </StageBox>
+      <AddStageBtn type="button" onClick={handleAddStageClick}>
+        AddStageButton
+      </AddStageBtn>
     </StageLayout>
   );
 }
