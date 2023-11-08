@@ -21,7 +21,7 @@ import KanbanStageBox from "./KanbanStageBox";
 const KanbanInfoLayout = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
 `;
 
 const KanbanInfoBox = styled.div``;
