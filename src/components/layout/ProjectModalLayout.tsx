@@ -18,13 +18,28 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
     `};
 `;
 
+const ProjectModalTabContainer = styled.div`
+  display: flex;
+`;
+
 const ProjectModalTabBox = styled.div<{
   $marginLeft: number;
   $isShow?: boolean;
 }>`
+  transition: all 1s ease;
+  z-index: 1000;
+
   width: 9rem;
-  position: relative;
-  transform: translate(${(props) => `${props.$marginLeft}rem`}, -2rem);
+  position: absolute;
+  left: ${(props) => `${props.$marginLeft}rem`};
+
+  top: 0.75rem;
+  ${(props) =>
+    !props.$isShow &&
+    css`
+      top: calc(100% - 1.5rem);
+    `};
+
   &:hover {
     cursor: pointer;
     > svg {
@@ -63,7 +78,7 @@ const ProjectModalContentBox = styled.div`
   border-radius: 0.6rem 0.6rem 0 0;
   box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
 
-  transform: translateY(-2rem);
+  /* transform: translateY(-2rem); */
 
   overflow: scroll;
   -ms-overflow-style: none;
@@ -74,6 +89,7 @@ const ProjectModalContentBox = styled.div`
 
 export {
   ProjectModalLayout,
+  ProjectModalTabContainer,
   ProjectModalTabBox,
   ProjectModalTabText,
   ProjectModalTabBackground,

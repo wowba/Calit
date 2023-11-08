@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { SetURLSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 
@@ -10,9 +10,6 @@ import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import {
   ProjectModalLayout,
-  ProjectModalTabBackground,
-  ProjectModalTabText,
-  ProjectModalTabBox,
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
 import ErrorPage from "../../../components/ErrorPage";
@@ -50,15 +47,9 @@ const KanbanDateParagraph = styled.p`
 
 type Props = {
   isKanbanShow: boolean;
-  setSearchParams: SetURLSearchParams;
-  kanbanTabColor: string;
 };
 
-export default function KanbanModal({
-  isKanbanShow,
-  setSearchParams,
-  kanbanTabColor,
-}: Props) {
+export default function KanbanModal({ isKanbanShow }: Props) {
   const navigate = useNavigate();
 
   const kanbanDataState = useRecoilValue(kanbanState);
@@ -80,13 +71,6 @@ export default function KanbanModal({
     setLastkanbanId(kanbanId);
   }, [kanbanId, isKanbanShow]);
 
-  const handleKanbanTabClick = () => {
-    if (kanbanId !== "null")
-      setSearchParams({
-        kanbanID: kanbanId,
-      });
-  };
-
   const handleDelete = async () => {
     const kanbanRef = doc(db, "project", projectID, "kanban", kanbanId);
     await updateDoc(kanbanRef, {
@@ -98,12 +82,6 @@ export default function KanbanModal({
   if (!currentKanban) {
     return (
       <ProjectModalLayout $isShow={isKanbanShow}>
-        <ProjectModalTabBox $marginLeft={10.75}>
-          <ProjectModalTabBackground $color={kanbanTabColor} />
-          <ProjectModalTabText $top={0.28} $left={2.8}>
-            Kanban
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
         <ProjectModalContentBox>
           <ErrorPage isKanban404 />
         </ProjectModalContentBox>
@@ -113,16 +91,6 @@ export default function KanbanModal({
 
   return (
     <ProjectModalLayout $isShow={isKanbanShow}>
-      <ProjectModalTabBox
-        $marginLeft={10.75}
-        $isShow={isKanbanShow}
-        onClick={handleKanbanTabClick}
-      >
-        <ProjectModalTabBackground $color={kanbanTabColor} />
-        <ProjectModalTabText $top={0.28} $left={2.8}>
-          Kanban
-        </ProjectModalTabText>
-      </ProjectModalTabBox>
       <ProjectModalContentBox id="kanbanModalContentBox">
         <KanbanInfoLayout>
           <KanbanInfoBox>
