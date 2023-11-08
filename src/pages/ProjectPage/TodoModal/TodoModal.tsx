@@ -20,6 +20,8 @@ import todoState from "../../../recoil/atoms/todo/todoState";
 import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
 import TagSelectLayout from "./TagSelectLayout";
 import ErrorPage from "../../../components/ErrorPage";
+import trashIcon from "../../../assets/icons/trashIcon.svg";
+import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 
 type Props = {
   todoTabColor: string;
@@ -89,12 +91,12 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
     todoId,
   );
 
-  // 바꾸는 중
   const navigate = useNavigate();
 
   const [lastTodoId, setLastTodoId] = useState("");
 
   const todoDataState = useRecoilValue(todoState);
+  const kanbanDataState = useRecoilValue(kanbanState);
 
   const currentTodo =
     todoDataState.get(todoId) || todoDataState.get(lastTodoId);
@@ -159,6 +161,18 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
 
   // 투두 삭제
   const handleDelete = async () => {
+    const updatedStageList = kanbanDataState
+      .get(kanbanId)
+      .stage_list.map((stage: { id: string; todoIds: string[] }) => {
+        if (stage.id === currentTodo.stage_id) {
+          const updatedTodoIds = stage.todoIds.filter((id) => id !== todoId);
+          return { ...stage, todoIds: updatedTodoIds };
+        }
+        return stage;
+      });
+    await updateDoc(kanbanRef, {
+      stage_list: updatedStageList,
+    });
     await updateDoc(todoRef, {
       is_deleted: true,
     });
@@ -215,6 +229,9 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
               onBlur={handleFocus}
             />
           </TodoTitle>
+          <button type="button" onClick={handleDelete}>
+            <img src={trashIcon} alt="삭제" />
+          </button>
           <div>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
@@ -243,7 +260,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
                 kanbanId={kanbanId}
                 kanbanRef={kanbanRef}
                 todoRef={todoRef}
-                todoDataState={todoDataState.get(todoId)}
+                todoDataState={currentTodo}
                 isTodoShow={isTodoShow}
               />
             </TagContainer>
@@ -263,10 +280,7 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
         <div>
           <TodoTitle>업데이트</TodoTitle>
           <Contour />
-          <MarkdownEditor
-            todoRef={todoRef}
-            todoDataState={todoDataState.get(todoId)}
-          />
+          <MarkdownEditor todoRef={todoRef} todoDataState={currentTodo} />
         </div>
       </TodoContainer>
     </ProjectModalLayout>
