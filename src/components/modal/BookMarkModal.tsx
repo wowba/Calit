@@ -5,7 +5,6 @@ import { useRecoilValue } from "recoil";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
-import pencilIcon from "../../assets/icons/pencilIcon.svg";
 import closeIcon from "../../assets/icons/closeIcon.svg";
 import { db } from "../../firebaseSDK";
 import projectState from "../../recoil/atoms/project/projectState";
@@ -48,11 +47,6 @@ const BookMarkLinksParagraph = styled.p`
   cursor: pointer;
 `;
 
-const BookMarkLinkUpdateIconBox = styled.img`
-  display: inline;
-  padding-left: 10px;
-`;
-
 const BookMarkLinksDeleteIconBox = styled.img`
   display: inline;
   padding-left: 10px;
@@ -63,7 +57,6 @@ export default function Bookmark() {
     useRecoilValue(projectState).projectData;
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  const [isURLShow, setIsURLShow] = useState(false);
   const [bookMarkData, setBookMarkData] = useState<any[]>([]);
   const projectId = window.location.pathname.substring(1);
   const projectRef = doc(db, "project", projectId);
@@ -115,18 +108,6 @@ export default function Bookmark() {
     if (e.key === "Enter") {
       handleBtnClick();
     }
-  };
-
-  const handleEnterUpdate = async (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      console.log("update");
-      setIsURLShow(false);
-    }
-  };
-
-  const handleClickUpdate = async (name: string) => {
-    console.log(name, "enter");
-    setIsURLShow(true);
   };
 
   const handleClickDelete = async (path: string) => {
@@ -198,30 +179,11 @@ export default function Bookmark() {
       <BookMarkLinksBox>
         {bookMarkData.map((singleBookMark: any) => (
           <BookMarkLinksContentBox key={singleBookMark.value}>
-            {isURLShow ? (
-              <CommonInputLayout
-                placeholder="URL을 입력해주세요"
-                $dynamicWidth="100%"
-                $dynamicHeight="2rem"
-                $dynamicFontSize="0.9rem"
-                $dynamicPadding="4px 4px"
-                style={{ border: "1px solid black", marginBottom: "4px" }}
-                value={singleBookMark.value}
-                onChange={(e) => setInputTextValue(e.target.value)}
-                onKeyDown={handleEnterUpdate}
-              />
-            ) : (
-              <BookMarkLinksParagraph
-                onClick={() => handleClickNavigate(singleBookMark.value)}
-              >
-                {lengthChecker(singleBookMark.name)}
-              </BookMarkLinksParagraph>
-            )}
-
-            <BookMarkLinkUpdateIconBox
-              src={pencilIcon}
-              onClick={() => handleClickUpdate(singleBookMark.value)}
-            />
+            <BookMarkLinksParagraph
+              onClick={() => handleClickNavigate(singleBookMark.value)}
+            >
+              {lengthChecker(singleBookMark.name)}
+            </BookMarkLinksParagraph>
 
             <BookMarkLinksDeleteIconBox
               src={closeIcon}
