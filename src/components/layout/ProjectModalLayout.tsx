@@ -23,7 +23,7 @@ const ProjectModalTabContainer = styled.div`
 `;
 
 const ProjectModalTabBox = styled.div<{
-  $marginLeft: number;
+  $left: number;
   $isShow?: boolean;
 }>`
   transition: all 1s ease;
@@ -31,7 +31,7 @@ const ProjectModalTabBox = styled.div<{
 
   width: 9rem;
   position: absolute;
-  left: ${(props) => `${props.$marginLeft}rem`};
+  left: ${(props) => `${props.$left}rem`};
 
   top: 0.75rem;
   ${(props) =>
@@ -77,8 +77,6 @@ const ProjectModalContentBox = styled.div`
   background-color: white;
   border-radius: 0.6rem 0.6rem 0 0;
   box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
-
-  /* transform: translateY(-2rem); */
 
   overflow: scroll;
   -ms-overflow-style: none;
