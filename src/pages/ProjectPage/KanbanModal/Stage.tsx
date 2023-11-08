@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
-import Task from "./Todo";
+import Todo from "./Todo";
 
 const Container = styled.div`
   margin: 8px;
@@ -27,16 +27,16 @@ const TodoPlusIcon = styled.img`
   cursor: pointer;
 `;
 
-interface ITaskList {
+interface TodoListProps {
   $isDraggingOver: boolean;
 }
-const TaskList = styled.div<ITaskList>`
+const TodoList = styled.div<TodoListProps>`
   padding: 8px;
   background-color: ${(props) => (props.$isDraggingOver ? "skyblue" : "white")};
   flex-grow: 1;
 `;
 
-interface IColumnProps {
+interface StageProps {
   stage: { id: string; name: string; todoIds: string[] };
   todos: {
     id: string;
@@ -46,7 +46,7 @@ interface IColumnProps {
   handleAddTodoClick: any;
 }
 
-function Stage({ stage, todos, index, handleAddTodoClick }: IColumnProps) {
+function Stage({ stage, todos, index, handleAddTodoClick }: StageProps) {
   return (
     <Draggable draggableId={stage.id} index={index}>
       {(provided, snapshot) => {
@@ -72,20 +72,20 @@ function Stage({ stage, todos, index, handleAddTodoClick }: IColumnProps) {
               />
             </div>
 
-            <Droppable droppableId={stage.id} type="task">
+            <Droppable droppableId={stage.id} type="todo">
               {(provided, snapshot) => (
-                <TaskList
+                <TodoList
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   $isDraggingOver={snapshot.isDraggingOver}
                 >
                   <>
                     {todos.map((todo, idx) => (
-                      <Task key={todo.id} todo={todo} index={idx} />
+                      <Todo key={todo.id} todo={todo} index={idx} />
                     ))}
                     {provided.placeholder}
                   </>
-                </TaskList>
+                </TodoList>
               )}
             </Droppable>
           </Container>

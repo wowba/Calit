@@ -127,12 +127,12 @@ export default function CreateKanbanModal(props: Props) {
     const DEFAULT_STAGES = [
       {
         id: "default-1",
-        name: "작업 중",
+        name: "작업 전",
         todoIds: [],
       },
       {
         id: "default-2",
-        name: "작업 전",
+        name: "작업 중",
         todoIds: [],
       },
       {
