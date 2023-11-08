@@ -104,7 +104,7 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
           업데이트 내역
         </span>
         <UpdateList>
-          {todoDataState.todoData.update_list.map(
+          {todoDataState.update_list.map(
             (updateContent: any, index: number) => (
               <UpdateContentBox
                 key={updateContent.created_date.seconds}
