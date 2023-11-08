@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import {
   DateSelectArg,
@@ -522,7 +521,6 @@ export default function CalendarModal({
         type="color"
         value={colorModalInfo.color}
         onChange={handleColorModalthrottle.current}
-        // onChange={handleColorModalChange}
         onBlur={handleColorModalBlur}
       />
       <ColorModalBackground
