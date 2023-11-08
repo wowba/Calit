@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
 import { useRecoilValue } from "recoil";
 import { v4 as uuid } from "uuid";
