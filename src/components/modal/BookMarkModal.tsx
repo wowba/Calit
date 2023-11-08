@@ -142,8 +142,8 @@ export default function Bookmark() {
   };
 
   const handleClickNavigate = (path: string) => {
-    if (!path.includes("http")) {
-      window.open(`https://www.${path}`);
+    if (!path.includes("//")) {
+      window.open(`https://${path}`);
     } else {
       window.open(path);
     }
