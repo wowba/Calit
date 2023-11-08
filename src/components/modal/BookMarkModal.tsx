@@ -73,12 +73,31 @@ export default function Bookmark() {
     return result;
   };
 
+  const inputUrlValidation = (path: string) => {
+    const RegExp =
+      // eslint-disable-next-line no-useless-escape
+      /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    // /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    // /^http[s]?:\/\/([\S]{3,})/i;
+
+    if (RegExp.test(path)) {
+      return true;
+    }
+    return false;
+  };
+
   const handleBtnClick = async () => {
     if (inputUrlValue) {
       // 같은 주소가 중복해서 북마크 등록되지 않게 검증
       if (bookmarkCheck(inputUrlValue)) {
         // eslint-disable-next-line no-alert
         alert("이미 등록된 주소입니다.");
+        return;
+      }
+
+      if (!inputUrlValidation(inputUrlValue)) {
+        // eslint-disable-next-line no-alert
+        alert("올바른 URL 주소를 입력해주세요.");
         return;
       }
 
@@ -123,11 +142,7 @@ export default function Bookmark() {
   };
 
   const handleClickNavigate = (path: string) => {
-    if (!path.includes("//")) {
-      window.open(`https://${path}`);
-    } else {
-      window.open(path);
-    }
+    window.open(path);
   };
 
   const lengthChecker = (word: string) => {
