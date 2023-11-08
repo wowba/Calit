@@ -4,11 +4,11 @@ import React from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import { useSearchParams } from "react-router-dom";
 
-interface IContainer {
+interface ContainerProps {
   $isDragging: boolean;
 }
 
-const Container = styled.div<IContainer>`
+const Container = styled.div<ContainerProps>`
   border: 1px solid lightgrey;
   border-radius: 2px;
   padding: 8px;
@@ -17,7 +17,7 @@ const Container = styled.div<IContainer>`
   background-color: ${(props) => (props.$isDragging ? "lightgreen" : "white")};
 `;
 
-interface ITaskProps {
+interface TodoProps {
   todo: {
     id: string;
     name: string;
@@ -25,7 +25,7 @@ interface ITaskProps {
   index: number;
 }
 
-function Todo({ todo, index }: ITaskProps) {
+function Todo({ todo, index }: TodoProps) {
   const [, setSearchParams] = useSearchParams();
   const urlQueryString = new URLSearchParams(window.location.search);
   const kanbanID = String(urlQueryString.get("kanbanID"));
