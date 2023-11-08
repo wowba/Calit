@@ -24,6 +24,12 @@ interface TodoData {
   todo_tag_list: Array<Object>;
   todo_option_list: Array<Object>;
 }
+interface TodoUpdateData {
+  writer: string;
+  writer_img: string;
+  detail: string;
+  created_date: FieldValue;
+}
 
 export const createKanban = async (
   documentId: string,
@@ -50,4 +56,28 @@ export const createTodo = async (
   // alert("투두를 생성했습니다");
   const newTodoId = docRef.id;
   return newTodoId;
+};
+
+export const createTodoUpdate = async (
+  documentId: string,
+  kanbanId: string,
+  todoId: string,
+  data: TodoUpdateData,
+): Promise<string> => {
+  const docRef = await addDoc(
+    collection(
+      db,
+      "project",
+      documentId,
+      "kanban",
+      kanbanId,
+      "todo",
+      todoId,
+      "todoUpdate",
+    ),
+    data,
+  );
+  // alert("투두 업데이트를 생성했습니다");
+  const newTodoUpdateId = docRef.id;
+  return newTodoUpdateId;
 };
