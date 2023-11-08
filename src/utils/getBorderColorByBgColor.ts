@@ -9,5 +9,5 @@ export default function getBorderColorByBackgroundColor(hexColor: string) {
   const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
 
   // 색상 선택
-  return luma < 127.5 ? "transparent" : "gray";
+  return luma < 127.5 ? "transparent" : "#EAEAEA";
 }

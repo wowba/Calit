@@ -20,9 +20,6 @@ import _ from "lodash";
 
 import {
   ProjectModalLayout,
-  ProjectModalTabBackground,
-  ProjectModalTabText,
-  ProjectModalTabBox,
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
 import CreateKanbanModal from "./CreateKanbanModal";
@@ -275,7 +272,6 @@ export const ColorModalBackground = styled.button<{ $isShow: boolean }>`
 `;
 
 type Props = {
-  calendarTabColor: string;
   setSearchParams: SetURLSearchParams;
 };
 
@@ -287,10 +283,7 @@ type ColorModalInfo = {
   selectedEvent: EventContentArg | null;
 };
 
-export default function CalendarModal({
-  calendarTabColor,
-  setSearchParams,
-}: Props) {
+export default function CalendarModal({ setSearchParams }: Props) {
   const kanbanDataState = useRecoilValue(kanbanState);
   const [isShowCreateKanbanModal, setIsShowCreateKanbanModal] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -319,10 +312,6 @@ export default function CalendarModal({
     }));
     setKanbanEvents(result);
   }, [kanbanDataState]);
-
-  const handleCalendarTabClick = () => {
-    setSearchParams();
-  };
 
   const handleSelect = (info: DateSelectArg) => {
     const calendarApi = info.view.calendar;
@@ -478,7 +467,6 @@ export default function CalendarModal({
     editable: true,
     fixedWeekCount: false,
     events: kanbanEvents,
-    fixedMirrorParent: document.body,
     select: handleSelect,
     eventClick: handleEventClick,
     eventDrop: handleEventDrop,
@@ -488,16 +476,6 @@ export default function CalendarModal({
 
   return (
     <ProjectModalLayout $isShow>
-      <ProjectModalTabBox
-        $marginLeft={2}
-        onClick={handleCalendarTabClick}
-        $isShow
-      >
-        <ProjectModalTabBackground $color={calendarTabColor} />
-        <ProjectModalTabText $top={0.28} $left={2.5}>
-          Calender
-        </ProjectModalTabText>
-      </ProjectModalTabBox>
       <ProjectModalContentBox>
         <CalendarBox>
           <FullCalendar

@@ -70,52 +70,39 @@ interface StageProps {
 function Stage({ stage, todos, index, handleAddTodoClick }: StageProps) {
   return (
     <Draggable draggableId={stage.id} index={index}>
-      {(provided, snapshot) => {
-        // Todo : 드래그 시 요소가 정확한 위치에 오도록 하는 해결법을 찾지 못해 삽질하다가 임시방편으로 해결. 추후 확인할 것.
-        // 이 문제는 ProjectModalLayout의 transform translate 속성을 제거할 경우 해결 됨.
-        // 참고 깃헙 주소: https://github.com/atlassian/react-beautiful-dnd/issues/1881
-        const viewportNode = document.getElementById("kanbanModalContentBox");
-        if (snapshot.isDragging) {
-          // @ts-ignore
-          provided.draggableProps.style.left -= viewportNode.offsetLeft + 206;
-          // @ts-ignore
-          provided.draggableProps.style.top = "auto !important";
-        }
+      {(provided) => (
+        <Container ref={provided.innerRef} {...provided.draggableProps}>
+          <StageInfoBox {...provided.dragHandleProps}>
+            <StageTitleBox>
+              <Title>{stage.name}</Title>
+              <p>({todos.length})</p>
+            </StageTitleBox>
 
-        return (
-          <Container ref={provided.innerRef} {...provided.draggableProps}>
-            <StageInfoBox {...provided.dragHandleProps}>
-              <StageTitleBox>
-                <Title>{stage.name}</Title>
-                <p>({todos.length})</p>
-              </StageTitleBox>
+            <TodoPlusIcon
+              src={icon_plus_circle}
+              alt="스테이지 추가"
+              onClick={() => handleAddTodoClick(stage.id)}
+            />
+          </StageInfoBox>
 
-              <TodoPlusIcon
-                src={icon_plus_circle}
-                alt="스테이지 추가"
-                onClick={() => handleAddTodoClick(stage.id)}
-              />
-            </StageInfoBox>
-
-            <Droppable droppableId={stage.id} type="todo">
-              {(provided, snapshot) => (
-                <TodoList
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  $isDraggingOver={snapshot.isDraggingOver}
-                >
-                  <>
-                    {todos.map((todo, idx) => (
-                      <Todo key={todo.id} todo={todo} index={idx} />
-                    ))}
-                    {provided.placeholder}
-                  </>
-                </TodoList>
-              )}
-            </Droppable>
-          </Container>
-        );
-      }}
+          <Droppable droppableId={stage.id} type="todo">
+            {(provided, snapshot) => (
+              <TodoList
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                $isDraggingOver={snapshot.isDraggingOver}
+              >
+                <>
+                  {todos.map((todo, idx) => (
+                    <Todo key={todo.id} todo={todo} index={idx} />
+                  ))}
+                  {provided.placeholder}
+                </>
+              </TodoList>
+            )}
+          </Droppable>
+        </Container>
+      )}
     </Draggable>
   );
 }

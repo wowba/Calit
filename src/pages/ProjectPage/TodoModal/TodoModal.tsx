@@ -6,9 +6,6 @@ import { useRecoilValue } from "recoil";
 import { db } from "../../../firebaseSDK";
 import {
   ProjectModalLayout,
-  ProjectModalTabBackground,
-  ProjectModalTabText,
-  ProjectModalTabBox,
   ProjectModalContentBox,
 } from "../../../components/layout/ProjectModalLayout";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
@@ -23,7 +20,6 @@ import trashIcon from "../../../assets/icons/trashIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 
 type Props = {
-  todoTabColor: string;
   isTodoShow: boolean;
 };
 
@@ -73,7 +69,7 @@ const Contour = styled.div`
   border-radius: 1px;
 `;
 
-export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
+export default function TodoModal({ isTodoShow }: Props) {
   const projectId = window.location.pathname.substring(1);
   const urlQueryString = new URLSearchParams(window.location.search);
   const kanbanId = isTodoShow ? String(urlQueryString.get("kanbanID")) : "null";
@@ -192,12 +188,6 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
   if (!currentTodo) {
     return (
       <ProjectModalLayout $isShow={isTodoShow}>
-        <ProjectModalTabBox $marginLeft={19.5}>
-          <ProjectModalTabBackground $color={todoTabColor} />
-          <ProjectModalTabText $top={0.28} $left={3.3}>
-            Todo
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
         <ProjectModalContentBox>
           <ErrorPage isTodo404 />
         </ProjectModalContentBox>
@@ -207,12 +197,6 @@ export default function TodoModal({ todoTabColor, isTodoShow }: Props) {
 
   return (
     <ProjectModalLayout $isShow={isTodoShow}>
-      <ProjectModalTabBox $marginLeft={19.5} $isShow={isTodoShow}>
-        <ProjectModalTabBackground $color={todoTabColor} />
-        <ProjectModalTabText $top={0.28} $left={3.3}>
-          Todo
-        </ProjectModalTabText>
-      </ProjectModalTabBox>
       <TodoContainer>
         <div style={{ padding: "0 2rem 0 0" }}>
           <TodoTitle>
