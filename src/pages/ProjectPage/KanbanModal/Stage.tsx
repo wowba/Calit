@@ -6,19 +6,35 @@ import styled from "styled-components";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 
 import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
-import Task from "./Todo";
+import Todo from "./Todo";
 
 const Container = styled.div`
-  margin: 8px;
-  border: 1px solid lightgrey;
-  border-radius: 2px;
-  width: 220px;
-
   display: flex;
   flex-direction: column;
+
+  height: 30rem;
+  width: 15rem;
+  margin: 0 0.5rem 0 0.5rem;
 `;
-const Title = styled.h3`
-  padding: 8px;
+
+const StageInfoBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: 2.5px solid #eaeaea;
+
+  padding: 0.5rem 0.5rem;
+  margin: 0 0 1rem 0;
+`;
+
+const StageTitleBox = styled.div`
+  display: flex;
+  gap: 0.125rem;
+`;
+
+const Title = styled.p`
+  font-weight: 900;
 `;
 
 const TodoPlusIcon = styled.img`
@@ -27,16 +43,21 @@ const TodoPlusIcon = styled.img`
   cursor: pointer;
 `;
 
-interface ITaskList {
+const TodoList = styled.div<TodoListProps>`
+  flex-grow: 1;
+
+  background-color: ${(props) =>
+    props.$isDraggingOver ? "skyblue" : "#EDEDED"};
+  border: 1px solid #d5d5d5;
+  border-radius: 0.5rem;
+
+  padding: 0.5rem;
+`;
+interface TodoListProps {
   $isDraggingOver: boolean;
 }
-const TaskList = styled.div<ITaskList>`
-  padding: 8px;
-  background-color: ${(props) => (props.$isDraggingOver ? "skyblue" : "white")};
-  flex-grow: 1;
-`;
 
-interface IColumnProps {
+interface StageProps {
   stage: { id: string; name: string; todoIds: string[] };
   todos: {
     id: string;
@@ -46,7 +67,7 @@ interface IColumnProps {
   handleAddTodoClick: any;
 }
 
-function Stage({ stage, todos, index, handleAddTodoClick }: IColumnProps) {
+function Stage({ stage, todos, index, handleAddTodoClick }: StageProps) {
   return (
     <Draggable draggableId={stage.id} index={index}>
       {(provided, snapshot) => {
@@ -63,29 +84,33 @@ function Stage({ stage, todos, index, handleAddTodoClick }: IColumnProps) {
 
         return (
           <Container ref={provided.innerRef} {...provided.draggableProps}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Title {...provided.dragHandleProps}>{stage.name}</Title>
+            <StageInfoBox {...provided.dragHandleProps}>
+              <StageTitleBox>
+                <Title>{stage.name}</Title>
+                <p>({todos.length})</p>
+              </StageTitleBox>
+
               <TodoPlusIcon
                 src={icon_plus_circle}
                 alt="스테이지 추가"
                 onClick={() => handleAddTodoClick(stage.id)}
               />
-            </div>
+            </StageInfoBox>
 
-            <Droppable droppableId={stage.id} type="task">
+            <Droppable droppableId={stage.id} type="todo">
               {(provided, snapshot) => (
-                <TaskList
+                <TodoList
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                   $isDraggingOver={snapshot.isDraggingOver}
                 >
                   <>
                     {todos.map((todo, idx) => (
-                      <Task key={todo.id} todo={todo} index={idx} />
+                      <Todo key={todo.id} todo={todo} index={idx} />
                     ))}
                     {provided.placeholder}
                   </>
-                </TaskList>
+                </TodoList>
               )}
             </Droppable>
           </Container>

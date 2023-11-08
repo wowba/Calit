@@ -15,6 +15,7 @@ interface KanbanData {
 interface TodoData {
   update_list: Array<Object>;
   user_list: Array<string>;
+  stage_id: string;
   name: string;
   created_date: FieldValue;
   modified_date: FieldValue;
