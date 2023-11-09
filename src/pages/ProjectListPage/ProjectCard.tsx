@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../firebaseSDK";
@@ -33,7 +34,7 @@ export const ProjectCardUnit = styled.div`
     border: 1px solid #c9c9c9;
   }
 `;
-const ProjectCardBgImg = styled.a<Props>`
+const ProjectCardBgImg = styled.button<Props>`
   background-image: url(${(props) =>
     props.$dynamic_url
       ? props.$dynamic_url
@@ -79,6 +80,7 @@ export default function ProjectCard({
   projectIntro,
   fetchProjectData,
 }: any) {
+  const navigate = useNavigate();
   const [inputNameValue, setInputNameValue] = useState(projectName);
   const [inputIntroValue, setInputIntroValue] = useState(projectIntro);
   const [isTextInputActive, setIsTextInputActive] = useState(false);
@@ -108,7 +110,12 @@ export default function ProjectCard({
 
   return (
     <ProjectCardUnit>
-      <ProjectCardBgImg $dynamic_url={projectImgUrl} href={projectId} />
+      <ProjectCardBgImg
+        $dynamic_url={projectImgUrl}
+        onClick={() => {
+          navigate(`/${projectId}`);
+        }}
+      />
       <ProjectIconContainer
         projectId={projectId}
         fetchProjectData={fetchProjectData}

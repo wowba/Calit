@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
 import { getDoc, updateDoc } from "firebase/firestore";
-import { useRecoilValue } from "recoil";
 import settingIcon from "../../../assets/icons/settingIconBlack.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
-import userState from "../../../recoil/atoms/login/userDataState";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import pencilIcon from "../../../assets/icons/pencilIcon.svg";
 import reloadIcon from "../../../assets/icons/reloadIcon.svg";
@@ -45,22 +43,15 @@ const ChangeUpdateModal = styled(CommonSettingModal)`
 `;
 
 export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
-  const { name, profile_img_URL: profileImgUrl } =
-    useRecoilValue(userState).userData;
-
-  const [markdownContent, setMarkdownContent] = useState(data.detail);
+  const [markdownContent, setMarkdownContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isSettingOpened, setIsSettingOpened] = useState(false);
-  const [originalMarkdownContent, setOriginalMarkdownContent] = useState(
-    data.detail,
-  );
 
   const handleMarkdownChange = (edit: any) => {
     setMarkdownContent(edit);
   };
   // 업데이트 컴포넌트 변경 취소
   const handleCancleClick = () => {
-    setMarkdownContent(originalMarkdownContent);
     setIsEditing(!isEditing);
     setIsSettingOpened(!isSettingOpened);
   };
@@ -86,7 +77,6 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
       });
       setIsSettingOpened(!isSettingOpened);
     }
-    setOriginalMarkdownContent(markdownContent);
     setIsEditing(!isEditing);
   };
   // 업데이트 컴포넌트 삭제
@@ -102,12 +92,16 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
     setIsSettingOpened(!isSettingOpened);
   };
 
+  useEffect(() => {
+    setMarkdownContent(data.detail);
+  }, [todoRef, isEditing]);
+
   return (
     <UpdateContent>
       <UpdateListHeader>
         <ManagedUser>
           <img
-            src={profileImgUrl}
+            src={data.writer_img}
             alt="프로필사진"
             style={{
               width: "1.5rem",
@@ -117,7 +111,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
               margin: "0 0.5rem 0 0",
             }}
           />
-          {name}
+          {data.writer}
         </ManagedUser>
         <SettingContainer>
           <span>{yearMonthDayFormat(data.created_date.seconds)}</span>
