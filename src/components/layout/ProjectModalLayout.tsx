@@ -70,15 +70,16 @@ const ProjectModalTabText = styled.span<{ $top: number; $left: number }>`
   font-weight: 800;
   scale: 1.1;
 `;
-
-const ProjectModalContentBox = styled.div`
+interface Props {
+  $isKanbanOrTodoShow?: boolean;
+}
+const ProjectModalContentBox = styled.div<Props>`
   height: 100%;
 
   background-color: white;
   border-radius: 0.6rem 0.6rem 0 0;
-  box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
-
   overflow: scroll;
+  transition: box-shadow 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;

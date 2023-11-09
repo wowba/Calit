@@ -197,7 +197,13 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   return (
     <ProjectModalLayout $isShow={isTodoShow}>
-      <TodoContainer>
+      <TodoContainer
+        style={{
+          boxShadow: isTodoShow
+            ? "none"
+            : "0px 0px 10px 6px rgba(0, 0, 0, 0.05)",
+        }}
+      >
         <div style={{ padding: "0 2rem 0 0" }}>
           <TodoTitle>
             <CommonInputLayout

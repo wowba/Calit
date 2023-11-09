@@ -476,7 +476,9 @@ export default function CalendarModal({ setSearchParams }: Props) {
 
   return (
     <ProjectModalLayout $isShow>
-      <ProjectModalContentBox>
+      <ProjectModalContentBox
+        style={{ boxShadow: " 0px 0px 10px 6px rgba(0, 0, 0, 0.1)" }}
+      >
         <CalendarBox>
           <FullCalendar
             // eslint-disable-next-line react/jsx-props-no-spreading
