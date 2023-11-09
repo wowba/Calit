@@ -28,7 +28,7 @@ const TodoContainer = styled(ProjectModalContentBox)`
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  overflow: hidden;
+  grid-template-rows: 100%;
 `;
 const TodoTitle = styled.div`
   display: inline-block;
