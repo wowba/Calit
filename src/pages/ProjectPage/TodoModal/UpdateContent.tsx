@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
 import { getDoc, updateDoc } from "firebase/firestore";
-// import { useRecoilValue } from "recoil";
 import settingIcon from "../../../assets/icons/settingIconBlack.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
-// import userState from "../../../recoil/atoms/login/userDataState";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import pencilIcon from "../../../assets/icons/pencilIcon.svg";
 import reloadIcon from "../../../assets/icons/reloadIcon.svg";
@@ -46,9 +43,6 @@ const ChangeUpdateModal = styled(CommonSettingModal)`
 `;
 
 export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
-  // const { name, profile_img_URL: profileImgUrl } =
-  //   useRecoilValue(userState).userData;
-
   const [markdownContent, setMarkdownContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isSettingOpened, setIsSettingOpened] = useState(false);
