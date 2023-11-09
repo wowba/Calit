@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -130,20 +130,18 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   // Input 및 Textarea 이벤트 로직(Enter키, Focus상태)
   // 1. Enter키
-  // const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === "Enter") {
-  //     if (inputTodoName) {
-  //       await updateDoc(todoRef, {
-  //         name: inputTodoName,
-  //         info: inputTodoInfo,
-  //         modified_date: serverTimestamp(),
-  //       });
-  //     }
-  //     // 포커스 해제
-  //   }
-  // };
-  // 2. Focus 상태
-  const handleFocus = async () => {
+  const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (inputTodoName) {
+        await updateDoc(todoRef, {
+          name: inputTodoName,
+          modified_date: serverTimestamp(),
+        });
+      }
+    }
+  };
+  // 2. onBlur
+  const handleOnBlur = async () => {
     if (inputTodoName) {
       await updateDoc(todoRef, {
         name: inputTodoName,
@@ -223,9 +221,9 @@ export default function TodoModal({ isTodoShow }: Props) {
                 $dynamicFontSize=" 1.2rem"
                 $dynamicPadding="1rem 0.5rem"
                 $dynamicWidth="auto"
-                // onKeyDown={handleEnterPress}
+                onKeyDown={handleEnterPress}
                 onChange={(e) => setInputTodoName(e.target.value)}
-                onBlur={handleFocus}
+                onBlur={handleOnBlur}
                 onKeyUp={(e) => {
                   if (e.key === "Enter") {
                     todoNameInputRef.current!.blur();
@@ -249,7 +247,7 @@ export default function TodoModal({ isTodoShow }: Props) {
                 userList={userList}
                 setUserList={setUserList}
                 // eslint-disable-next-line no-console
-                onBlur={handleFocus}
+                onBlur={handleOnBlur}
               />
             </UserListContainer>
             <DeadlineContainer>
@@ -280,9 +278,8 @@ export default function TodoModal({ isTodoShow }: Props) {
                 ref={textarea}
                 placeholder="설명을 입력하세요"
                 value={inputTodoInfo}
-                // onKeyDown={handleEnterPress}
                 onChange={handleChange}
-                onBlur={handleFocus}
+                onBlur={handleOnBlur}
               />
             </InfoContainer>
           </div>
