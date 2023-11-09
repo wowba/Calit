@@ -30,11 +30,17 @@ const TodoContainer = styled(ProjectModalContentBox)`
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
 `;
+const TodoTopContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 2rem;
+`;
 const TodoTitle = styled.div`
   display: inline-block;
   font-weight: 900;
   font-size: 1.2rem;
-  margin: 0 1rem 2rem 0;
+  /* margin: 0 1rem 2rem 0; */
 `;
 const TodoSubtitle = styled.div`
   display: inline-block;
@@ -207,28 +213,35 @@ export default function TodoModal({ isTodoShow }: Props) {
         }}
       >
         <div style={{ padding: "0 2rem 0 0" }}>
-          <TodoTitle>
-            <CommonInputLayout
-              ref={todoNameInputRef}
-              type="text"
-              placeholder="제목을 입력하세요"
-              value={inputTodoName}
-              $dynamicFontSize=" 1.2rem"
-              $dynamicPadding="1rem 0.5rem"
-              $dynamicWidth="auto"
-              // onKeyDown={handleEnterPress}
-              onChange={(e) => setInputTodoName(e.target.value)}
-              onBlur={handleFocus}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  todoNameInputRef.current!.blur();
-                }
-              }}
-            />
-          </TodoTitle>
-          <button type="button" onClick={handleDelete}>
-            <img src={trashIcon} alt="삭제" />
-          </button>
+          <TodoTopContainer>
+            <TodoTitle>
+              <CommonInputLayout
+                ref={todoNameInputRef}
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={inputTodoName}
+                $dynamicFontSize=" 1.2rem"
+                $dynamicPadding="1rem 0.5rem"
+                $dynamicWidth="auto"
+                // onKeyDown={handleEnterPress}
+                onChange={(e) => setInputTodoName(e.target.value)}
+                onBlur={handleFocus}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    todoNameInputRef.current!.blur();
+                  }
+                }}
+              />
+            </TodoTitle>
+            <button
+              type="button"
+              onClick={handleDelete}
+              style={{ margin: "0 1rem 0 0" }}
+            >
+              <img src={trashIcon} alt="투두 삭제" />
+            </button>
+          </TodoTopContainer>
+
           <div>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
@@ -275,7 +288,9 @@ export default function TodoModal({ isTodoShow }: Props) {
           </div>
         </div>
         <div>
-          <TodoTitle>업데이트</TodoTitle>
+          <TodoTopContainer>
+            <TodoTitle>업데이트</TodoTitle>
+          </TodoTopContainer>
           <Contour />
           <MarkdownEditor todoRef={todoRef} todoDataState={currentTodo} />
         </div>
