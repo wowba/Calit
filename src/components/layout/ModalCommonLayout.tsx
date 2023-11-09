@@ -50,6 +50,7 @@ export default function ModalCommon(name: ModalInfo) {
     setActiveIndex(modalSelected);
   }, [modalSelected]);
 
+  // URL 변경 시(프로젝트 페이지 진입, 칸반 및 투두 선택.. ) 모달 activeIndex 값 초기화해 화면 바뀌었을때 모달 뜨지 않게 수정
   useEffect(() => {
     setActiveIndex(-1);
   }, [path]);
