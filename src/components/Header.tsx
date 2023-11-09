@@ -9,13 +9,13 @@ import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
 import memberIcon from "../assets/icons/headerMemberIcon.svg";
 import bookmarkIcon from "../assets/icons/headerBookmarkIcon.svg";
 import tutorialIcon from "../assets/icons/headerInfoIcon.svg";
-import logIcon from "../assets/icons/headerBellIcon.svg";
+// import logIcon from "../assets/icons/headerBellIcon.svg";
 
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
 import BookMark from "./modal/BookMarkModal";
 import Tutorial from "./modal/TutorialModal";
-import Log from "./modal/LogModal";
+// import Log from "./modal/LogModal";
 import UserProfile from "./modal/UserProfileModal";
 
 // 모달 공통 컴포넌트
@@ -75,12 +75,12 @@ const modals = [
     type: "list",
     content: <Tutorial />,
   },
-  {
-    key: "log",
-    icon: <img style={{ width: "1.5rem" }} src={logIcon} alt="modalIcon" />,
-    type: "project",
-    content: <Log />,
-  },
+  // {
+  //   key: "log",
+  //   icon: <img style={{ width: "1.5rem" }} src={logIcon} alt="modalIcon" />,
+  //   type: "project",
+  //   content: <Log />,
+  // },
   {
     key: "profile",
     icon: "userProfile",

@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent, useEffect } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
@@ -22,7 +22,7 @@ const BookMarkInputBox = styled.div`
 
 const BookMarkLinksBox = styled.ul`
   overflow: scroll;
-  height: 60%;
+  max-height: 15rem;
   margin-top: 5px;
   &::-webkit-scrollbar {
     width: 8px;
@@ -57,18 +57,11 @@ export default function Bookmark() {
     useRecoilValue(projectState).projectData;
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  const [bookMarkData, setBookMarkData] = useState<any[]>([]);
   const projectId = window.location.pathname.substring(1);
   const projectRef = doc(db, "project", projectId);
 
-  useEffect(() => {
-    if (bookMarkList) {
-      setBookMarkData([...bookMarkList]);
-    }
-  }, [window.location.href]);
-
   const bookmarkCheck = (path: string) => {
-    const check = bookMarkData.findIndex((item: any) => item.value === path);
+    const check = bookMarkList.findIndex((item: any) => item.value === path);
     const result: boolean = check > -1;
     return result;
   };
@@ -77,8 +70,6 @@ export default function Bookmark() {
     const RegExp =
       // eslint-disable-next-line no-useless-escape
       /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    // /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    // /^http[s]?:\/\/([\S]{3,})/i;
 
     if (RegExp.test(path)) {
       return true;
@@ -101,14 +92,13 @@ export default function Bookmark() {
         return;
       }
 
-      const curBookMarkList = [...bookMarkData];
+      const curBookMarkList = [...bookMarkList];
 
       if (inputTextValue) {
         curBookMarkList.push({ name: inputTextValue, value: inputUrlValue });
       } else {
         curBookMarkList.push({ name: inputUrlValue, value: inputUrlValue });
       }
-      setBookMarkData(curBookMarkList);
 
       await updateDoc(projectRef, {
         bookmark_list: curBookMarkList,
@@ -130,13 +120,12 @@ export default function Bookmark() {
   };
 
   const handleClickDelete = async (path: string) => {
-    const target = bookMarkData.findIndex((item: any) => item.value === path);
+    const target = bookMarkList.findIndex((item: any) => item.value === path);
 
-    bookMarkData.splice(target, 1);
-    setBookMarkData(bookMarkData);
+    bookMarkList.splice(target, 1);
 
     await updateDoc(projectRef, {
-      bookmark_list: bookMarkData,
+      bookmark_list: bookMarkList,
       modified_date: serverTimestamp(),
     });
   };
@@ -153,7 +142,7 @@ export default function Bookmark() {
   return (
     <ModalArea
       $dynamicWidth="25rem"
-      $dynamicHeight="25rem"
+      $dynamicHeight="auto"
       onClick={handleClick}
     >
       <ModalTitle>Links</ModalTitle>
@@ -164,7 +153,7 @@ export default function Bookmark() {
           $dynamicHeight="2rem"
           $dynamicFontSize="0.9rem"
           $dynamicPadding="4px 4px"
-          style={{ border: "1px solid black", marginBottom: "4px" }}
+          style={{ marginBottom: "4px" }}
           value={inputUrlValue}
           onChange={(e) => setInputUrlValue(e.target.value)}
           onKeyDown={handleEnterPress}
@@ -176,7 +165,7 @@ export default function Bookmark() {
           $dynamicHeight="2rem"
           $dynamicFontSize="0.9rem"
           $dynamicPadding="4px 4px"
-          style={{ border: "1px solid black", marginBottom: "4px" }}
+          style={{ marginBottom: "4px" }}
           value={inputTextValue}
           onChange={(e) => setInputTextValue(e.target.value)}
           onKeyDown={handleEnterPress}
@@ -192,7 +181,7 @@ export default function Bookmark() {
         </ConfirmBtn>
       </BookMarkInputBox>
       <BookMarkLinksBox>
-        {bookMarkData.map((singleBookMark: any) => (
+        {bookMarkList.map((singleBookMark: any) => (
           <BookMarkLinksContentBox key={singleBookMark.value}>
             <BookMarkLinksParagraph
               onClick={() => handleClickNavigate(singleBookMark.value)}
