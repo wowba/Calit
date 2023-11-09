@@ -14,7 +14,6 @@ const ProjectListTitle = styled.div`
   font-weight: 900;
   > img {
     scale: 85%;
-    margin: 0 0 0 0.6rem;
   }
 `;
 const ProjectListContainer = styled.div`
@@ -61,7 +60,7 @@ export default function ProjectList() {
   }, [name, projectImgUrl, projectIntro, projectList]);
 
   return (
-    <div style={{ margin: "2.5rem 8%" }}>
+    <div style={{ margin: "2.5rem 6.5rem" }}>
       <ProjectListTitle>
         <img src={ProjectListIcon} alt="Project List" />
       </ProjectListTitle>

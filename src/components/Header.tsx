@@ -22,13 +22,18 @@ import UserProfile from "./modal/UserProfileModal";
 import ModalCommon from "./layout/ModalCommonLayout";
 import headerState from "../recoil/atoms/header/headerState";
 
-const HeaderLayout = styled.div`
+interface Props {
+  $whichPage?: string;
+}
+const HeaderLayout = styled.div<Props>`
   height: 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0rem 1rem 0rem 1rem;
+  padding: ${(props) =>
+    props.$whichPage === "list" ? " 0rem calc(6rem + 20px)" : "0rem 1rem"};
   border-bottom: 1.5px solid #ebebeb;
+  transition: padding 0.8s ease;
 `;
 
 const HeaderIconBox = styled.div`
@@ -105,7 +110,7 @@ export default function Header() {
   };
 
   return (
-    <HeaderLayout>
+    <HeaderLayout $whichPage={currentHeaderState}>
       <HeaderLogo />
       <HeaderIconBox>
         {(currentHeaderState === "list" ? listPageModals : modals).map(
