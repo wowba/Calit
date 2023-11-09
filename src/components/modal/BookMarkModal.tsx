@@ -57,15 +57,8 @@ export default function Bookmark() {
     useRecoilValue(projectState).projectData;
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  // const [bookMarkData, setBookMarkData] = useState<any[]>([]);
   const projectId = window.location.pathname.substring(1);
   const projectRef = doc(db, "project", projectId);
-
-  // useEffect(() => {
-  //   if (bookMarkList) {
-  //     setBookMarkData([...bookMarkList]);
-  //   }
-  // }, [window.location.href]);
 
   const bookmarkCheck = (path: string) => {
     const check = bookMarkList.findIndex((item: any) => item.value === path);
@@ -77,8 +70,6 @@ export default function Bookmark() {
     const RegExp =
       // eslint-disable-next-line no-useless-escape
       /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    // /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    // /^http[s]?:\/\/([\S]{3,})/i;
 
     if (RegExp.test(path)) {
       return true;
@@ -108,7 +99,6 @@ export default function Bookmark() {
       } else {
         curBookMarkList.push({ name: inputUrlValue, value: inputUrlValue });
       }
-      // setBookMarkData(curBookMarkList);
 
       await updateDoc(projectRef, {
         bookmark_list: curBookMarkList,
@@ -133,7 +123,6 @@ export default function Bookmark() {
     const target = bookMarkList.findIndex((item: any) => item.value === path);
 
     bookMarkList.splice(target, 1);
-    // setBookMarkData(bookMarkData);
 
     await updateDoc(projectRef, {
       bookmark_list: bookMarkList,
