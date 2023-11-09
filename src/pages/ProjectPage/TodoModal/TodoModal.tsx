@@ -70,6 +70,8 @@ const Contour = styled.div`
 `;
 
 export default function TodoModal({ isTodoShow }: Props) {
+  const todoNameInputRef = useRef<HTMLInputElement>(null);
+
   const projectId = window.location.pathname.substring(1);
   const urlQueryString = new URLSearchParams(window.location.search);
   const kanbanId = isTodoShow ? String(urlQueryString.get("kanbanID")) : "null";
@@ -201,6 +203,7 @@ export default function TodoModal({ isTodoShow }: Props) {
         <div style={{ padding: "0 2rem 0 0" }}>
           <TodoTitle>
             <CommonInputLayout
+              ref={todoNameInputRef}
               type="text"
               placeholder="제목을 입력하세요"
               value={inputTodoName}
@@ -210,6 +213,11 @@ export default function TodoModal({ isTodoShow }: Props) {
               // onKeyDown={handleEnterPress}
               onChange={(e) => setInputTodoName(e.target.value)}
               onBlur={handleFocus}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  todoNameInputRef.current!.blur();
+                }
+              }}
             />
           </TodoTitle>
           <button type="button" onClick={handleDelete}>
