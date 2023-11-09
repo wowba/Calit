@@ -477,7 +477,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
   return (
     <ProjectModalLayout $isShow>
       <ProjectModalContentBox
-        style={{ boxShadow: " 0px 0px 10px 6px rgba(0, 0, 0, 0.1)" }}
+        style={{ boxShadow: " 0px 0px 25px 5px rgba(0, 0, 0, 0.1)" }}
       >
         <CalendarBox>
           <FullCalendar

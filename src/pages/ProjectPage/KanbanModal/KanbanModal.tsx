@@ -115,7 +115,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
 
   return (
     <ProjectModalLayout $isShow={isKanbanShow}>
-      <ProjectModalContentBox
+      <KanbanContainer
         id="kanbanModalContentBox"
         style={{
           boxShadow: isKanbanShow
