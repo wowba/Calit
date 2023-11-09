@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from "react";
+import React, { useRef, useState, useEffect, ReactElement } from "react";
 import { styled } from "styled-components";
 
 interface Props {
@@ -45,7 +45,27 @@ export default function ModalCommon(name: ModalInfo) {
   const { modalIndex, modalSelected, children } = name;
   const [activeIndex, setActiveIndex] = useState<number>();
 
-  const handleClick = () => {
+  useEffect(() => {
+    setActiveIndex(modalSelected);
+  }, [modalSelected]);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent): void {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setActiveIndex(-1);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
+
+  const handleClickBox = () => {
     if (activeIndex === modalIndex) {
       // 같은 모달 아이콘 클릭시 기본 값 -1 부여를 통한 모달 닫힘 처리
       setActiveIndex(-1);
@@ -54,13 +74,9 @@ export default function ModalCommon(name: ModalInfo) {
     }
   };
 
-  useEffect(() => {
-    setActiveIndex(modalSelected);
-  }, [modalSelected]);
-
   return (
     <ModalLayout>
-      <ModalBox onClick={() => handleClick()}>
+      <ModalBox onClick={handleClickBox} ref={wrapperRef} className="modalBox">
         {children.props.children[0]}
         {activeIndex === modalIndex ? children.props.children[1] : null}
       </ModalBox>
