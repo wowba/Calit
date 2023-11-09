@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent, useEffect } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
@@ -57,18 +57,18 @@ export default function Bookmark() {
     useRecoilValue(projectState).projectData;
   const [inputUrlValue, setInputUrlValue] = useState("");
   const [inputTextValue, setInputTextValue] = useState("");
-  const [bookMarkData, setBookMarkData] = useState<any[]>([]);
+  // const [bookMarkData, setBookMarkData] = useState<any[]>([]);
   const projectId = window.location.pathname.substring(1);
   const projectRef = doc(db, "project", projectId);
 
-  useEffect(() => {
-    if (bookMarkList) {
-      setBookMarkData([...bookMarkList]);
-    }
-  }, [window.location.href]);
+  // useEffect(() => {
+  //   if (bookMarkList) {
+  //     setBookMarkData([...bookMarkList]);
+  //   }
+  // }, [window.location.href]);
 
   const bookmarkCheck = (path: string) => {
-    const check = bookMarkData.findIndex((item: any) => item.value === path);
+    const check = bookMarkList.findIndex((item: any) => item.value === path);
     const result: boolean = check > -1;
     return result;
   };
@@ -101,14 +101,14 @@ export default function Bookmark() {
         return;
       }
 
-      const curBookMarkList = [...bookMarkData];
+      const curBookMarkList = [...bookMarkList];
 
       if (inputTextValue) {
         curBookMarkList.push({ name: inputTextValue, value: inputUrlValue });
       } else {
         curBookMarkList.push({ name: inputUrlValue, value: inputUrlValue });
       }
-      setBookMarkData(curBookMarkList);
+      // setBookMarkData(curBookMarkList);
 
       await updateDoc(projectRef, {
         bookmark_list: curBookMarkList,
@@ -130,13 +130,13 @@ export default function Bookmark() {
   };
 
   const handleClickDelete = async (path: string) => {
-    const target = bookMarkData.findIndex((item: any) => item.value === path);
+    const target = bookMarkList.findIndex((item: any) => item.value === path);
 
-    bookMarkData.splice(target, 1);
-    setBookMarkData(bookMarkData);
+    bookMarkList.splice(target, 1);
+    // setBookMarkData(bookMarkData);
 
     await updateDoc(projectRef, {
-      bookmark_list: bookMarkData,
+      bookmark_list: bookMarkList,
       modified_date: serverTimestamp(),
     });
   };
@@ -192,7 +192,7 @@ export default function Bookmark() {
         </ConfirmBtn>
       </BookMarkInputBox>
       <BookMarkLinksBox>
-        {bookMarkData.map((singleBookMark: any) => (
+        {bookMarkList.map((singleBookMark: any) => (
           <BookMarkLinksContentBox key={singleBookMark.value}>
             <BookMarkLinksParagraph
               onClick={() => handleClickNavigate(singleBookMark.value)}
