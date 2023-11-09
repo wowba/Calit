@@ -16,6 +16,7 @@ const CommonInputLayout = styled.input<Props>`
     props.$dynamicHeight ? props.$dynamicHeight : "1.5rem"};
 
   padding: ${(props) => (props.$dynamicPadding ? props.$dynamicPadding : "0")};
+  padding-left: 0;
 
   font-size: ${(props) =>
     props.$dynamicFontSize ? props.$dynamicFontSize : "1.125rem"};
@@ -27,6 +28,8 @@ const CommonInputLayout = styled.input<Props>`
 
   &:focus {
     border-color: #adadad;
+    padding: ${(props) =>
+      props.$dynamicPadding ? props.$dynamicPadding : "0"};
   }
 
   ${(props) =>

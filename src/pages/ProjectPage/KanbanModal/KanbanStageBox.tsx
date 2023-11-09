@@ -12,12 +12,12 @@ import { createTodo } from "../../../api/CreateCollection";
 import todoDataState from "../../../recoil/atoms/todo/todoState";
 import { db } from "../../../firebaseSDK";
 import Stage from "./Stage";
+import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
 
 const StageLayout = styled.div`
   display: flex;
 
   overflow-x: scroll;
-
   &::-webkit-scrollbar {
     height: 0.25rem;
     border-radius: 6px;
@@ -29,6 +29,9 @@ const StageLayout = styled.div`
   &::-webkit-scrollbar-corner {
     background: transparent;
   }
+
+  height: calc(100% - 4.4rem);
+  margin: 0.5rem 0 0 0;
 `;
 
 const Container = styled.div`
@@ -36,17 +39,36 @@ const Container = styled.div`
 `;
 
 const AddStageBtn = styled.button`
-  width: 3rem;
+  transition: all 0.2s;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 3rem;
+  height: calc(100% - 3.68rem);
   margin-top: auto;
 
   background-color: #ededed;
   border: 1px solid #d5d5d5;
   border-radius: 0.5rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.btnHoverColor2};
+  }
+`;
+
+const StagePlusIcon = styled.img`
+  height: 2rem;
+  width: 2rem;
+  cursor: pointer;
 `;
 
 interface Props {
   stageList: any;
   isKanbanShow: boolean;
+  setProgress: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 interface InitialData {
@@ -59,11 +81,15 @@ interface InitialData {
   stageOrder: string[];
 }
 
-export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
+export default function KanbanStageBox({
+  stageList,
+  isKanbanShow,
+  setProgress,
+}: Props) {
   const urlQueryString = new URLSearchParams(window.location.search);
-  const projectID = window.location.pathname.substring(1);
-  const kanbanID = String(urlQueryString.get("kanbanID"));
-  const kanbanRef = doc(db, "project", projectID, "kanban", kanbanID);
+  const projectId = window.location.pathname.substring(1);
+  const kanbanId = String(urlQueryString.get("kanbanID"));
+  const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
 
   const todoState = useRecoilValue(todoDataState);
 
@@ -83,18 +109,23 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
       stageOrder: [],
     };
 
-    // 1-1. stageList 배열 반복문
+    // stageList 배열 반복문
     stageList.forEach((stage: any) => {
       updatedData.stages[stage.id] = stage;
       updatedData.stageOrder.push(stage.id);
     });
 
-    // 1-2. todoState Map 반복문
+    // todoState Map 반복문
     todoState.forEach((value, key) => {
       value.id = key;
       updatedData.todos[key] = value;
     });
 
+    // 현재 완료한 Todo 계산
+    setProgress([
+      todoState.size,
+      updatedData.stages["default-3"].todoIds.length,
+    ]);
     setData(updatedData);
   }, [todoState, stageList, isKanbanShow]);
 
@@ -208,9 +239,9 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
         const todoRef = doc(
           db,
           "project",
-          projectID,
+          projectId,
           "kanban",
-          kanbanID,
+          kanbanId,
           "todo",
           draggableId,
         );
@@ -223,7 +254,7 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
   );
 
   const handleAddTodoClick = async (stageId: string) => {
-    const todoId = await createTodo(projectID, kanbanID, {
+    const todoId = await createTodo(projectId, kanbanId, {
       update_list: [],
       user_list: [],
       name: "테스트투두",
@@ -295,6 +326,10 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
                     key={stage.id}
                     index={index}
                     handleAddTodoClick={handleAddTodoClick}
+                    stageData={{
+                      stages: data.stages,
+                      stageOrder: data.stageOrder,
+                    }}
                   />
                 );
               })}
@@ -304,7 +339,7 @@ export default function KanbanStageBox({ stageList, isKanbanShow }: Props) {
         </Droppable>
       </DragDropContext>
       <AddStageBtn type="button" onClick={handleAddStageClick}>
-        AddStageButton
+        <StagePlusIcon src={icon_plus_circle} alt="스테이지 추가" />
       </AddStageBtn>
     </StageLayout>
   );
