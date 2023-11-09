@@ -153,7 +153,7 @@ export default function Bookmark() {
           $dynamicHeight="2rem"
           $dynamicFontSize="0.9rem"
           $dynamicPadding="4px 4px"
-          style={{ border: "1px solid black", marginBottom: "4px" }}
+          style={{ marginBottom: "4px" }}
           value={inputUrlValue}
           onChange={(e) => setInputUrlValue(e.target.value)}
           onKeyDown={handleEnterPress}
@@ -165,7 +165,7 @@ export default function Bookmark() {
           $dynamicHeight="2rem"
           $dynamicFontSize="0.9rem"
           $dynamicPadding="4px 4px"
-          style={{ border: "1px solid black", marginBottom: "4px" }}
+          style={{ marginBottom: "4px" }}
           value={inputTextValue}
           onChange={(e) => setInputTextValue(e.target.value)}
           onKeyDown={handleEnterPress}
