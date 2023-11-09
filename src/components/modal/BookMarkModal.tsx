@@ -22,7 +22,7 @@ const BookMarkInputBox = styled.div`
 
 const BookMarkLinksBox = styled.ul`
   overflow: scroll;
-  height: 60%;
+  max-height: 15rem;
   margin-top: 5px;
   &::-webkit-scrollbar {
     width: 8px;
@@ -153,7 +153,7 @@ export default function Bookmark() {
   return (
     <ModalArea
       $dynamicWidth="25rem"
-      $dynamicHeight="25rem"
+      $dynamicHeight="auto"
       onClick={handleClick}
     >
       <ModalTitle>Links</ModalTitle>
