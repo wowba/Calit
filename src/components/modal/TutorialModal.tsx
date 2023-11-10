@@ -84,9 +84,9 @@ export default function Tutorial() {
   return (
     <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
       <ModalTitle>{`${tutorialTitle} Tutorial`}</ModalTitle>
-      <TutorialTextLayout className="layout">
+      <TutorialTextLayout>
         {posts.slice(offset, page).map((singleElement: any) => (
-          <TutorialTextContent key={singleElement.key} className="content">
+          <TutorialTextContent key={singleElement.key}>
             <TutorialTextParagraph>{singleElement.key}</TutorialTextParagraph>
             {singleElement.content}
           </TutorialTextContent>
