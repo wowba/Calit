@@ -119,7 +119,7 @@ function Todo({ todo, index }: TodoProps) {
 
   const handleTodoClick = () => {
     setSearchParams({
-      kanbanId,
+      kanbanID: kanbanId,
       todoID: todo.id,
     });
   };
