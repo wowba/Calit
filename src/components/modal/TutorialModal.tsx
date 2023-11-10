@@ -3,9 +3,16 @@ import { styled } from "styled-components";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import TutorialPagination from "./TutorialPagination";
 
-const TutorialTextLayout = styled.div``;
+const TutorialTextLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 20rem;
+`;
 const TutorialTextContent = styled.div`
   white-space: pre-line;
+  max-height: 15rem;
+  overflow: scroll;
 `;
 const TutorialTextParagraph = styled.p`
   font-size: 1.5rem;
