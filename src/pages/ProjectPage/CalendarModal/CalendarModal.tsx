@@ -29,6 +29,7 @@ import { db } from "../../../firebaseSDK";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
 import paint from "../../../assets/icons/paint.svg";
+import CalendarTutorialModal from "./CalendarTutorialModal";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -296,6 +297,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
     selectedEvent: null,
   });
   const [isColorModalShow, setIsColorModalShow] = useState(false);
+  const [isTutorialModalShow, setIsTutorialModalShow] = useState(false);
 
   const [kanbanEvents, setKanbanEvents] = useState(Array<EventInput>);
 
@@ -446,6 +448,10 @@ export default function CalendarModal({ setSearchParams }: Props) {
     handleModalCloseClick();
   };
 
+  const handleTutorialBtnClick = () => {
+    setIsTutorialModalShow(true);
+  };
+
   const fullCalendarSetting: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     selectable: true,
@@ -457,6 +463,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
     customButtons: {
       tutorial: {
         text: "i",
+        click: handleTutorialBtnClick,
       },
     },
     initialView: "dayGridMonth",
@@ -477,7 +484,10 @@ export default function CalendarModal({ setSearchParams }: Props) {
   return (
     <ProjectModalLayout $isShow>
       <ProjectModalContentBox
-        style={{ boxShadow: " 0px 0px 25px 5px rgba(0, 0, 0, 0.1)" }}
+        style={{
+          boxShadow: " 0px 0px 25px 5px rgba(0, 0, 0, 0.1)",
+          position: "relative",
+        }}
       >
         <CalendarBox>
           <FullCalendar
@@ -492,6 +502,10 @@ export default function CalendarModal({ setSearchParams }: Props) {
           setStartDate={setStartDate}
           endDate={endDate}
           setEndDate={setEndDate}
+        />
+        <CalendarTutorialModal
+          isShow={isTutorialModalShow}
+          setIsShow={setIsTutorialModalShow}
         />
       </ProjectModalContentBox>
       <ColorModal
