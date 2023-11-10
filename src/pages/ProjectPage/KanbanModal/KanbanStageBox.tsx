@@ -73,7 +73,14 @@ interface Props {
 
 interface InitialData {
   todos: {
-    [key: string]: { id: string; name: string };
+    [key: string]: {
+      id: string;
+      name: string;
+      info: string;
+      todo_tag_list: { color: string; label: string }[];
+      user_list: { image: string; label: string; value: string }[];
+      stage_id: string;
+    };
   };
   stages: {
     [key: string]: { id: string; name: string; todoIds: string[] };
@@ -257,13 +264,13 @@ export default function KanbanStageBox({
     const todoId = await createTodo(projectId, kanbanId, {
       update_list: [],
       user_list: [],
-      name: "테스트투두",
+      name: "새 투두",
       stage_id: stageId,
       created_date: serverTimestamp(),
       modified_date: serverTimestamp(),
       is_deleted: false,
       deadline: new Date(),
-      info: "내용",
+      info: "내용을 입력해 주세요.",
       todo_tag_list: [],
       todo_option_list: [
         {

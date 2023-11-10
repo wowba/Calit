@@ -19,7 +19,7 @@ const Container = styled.div`
   flex-direction: column;
 
   height: auto;
-  width: 15rem;
+  width: 18rem;
   margin: 0 1rem 0 0;
 
   :hover {
@@ -51,7 +51,7 @@ const TodoPlusIcon = styled.img`
   width: 1rem;
   cursor: pointer;
 
-  margin: 0 0 0 0.8rem;
+  margin: 0 0 0 0.25rem;
 `;
 
 const StageTrashIcon = styled.img`
@@ -86,6 +86,10 @@ interface StageProps {
   todos: {
     id: string;
     name: string;
+    info: string;
+    todo_tag_list: { color: string; label: string }[];
+    user_list: { image: string; label: string; value: string }[];
+    stage_id: string;
   }[];
   index: number;
   handleAddTodoClick: any;
@@ -166,7 +170,7 @@ function Stage({
                 value={stageName}
                 type="text"
                 placeholder="이름을 입력하세요"
-                $dynamicWidth="10rem"
+                $dynamicWidth="14rem"
                 $dynamicFontSize=" 1.1rem"
                 $dynamicPadding="1rem 0.5rem"
                 style={{ fontWeight: "900" }}
