@@ -1,7 +1,8 @@
+/* eslint-disable no-plusplus */
 import React from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
-const TutorialUl = styled.ul`
+const PageUl = styled.ul`
   float: left;
   list-style: none;
   text-align: center;
@@ -13,7 +14,7 @@ const TutorialUl = styled.ul`
   background-color: rgba(0, 0, 0, 0.4);
 `;
 
-const TutorialLi = styled.li`
+const PageLi = styled.li`
   display: inline-block;
   font-size: 17px;
   font-weight: 600;
@@ -31,7 +32,7 @@ const TutorialLi = styled.li`
   }
 `;
 
-const TutorialSpan = styled.span`
+const PageSpan = styled.span`
   &:hover::after,
   &:focus::after {
     border-radius: 100%;
@@ -41,33 +42,32 @@ const TutorialSpan = styled.span`
 `;
 
 interface Props {
-  textPerPage: any;
-  totalText: any;
+  postsPerPage: any;
+  totalPosts: any;
   paginate: any;
 }
 
 export default function TutorialText({
-  textPerPage,
-  totalText,
+  postsPerPage,
+  totalPosts,
   paginate,
 }: Props) {
   const pageNumbers = [];
-  // eslint-disable-next-line no-plusplus
-  for (let i = 1; i <= Math.ceil(totalText / textPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
   }
   return (
     <div>
       <nav>
-        <TutorialUl>
-          {pageNumbers.map((number: any) => (
-            <TutorialLi key={number}>
-              <TutorialSpan onClick={() => paginate(number)}>
+        <PageUl className="pagination">
+          {pageNumbers.map((number) => (
+            <PageLi key={number} className="page-item">
+              <PageSpan onClick={() => paginate(number)} className="page-link">
                 {number}
-              </TutorialSpan>
-            </TutorialLi>
+              </PageSpan>
+            </PageLi>
           ))}
-        </TutorialUl>
+        </PageUl>
       </nav>
     </div>
   );

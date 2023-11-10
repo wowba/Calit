@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 
 import TutorialText from "./TutorialText";
+import TutorialPost from "./TutorialPosts";
 
 const TutorialTextLayout = styled.div``;
 const TutorialTextContent = styled.div`
@@ -68,31 +70,41 @@ export default function Tutorial() {
     ? TUTORIAL_LIST_TEXT
     : TUTORIAL_PROJECT_TEXT;
 
-  const [text, setText] = useState<any>([]);
+  const [posts, setPosts] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [textPerPage, setTextPerPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(1);
 
   useEffect(() => {
-    setText(tutorialTarget);
+    setPosts(tutorialTarget);
   }, []);
+
+  console.log(posts);
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = (posts: any) => {
+    let currentPost = 0;
+    currentPost = posts.slice(indexOfFirst, indexOfLast);
+    return currentPost;
+  };
+  console.log(currentPosts(posts));
 
   return (
     <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
       <ModalTitle>{`${tutorialText} Tutorial`}</ModalTitle>
       <TutorialTextLayout>
-        {text.map((singleElement: any) => (
+        {/* {posts.map((singleElement: any) => (
           <TutorialTextContent key={singleElement.key}>
             <TutorialTextParagraph>{singleElement.key}</TutorialTextParagraph>
             {singleElement.content}
           </TutorialTextContent>
-        ))}
+        ))} */}
+        <TutorialPost posts={currentPosts(posts)} />
+        <TutorialText
+          postsPerPage={postsPerPage}
+          totalPosts={posts.length}
+          paginate={setCurrentPage}
+        />
       </TutorialTextLayout>
-
-      <TutorialText
-        textPerPage={textPerPage}
-        totalText={text.length}
-        paginate={setCurrentPage}
-      />
     </ModalArea>
   );
 }
