@@ -3,7 +3,12 @@ import { styled } from "styled-components";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import TutorialPagination from "./TutorialPagination";
 
-const TutorialTextLayout = styled.div``;
+const TutorialTextLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 20rem;
+`;
 const TutorialTextContent = styled.div`
   white-space: pre-line;
 `;
@@ -77,9 +82,9 @@ export default function Tutorial() {
   return (
     <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
       <ModalTitle>{`${tutorialTitle} Tutorial`}</ModalTitle>
-      <TutorialTextLayout>
+      <TutorialTextLayout className="layout">
         {posts.slice(offset, page).map((singleElement: any) => (
-          <TutorialTextContent key={singleElement.key}>
+          <TutorialTextContent key={singleElement.key} className="content">
             <TutorialTextParagraph>{singleElement.key}</TutorialTextParagraph>
             {singleElement.content}
           </TutorialTextContent>
