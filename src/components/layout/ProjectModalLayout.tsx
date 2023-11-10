@@ -27,7 +27,7 @@ const ProjectModalTabBox = styled.div<{
   $isShow?: boolean;
 }>`
   transition: all 1s ease;
-  z-index: 1000;
+  z-index: 998;
 
   width: 9rem;
   position: absolute;

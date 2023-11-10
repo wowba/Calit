@@ -69,7 +69,7 @@ const InviteBtn = styled.button`
   display: flex;
   margin: 1rem 1rem 0 0;
   > img {
-    transition: transform 0.3s ease-in;
+    transition: transform 0.3s ease;
   }
   &:hover {
     & > img {
