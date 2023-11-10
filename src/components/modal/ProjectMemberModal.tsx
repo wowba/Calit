@@ -68,10 +68,26 @@ const BtnBox = styled.span`
 const InviteBtn = styled.button`
   display: flex;
   margin: 1rem 1rem 0 0;
+  > img {
+    transition: transform 0.3s ease-in;
+  }
+  &:hover {
+    & > img {
+      transform: rotate(90deg);
+    }
+  }
 `;
 const GetOutBtn = styled.button`
   display: flex;
   margin: 1rem 0 0;
+  > img {
+    transition: transform 0.3s ease;
+  }
+  &:hover {
+    & > img {
+      transform: rotate(90deg);
+    }
+  }
 `;
 // const SelectInput = styled.select`
 //   background: #fafafa;
