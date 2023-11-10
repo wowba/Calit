@@ -66,7 +66,7 @@ export default function Tutorial() {
     ? TUTORIAL_LIST_TEXT
     : TUTORIAL_PROJECT_TEXT;
 
-  const [posts, setPosts] = useState<any>([]);
+  const [posts, setPosts] = useState<object[]>([]);
   const [page, setPage] = useState(1);
   const offset = page - 1;
 
