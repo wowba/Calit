@@ -52,6 +52,14 @@ const UserInfoBox = styled.div`
 const LogoutBtn = styled.button`
   display: block;
   margin: auto;
+  img {
+    transition: transform 0.3s ease;
+  }
+  &:hover {
+    & img {
+      transform: translateX(0.3rem);
+    }
+  }
 `;
 
 export default function UserProfile() {

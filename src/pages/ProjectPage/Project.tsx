@@ -35,7 +35,7 @@ const ProjectLayoutFooter = styled.div`
 
   border-radius: 0 0.6rem 0 0;
   background-color: #ffea7a;
-  box-shadow: -2px 4px 20px 0px rgba(0, 0, 0, 0.6);
+  box-shadow: -2px 4px 20px 0px rgba(0, 0, 0, 0.1);
 `;
 
 export default function Project() {

@@ -29,7 +29,7 @@ export default function InvitationBtn() {
   };
 
   return (
-    <div style={{ margin: "2.5rem 0 0 1.7rem" }}>
+    <div style={{ margin: "2.5rem 0 0 20px" }}>
       <ConfirmBtn type="button" onClick={handleClick} style={{ zIndex: "2" }}>
         초대링크로 입장
       </ConfirmBtn>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -28,13 +28,19 @@ const TodoContainer = styled(ProjectModalContentBox)`
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  overflow: hidden;
+  grid-template-rows: 100%;
+`;
+const TodoTopContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 0 0 2rem;
 `;
 const TodoTitle = styled.div`
   display: inline-block;
   font-weight: 900;
   font-size: 1.2rem;
-  margin: 0 1rem 2rem 0;
+  /* margin: 0 1rem 2rem 0; */
 `;
 const TodoSubtitle = styled.div`
   display: inline-block;
@@ -124,20 +130,18 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   // Input 및 Textarea 이벤트 로직(Enter키, Focus상태)
   // 1. Enter키
-  // const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === "Enter") {
-  //     if (inputTodoName) {
-  //       await updateDoc(todoRef, {
-  //         name: inputTodoName,
-  //         info: inputTodoInfo,
-  //         modified_date: serverTimestamp(),
-  //       });
-  //     }
-  //     // 포커스 해제
-  //   }
-  // };
-  // 2. Focus 상태
-  const handleFocus = async () => {
+  const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (inputTodoName) {
+        await updateDoc(todoRef, {
+          name: inputTodoName,
+          modified_date: serverTimestamp(),
+        });
+      }
+    }
+  };
+  // 2. onBlur
+  const handleOnBlur = async () => {
     if (inputTodoName) {
       await updateDoc(todoRef, {
         name: inputTodoName,
@@ -199,30 +203,43 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   return (
     <ProjectModalLayout $isShow={isTodoShow}>
-      <TodoContainer>
+      <TodoContainer
+        style={{
+          boxShadow: isTodoShow
+            ? "none"
+            : "0px 0px 10px 6px rgba(0, 0, 0, 0.05)",
+        }}
+      >
         <div style={{ padding: "0 2rem 0 0" }}>
-          <TodoTitle>
-            <CommonInputLayout
-              ref={todoNameInputRef}
-              type="text"
-              placeholder="제목을 입력하세요"
-              value={inputTodoName}
-              $dynamicFontSize=" 1.2rem"
-              $dynamicPadding="1rem 0.5rem"
-              $dynamicWidth="auto"
-              // onKeyDown={handleEnterPress}
-              onChange={(e) => setInputTodoName(e.target.value)}
-              onBlur={handleFocus}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") {
-                  todoNameInputRef.current!.blur();
-                }
-              }}
-            />
-          </TodoTitle>
-          <button type="button" onClick={handleDelete}>
-            <img src={trashIcon} alt="삭제" />
-          </button>
+          <TodoTopContainer>
+            <TodoTitle>
+              <CommonInputLayout
+                ref={todoNameInputRef}
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={inputTodoName}
+                $dynamicFontSize=" 1.2rem"
+                $dynamicPadding="1rem 0.5rem"
+                $dynamicWidth="auto"
+                onKeyDown={handleEnterPress}
+                onChange={(e) => setInputTodoName(e.target.value)}
+                onBlur={handleOnBlur}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
+                    todoNameInputRef.current!.blur();
+                  }
+                }}
+              />
+            </TodoTitle>
+            <button
+              type="button"
+              onClick={handleDelete}
+              style={{ margin: "0 1rem 0 0" }}
+            >
+              <img src={trashIcon} alt="투두 삭제" />
+            </button>
+          </TodoTopContainer>
+
           <div>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
@@ -230,7 +247,7 @@ export default function TodoModal({ isTodoShow }: Props) {
                 userList={userList}
                 setUserList={setUserList}
                 // eslint-disable-next-line no-console
-                onBlur={handleFocus}
+                onBlur={handleOnBlur}
               />
             </UserListContainer>
             <DeadlineContainer>
@@ -261,15 +278,16 @@ export default function TodoModal({ isTodoShow }: Props) {
                 ref={textarea}
                 placeholder="설명을 입력하세요"
                 value={inputTodoInfo}
-                // onKeyDown={handleEnterPress}
                 onChange={handleChange}
-                onBlur={handleFocus}
+                onBlur={handleOnBlur}
               />
             </InfoContainer>
           </div>
         </div>
         <div>
-          <TodoTitle>업데이트</TodoTitle>
+          <TodoTopContainer>
+            <TodoTitle>업데이트</TodoTitle>
+          </TodoTopContainer>
           <Contour />
           <MarkdownEditor todoRef={todoRef} todoDataState={currentTodo} />
         </div>

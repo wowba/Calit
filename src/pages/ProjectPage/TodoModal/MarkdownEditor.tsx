@@ -15,7 +15,7 @@ const AddUpdateTitle = styled.div`
 `;
 const UpdateContainer = styled.div`
   background-color: #eaeaea;
-  height: 80%;
+  height: calc(100% - 4.4rem);
   overflow: scroll;
   padding: 1.2rem 1.2rem 0 1.2rem;
   border-radius: 10px;
@@ -69,53 +69,51 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
   };
 
   return (
-    <div style={{ height: "80%" }}>
-      <UpdateContainer>
-        <AddUpdateTitle>
-          <span
-            style={{
-              fontWeight: "900",
-              fontSize: "0.9rem",
-            }}
-          >
-            업데이트 등록
-          </span>
-          <ConfirmBtn
-            type="submit"
-            onClick={handleSubmit}
-            $dynamicWidth="3.5rem"
-            $dynamicHeight="2rem"
-            style={{ fontSize: "0.9rem" }}
-          >
-            등록
-          </ConfirmBtn>
-        </AddUpdateTitle>
-
-        {/* @ts-ignore */}
-        <MDEditor value={value} onChange={setValue} preview="edit" />
+    // <div style={{ height: "100%" }}>
+    <UpdateContainer>
+      <AddUpdateTitle>
         <span
           style={{
             fontWeight: "900",
             fontSize: "0.9rem",
-            margin: "1.5rem 0 0",
-            display: "inline-block",
           }}
         >
-          업데이트 내역
+          업데이트 등록
         </span>
-        <UpdateList>
-          {todoDataState.update_list.map(
-            (updateContent: any, index: number) => (
-              <UpdateContentBox
-                key={updateContent.created_date.seconds}
-                data={updateContent}
-                todoRef={todoRef}
-                updateIndex={index}
-              />
-            ),
-          )}
-        </UpdateList>
-      </UpdateContainer>
-    </div>
+        <ConfirmBtn
+          type="submit"
+          onClick={handleSubmit}
+          $dynamicWidth="3.5rem"
+          $dynamicHeight="2rem"
+          style={{ fontSize: "0.9rem" }}
+        >
+          등록
+        </ConfirmBtn>
+      </AddUpdateTitle>
+
+      {/* @ts-ignore */}
+      <MDEditor value={value} onChange={setValue} preview="edit" />
+      <span
+        style={{
+          fontWeight: "900",
+          fontSize: "0.9rem",
+          margin: "1.5rem 0 0",
+          display: "inline-block",
+        }}
+      >
+        업데이트 내역
+      </span>
+      <UpdateList>
+        {todoDataState.update_list.map((updateContent: any, index: number) => (
+          <UpdateContentBox
+            key={updateContent.created_date.seconds}
+            data={updateContent}
+            todoRef={todoRef}
+            updateIndex={index}
+          />
+        ))}
+      </UpdateList>
+    </UpdateContainer>
+    // </div>
   );
 }

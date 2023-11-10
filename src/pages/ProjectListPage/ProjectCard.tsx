@@ -7,6 +7,7 @@ import rectangle from "../../assets/images/Rectangle.svg";
 import ProjectIconContainer from "./ProjectIconContainer";
 import CommonInputLayout from "../../components/layout/CommonInputLayout";
 import CommonTextArea from "../../components/layout/CommonTextArea";
+import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
 
 interface Props {
   $dynamic_url?: string;
@@ -35,10 +36,10 @@ export const ProjectCardUnit = styled.div`
   }
 `;
 const ProjectCardBgImg = styled.button<Props>`
-  background-image: url(${(props) =>
+  background-image: ${(props) =>
     props.$dynamic_url
-      ? props.$dynamic_url
-      : "https://i.pinimg.com/564x/ad/36/d7/ad36d788f88de7de91122c7317449371.jpg"});
+      ? `url(${props.$dynamic_url})`
+      : `url(${defaultProjectImg})`};
   display: inline-block;
   width: 100%;
   height: 226px;
@@ -56,7 +57,6 @@ const ProjectCardInfo = styled.div<{ $isTextInputActive: boolean }>`
   border-radius: 3px 3px 13px 13px;
   position: absolute;
   bottom: ${(props) => (props.$isTextInputActive ? "-5px" : "0px")};
-  justify-contents: center;
   box-shadow:
     5px -1px 86px -1px rgba(0, 0, 0, 0.8),
     0px 25px 16px 0px rgba(0, 0, 0, 0.6);
