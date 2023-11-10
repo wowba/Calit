@@ -44,7 +44,6 @@ export const ModalTitle = styled.div`
 export default function ModalCommon(name: ModalInfo) {
   const { modalIndex, modalSelected, children } = name;
   const [activeIndex, setActiveIndex] = useState<number>();
-  console.log(modalIndex, modalSelected, activeIndex);
   const { pathname } = window.location;
   useEffect(() => {
     setActiveIndex(modalSelected);

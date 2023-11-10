@@ -1,20 +1,16 @@
-/* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
-
-import TutorialText from "./TutorialText";
-import TutorialPost from "./TutorialPosts";
+import TutorialPagination from "./TutorialPagination";
 
 const TutorialTextLayout = styled.div``;
 const TutorialTextContent = styled.div`
-  margin-bottom: 10px;
   white-space: pre-line;
 `;
 const TutorialTextParagraph = styled.p`
   font-size: 1.5rem;
   font-weight: bold;
+  margin-bottom: 10px;
 `;
 
 const TUTORIAL_LIST_TEXT = [
@@ -65,60 +61,35 @@ const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
 
 export default function Tutorial() {
   const projectId = window.location.pathname.substring(1);
-  const tutorialText = !projectId ? "List" : "Project";
+  const tutorialTitle = !projectId ? "List" : "Project";
   const tutorialTarget = !projectId
     ? TUTORIAL_LIST_TEXT
     : TUTORIAL_PROJECT_TEXT;
 
   const [posts, setPosts] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(1);
+  const [page, setPage] = useState(1);
+  const offset = page - 1;
 
   useEffect(() => {
     setPosts(tutorialTarget);
   }, []);
 
-  console.log(posts);
-  const indexOfLast = currentPage * postsPerPage;
-  const indexOfFirst = indexOfLast - postsPerPage;
-  const currentPosts = (posts: any) => {
-    let currentPost = 0;
-    currentPost = posts.slice(indexOfFirst, indexOfLast);
-    return currentPost;
-  };
-  console.log(currentPosts(posts));
-
   return (
     <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
-      <ModalTitle>{`${tutorialText} Tutorial`}</ModalTitle>
+      <ModalTitle>{`${tutorialTitle} Tutorial`}</ModalTitle>
       <TutorialTextLayout>
-        {/* {posts.map((singleElement: any) => (
+        {posts.slice(offset, page).map((singleElement: any) => (
           <TutorialTextContent key={singleElement.key}>
             <TutorialTextParagraph>{singleElement.key}</TutorialTextParagraph>
             {singleElement.content}
           </TutorialTextContent>
-        ))} */}
-        <TutorialPost posts={currentPosts(posts)} />
-        <TutorialText
-          postsPerPage={postsPerPage}
-          totalPosts={posts.length}
-          paginate={setCurrentPage}
+        ))}
+        <TutorialPagination
+          total={posts.length}
+          page={page}
+          setPage={setPage}
         />
       </TutorialTextLayout>
     </ModalArea>
   );
 }
-
-// const Posts = ({ posts, loading }) => {
-//   return (
-//     <>
-//       {loading && <div> loading... </div>}
-//       <ul>
-//         {posts.map((post) => (
-//           <li key={post.id}>{post.title}</li>
-//         ))}
-//       </ul>
-//     </>
-//   );
-// };
-// export default Posts;
