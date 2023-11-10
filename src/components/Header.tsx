@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import { useRecoilValue } from "recoil";
+import { useNavigate } from "react-router-dom";
 import userData from "../recoil/atoms/login/userDataState";
 
 import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
@@ -55,6 +56,7 @@ const HeaderModalBox = styled.div`
 
 const HeaderLogo = styled(headerLogo)`
   height: 1.8rem;
+  cursor: pointer;
 `;
 
 const modals = [
@@ -100,6 +102,7 @@ export default function Header() {
   const userDataState = useRecoilValue(userData);
   const { profile_img_URL: profileImgUrl }: any = userDataState.userData;
   const [selectedModal, setSelectedModal] = useState(-1);
+  const navigate = useNavigate();
 
   const listPageModals = modals.filter(
     (modal) => modal.type === currentHeaderState,
@@ -111,7 +114,7 @@ export default function Header() {
 
   return (
     <HeaderLayout $whichPage={currentHeaderState}>
-      <HeaderLogo />
+      <HeaderLogo onClick={() => navigate("/")} />
       <HeaderIconBox>
         {(currentHeaderState === "list" ? listPageModals : modals).map(
           (modal, index) => (
