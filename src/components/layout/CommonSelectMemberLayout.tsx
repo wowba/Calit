@@ -1,11 +1,11 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { doc, getDoc } from "firebase/firestore";
 import styled from "styled-components";
 import Select from "react-select";
 
 import projectState from "../../recoil/atoms/project/projectState";
-import { db } from "../../firebaseSDK";
+import userListState from "../../recoil/atoms/userList/userListState";
 
 const ManagedUser = styled.div`
   border-radius: 8px;
@@ -31,26 +31,25 @@ interface Props {
 }
 
 export default function CommonSelectMemberLayout(props: Props) {
+  const userListData = useRecoilValue(userListState);
+
   const { userList, setUserList, onBlur, customUserData, isCustomUserData } =
     props;
   const { user_list: projectUserList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
 
-  // user_list 통해 user 데이터 가져오기
+  // user_list와 userListData를 통해 user 데이터 set
   useEffect(() => {
     const fetchData = async (list: any) => {
-      const data = await Promise.all(
-        list.map(async (id: string) => {
-          const userRef = doc(db, "user", id);
-          const userSnap: any = await getDoc(userRef);
-          return {
-            image: userSnap.data().profile_img_URL,
-            value: userSnap.data().email,
-            label: userSnap.data().name,
-          };
-        }),
-      );
+      const data = list.map((id: string) => {
+        const user = userListData.get(id);
+        return {
+          image: user.profile_img_URL,
+          value: user.email,
+          label: user.name,
+        };
+      });
       setUserData(data);
     };
 
@@ -59,13 +58,12 @@ export default function CommonSelectMemberLayout(props: Props) {
     } else {
       fetchData(projectUserList);
     }
-  }, [projectUserList]);
+  }, [userListData]);
 
   return (
     <Select
       options={userData}
       isMulti
-      // eslint-disable-next-line react/no-unstable-nested-components
       formatOptionLabel={(option: any) => (
         <ManagedUser>
           <ProfileImg src={option.image} alt="User Profile" />

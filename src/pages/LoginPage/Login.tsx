@@ -85,9 +85,7 @@ export default function Login() {
           await setDoc(doc(db, "user", user.email as string), {
             project_list: [],
             profile_img_URL: user.photoURL,
-            name: user.displayName,
             email: user.email,
-            intro: "",
             is_deleted: false,
           });
         }
