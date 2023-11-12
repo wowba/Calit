@@ -124,12 +124,29 @@ export default function ProjectCheckRoute() {
     const projectRef = doc(db, "project", pathname);
     const unsubProject = onSnapshot(projectRef, async (projectSnapshot) => {
       // 프로젝트 is_deleted 확인
-      if (projectSnapshot.exists() && !projectSnapshot.data().is_deleted) {
+      if (
+        projectSnapshot.exists() &&
+        !projectSnapshot.data().is_deleted &&
+        projectSnapshot.data().user_list.includes(loginEmail)
+      ) {
         setIsProjectLoaded(true);
         setProjectDataState({
           projectData: projectSnapshot.data(),
         });
-      } else {
+      }
+      if (
+        projectSnapshot.exists() &&
+        !projectSnapshot.data().user_list.includes(loginEmail)
+      ) {
+        unsubProject();
+        setIs403(true);
+      }
+      if (
+        !projectSnapshot.exists() ||
+        (projectSnapshot.exists() &&
+          projectSnapshot.data().user_list.includes(loginEmail) &&
+          projectSnapshot.data().is_deleted)
+      ) {
         unsubProject();
         setIs404(true);
       }
@@ -203,6 +220,7 @@ export default function ProjectCheckRoute() {
         prev.clear();
         return prev;
       });
+      setIs403(false);
       setIs404(false);
       unsubProject();
       unsubKanban();
