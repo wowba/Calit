@@ -6,7 +6,7 @@ import { ModalTitle } from "../../../components/layout/ModalCommonLayout";
 const CalendarTutorialModalLayout = styled.div<{ $isShow: boolean }>`
   position: absolute;
 
-  top: 14rem;
+  top: 17rem;
   left: calc(100% - 14rem);
   transform: translate(-50%, -50%);
 
@@ -30,7 +30,7 @@ const TutorialTextBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 15rem;
+  min-height: 20rem;
 `;
 const TutorialTextContent = styled.div`
   white-space: pre-line;
@@ -65,6 +65,14 @@ const TUTORIAL_CALENDER_TEXT = [
     content: `달력의 현재 월 안에서 원하는 일정만큼 드래그해 칸반 생성 모달을 열 수 있습니다.
 
     칸반 생성 모달에서는 칸반의 이름, 색상, 시작일과 종료일, 그리고 담당자를 지정할 수 있습니다.
+
+
+
+
+
+
+
+
     `,
   },
   {
