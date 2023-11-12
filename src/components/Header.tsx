@@ -132,10 +132,7 @@ export default function Header() {
                         objectFit: "cover",
                         borderRadius: "50%",
                       }}
-                      src={
-                        userListData.get(loginEmail) &&
-                        userListData.get(loginEmail).profile_img_URL
-                      }
+                      src={userListData.get(loginEmail).profile_img_URL}
                       alt="modalIcon"
                     />
                   ) : (

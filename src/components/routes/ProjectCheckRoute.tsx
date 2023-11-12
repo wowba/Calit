@@ -89,7 +89,6 @@ export default function ProjectCheckRoute() {
         setProjectDataState({
           projectData: projectDoc.data(),
         });
-        setHeaderState("project");
       } else if (!projectDoc.exists()) {
         unsubProject();
         setIs404(true);
@@ -151,6 +150,7 @@ export default function ProjectCheckRoute() {
         setUserDataState((prev) => new Map([...prev, ...addedMap]));
       }
       setIsUserListLoaded(true);
+      setHeaderState("project");
     });
 
     // 클린업 함수. 칸반 데이터 초기화 및 실시간 연결 해제
