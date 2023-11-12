@@ -41,7 +41,7 @@ const ProjectLayoutFooter = styled.div`
 
 export default function Project() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setTestTodoDataState = useSetRecoilState(todoState);
+  const setTodoDataState = useSetRecoilState(todoState);
 
   const [isKanbanShow, setIsKanbanShow] = useState(false);
   const [isTodoShow, setIsTodoShow] = useState(false);
@@ -76,7 +76,7 @@ export default function Project() {
     if (!searchParams.has("kanbanID")) {
       return;
     }
-    setTestTodoDataState(new Map());
+    setTodoDataState(new Map());
     const projectID = window.location.pathname.substring(1);
     const kanbanID = searchParams.get("kanbanID");
     const todoQuery = query(
@@ -93,21 +93,21 @@ export default function Project() {
         }
         // 투두를 수정할 경우
         if (change.type === "modified") {
-          setTestTodoDataState((prev) => {
+          setTodoDataState((prev) => {
             prev.set(change.doc.id, change.doc.data());
             return new Map([...prev]);
           });
         }
         // 투두가 삭제된 경우 (is_deleted 수정 시 쿼리 결과 변경)
         if (change.type === "removed") {
-          setTestTodoDataState((prev) => {
+          setTodoDataState((prev) => {
             prev.delete(change.doc.id);
             return new Map([...prev]);
           });
         }
       });
       if (addedMap.size > 0) {
-        setTestTodoDataState((prev) => new Map([...prev, ...addedMap]));
+        setTodoDataState((prev) => new Map([...prev, ...addedMap]));
       }
       setIsKanbanShow(true);
       if (searchParams.has("todoID")) {
