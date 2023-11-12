@@ -19,9 +19,9 @@ import {
 const ProjectLayout = styled.div`
   position: relative;
 
-  width: 100%;
+  width: calc(100% - 14rem);
   height: 100%;
-  padding: 0.75rem 1.75rem 0 0.5rem;
+  padding: 0.75rem 1rem 0 0.5rem;
 `;
 
 const ProjectLayoutFooter = styled.div`
@@ -30,7 +30,7 @@ const ProjectLayoutFooter = styled.div`
   top: calc(100% - 0.6rem);
 
   /* 사이드바 width 변경시 수정 필요. */
-  width: calc(100% - 14rem);
+  width: calc(100% - 15.5rem);
   height: 0.6rem;
 
   border-radius: 0 0.6rem 0 0;

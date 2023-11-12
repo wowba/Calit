@@ -7,7 +7,7 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
 
   // 헤더 및 사이드바 CSS 변경시 width, height 수정 요망
-  width: calc(100% - 14rem);
+  width: calc(100% - 15.5rem);
   height: calc(100% - 5.5rem);
 
   top: calc(5.75rem);
