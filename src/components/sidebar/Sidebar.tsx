@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import trashIcon from "../../assets/icons/trashIcon.svg";
 import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
 import projectState from "../../recoil/atoms/project/projectState";
 import RecentKanban from "./RecentKanban";
+import TrashBox from "../TrashBox";
 
 const SidebarLayout = styled.div`
   display: flex;
@@ -38,22 +38,6 @@ const ProjectProfileImg = styled.img`
   border-radius: 0.5rem;
 `;
 
-const TrashBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: auto;
-  height: 2.5rem;
-  background-color: #ffd43b;
-
-  border-radius: 0.3rem;
-`;
-
-const TrashBoxImg = styled.img`
-  width: 1.5rem;
-`;
-
 export default function Sidebar() {
   const { projectData } = useRecoilValue(projectState);
 
@@ -73,9 +57,7 @@ export default function Sidebar() {
         </ProjectInfoBox>
         <RecentKanban />
       </div>
-      <TrashBox>
-        <TrashBoxImg src={trashIcon} alt="TrashIcon" />
-      </TrashBox>
+      <TrashBox />
     </SidebarLayout>
   );
 }
