@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { db } from "../../../firebaseSDK";
@@ -17,6 +17,9 @@ import ErrorPage from "../../../components/ErrorPage";
 import KanbanStageBox from "./KanbanStageBox";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import projectState from "../../../recoil/atoms/project/projectState";
+import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
+import LoadingPage from "../../../components/LoadingPage";
+import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const KanbanContainer = styled(ProjectModalContentBox)`
   padding: 2rem 2rem 0.5rem 2rem;
@@ -82,6 +85,10 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   const { deleted_kanban_info_list: deletedKanbanIdList } =
     useRecoilValue(projectState).projectData;
 
+  const isLoaded = useRecoilValue(todoLoaded);
+
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
+
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
       return;
@@ -99,6 +106,15 @@ export default function KanbanModal({ isKanbanShow }: Props) {
     await updateDoc(projectRef, {
       deleted_kanban_info_list: [deletedKanbanInfo, ...deletedKanbanIdList],
     });
+    // 사이드바 최근 칸반 목록에서 삭제
+    const newIds = recentKanbanId[projectId].filter(
+      (id: string) => id !== kanbanId,
+    );
+    setRecentKanbanId((prev: any) => ({
+      ...prev,
+      [projectId]: [...newIds],
+    }));
+
     await updateDoc(kanbanRef, {
       is_deleted: true,
     });
@@ -121,6 +137,15 @@ export default function KanbanModal({ isKanbanShow }: Props) {
       <ProjectModalLayout $isShow={isKanbanShow}>
         <ProjectModalContentBox>
           <ErrorPage isKanban404 />
+        </ProjectModalContentBox>
+      </ProjectModalLayout>
+    );
+  }
+  if (!isLoaded) {
+    return (
+      <ProjectModalLayout $isShow>
+        <ProjectModalContentBox>
+          <LoadingPage />
         </ProjectModalContentBox>
       </ProjectModalLayout>
     );

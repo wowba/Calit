@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import {
   DateSelectArg,
@@ -13,7 +14,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, {
   EventResizeDoneArg,
 } from "@fullcalendar/interaction";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { SetURLSearchParams } from "react-router-dom";
 import _ from "lodash";
@@ -30,6 +31,7 @@ import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor"
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
 import paint from "../../../assets/icons/paint.svg";
 import CalendarTutorialModal from "./CalendarTutorialModal";
+import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -301,6 +303,9 @@ export default function CalendarModal({ setSearchParams }: Props) {
 
   const [kanbanEvents, setKanbanEvents] = useState(Array<EventInput>);
 
+  const projectId = window.location.pathname.substring(1);
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
+
   useEffect(() => {
     const data = [...kanbanDataState];
     const result: EventInput[] = data.map((item) => ({
@@ -328,6 +333,37 @@ export default function CalendarModal({ setSearchParams }: Props) {
       event: { _def: eventInfo },
     } = eventArg;
     setSearchParams({ kanbanID: eventInfo.publicId });
+
+    // local storage에 최근 칸반 주소 저장
+    if (projectId in recentKanbanId) {
+      // 이미 최근목록에 존재하는 칸반 접속 시 순서 최신화
+      if (recentKanbanId[projectId].includes(eventInfo.publicId)) {
+        const newIds = recentKanbanId[projectId].filter(
+          (id: string) => id !== eventInfo.publicId,
+        );
+        setRecentKanbanId((prev: any) => ({
+          ...prev,
+          [projectId]: [...newIds, eventInfo.publicId],
+        }));
+        return;
+      }
+      // 최근목록 길이 제한
+      if (recentKanbanId[projectId].length >= 3) {
+        const newIds = recentKanbanId[projectId].slice(1);
+        setRecentKanbanId((prev: any) => ({
+          ...prev,
+          [projectId]: [...newIds, eventInfo.publicId],
+        }));
+        return;
+      }
+    }
+
+    setRecentKanbanId((prev: any) => ({
+      ...prev,
+      [projectId]: Array.isArray(prev[projectId])
+        ? [...prev[projectId], eventInfo.publicId]
+        : [eventInfo.publicId],
+    }));
   };
 
   const handleEventDrop = async (eventArg: EventDropArg) => {
