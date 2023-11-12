@@ -69,7 +69,7 @@ export default function Bookmark() {
   const inputUrlValidation = (path: string) => {
     const RegExp =
       // eslint-disable-next-line no-useless-escape
-      /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+      /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
     if (RegExp.test(path)) {
       return true;
@@ -131,7 +131,11 @@ export default function Bookmark() {
   };
 
   const handleClickNavigate = (path: string) => {
-    window.open(path);
+    if (!path.includes("http")) {
+      window.open(`https://${path}`);
+    } else {
+      window.open(path);
+    }
   };
 
   const lengthChecker = (word: string) => {
