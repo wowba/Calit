@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import {
@@ -42,22 +43,23 @@ export default function ProjectCheckRoute() {
 
   const { email: loginEmail } = useRecoilValue(userState).userData;
 
+  const [isInviteChecked, setIsInviteChecked] = useState(false);
   const [is403, setIs403] = useState(false);
   const [is404, setIs404] = useState(false);
 
   const setHeaderState = useSetRecoilState(headerState);
 
+  // 초대 리스트 현황 및 프로젝트 유저 리스트 현황 체크
   useEffect(() => {
-    // 프로젝트 문서 onSnapshot
-    let passed = false;
     const projectRef = doc(db, "project", pathname);
-    const unsubProject = onSnapshot(projectRef, async (projectDoc) => {
-      // 초대 리스트에 있을경우 동작하는 로직
+
+    const checkInvite = async () => {
+      const projectDoc = await getDoc(projectRef);
+      // 초대 리스트 검증
       if (
         projectDoc.exists() &&
         projectDoc.data().invited_list.includes(loginEmail)
       ) {
-        passed = true;
         // user의 project_list에 project 추가
         const userRef = doc(db, "user", loginEmail);
         const userSnap: any = await getDoc(userRef);
@@ -92,23 +94,61 @@ export default function ProjectCheckRoute() {
           profile_img_URL: profileImgUrl,
           is_kicked: false,
         });
+        setIsInviteChecked(true);
       }
-      // 프로젝트 존재 및 userList 검증
-      if (
+      // 유저 리스트 검증
+      else if (
         projectDoc.exists() &&
-        !projectDoc.data().is_deleted &&
-        (projectDoc.data().user_list.includes(loginEmail) || passed)
+        projectDoc.data().user_list.includes(loginEmail)
+      ) {
+        setIsInviteChecked(true);
+      } else if (!projectDoc.exists()) {
+        setIs404(true);
+      } else {
+        setIs403(true);
+      }
+    };
+    checkInvite();
+
+    return () => {
+      setIs403(false);
+      setIs404(false);
+      setIsInviteChecked(false);
+    };
+  }, [pathname]);
+
+  useEffect(() => {
+    // 프로젝트 초대 현황 로직 우선 확인
+    if (!isInviteChecked) return;
+    // 프로젝트 문서 onSnapshot
+    const projectRef = doc(db, "project", pathname);
+    const unsubProject = onSnapshot(projectRef, async (projectSnapshot) => {
+      // 프로젝트 is_deleted 확인
+      if (
+        projectSnapshot.exists() &&
+        !projectSnapshot.data().is_deleted &&
+        projectSnapshot.data().user_list.includes(loginEmail)
       ) {
         setIsProjectLoaded(true);
         setProjectDataState({
-          projectData: projectDoc.data(),
+          projectData: projectSnapshot.data(),
         });
-      } else if (!projectDoc.exists()) {
-        unsubProject();
-        setIs404(true);
-      } else {
+      }
+      if (
+        projectSnapshot.exists() &&
+        !projectSnapshot.data().user_list.includes(loginEmail)
+      ) {
         unsubProject();
         setIs403(true);
+      }
+      if (
+        !projectSnapshot.exists() ||
+        (projectSnapshot.exists() &&
+          projectSnapshot.data().user_list.includes(loginEmail) &&
+          projectSnapshot.data().is_deleted)
+      ) {
+        unsubProject();
+        setIs404(true);
       }
     });
     // 칸반 컬렉션 onSnapshot
@@ -187,7 +227,7 @@ export default function ProjectCheckRoute() {
       unsubUserList();
       setHeaderState("list");
     };
-  }, [pathname]);
+  }, [pathname, isInviteChecked]);
 
   if (is404) {
     return <ErrorPage isProject404 />;
