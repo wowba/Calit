@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import styled from "styled-components";
-// import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { db } from "../../firebaseSDK";
 // import userState from "../../recoil/atoms/login/userDataState";
 // import loginState from "../../recoil/atoms/login/loginState";
 // import deleteStorageImg from "../../utils/deleteStorageImg";
 import ConfirmBtn from "../../components/layout/ConfirmBtnLayout";
+import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 
 // 모달
 const ModalContainer = styled.div`
@@ -50,13 +52,16 @@ export default function DeleteModal({
   setOpenModal,
   fetchProjectData,
 }: any) {
-  //   const { userCredential } = useRecoilValue(loginState);
-  //   const { project_list: projectList } = useRecoilValue(userState).userData;
   const docRef = doc(db, "project", projectId);
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
 
   // 삭제 버튼 클릭 시 동작
   const handleDelete = async () => {
     setOpenModal(false);
+    // 최근 칸반 목록 초기화
+    const newRecentList = { ...recentKanbanId };
+    delete newRecentList[projectId];
+    setRecentKanbanId(newRecentList);
     //   논리적 삭제
     await updateDoc(docRef, {
       is_deleted: true,
