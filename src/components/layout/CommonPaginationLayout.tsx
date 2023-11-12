@@ -45,7 +45,11 @@ interface Props {
   setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function TutorialPagination({ total, page, setPage }: Props) {
+export default function CommonPaginationLayout({
+  total,
+  page,
+  setPage,
+}: Props) {
   return (
     <TutorialPaginationLayout>
       <TutorialPaginationButton

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
-import TutorialPagination from "./TutorialPagination";
+import CommonPaginationLayout from "../layout/CommonPaginationLayout";
 
 const TutorialTextLayout = styled.div`
   display: flex;
@@ -91,7 +91,7 @@ export default function Tutorial() {
             {singleElement.content}
           </TutorialTextContent>
         ))}
-        <TutorialPagination
+        <CommonPaginationLayout
           total={posts.length}
           page={page}
           setPage={setPage}
