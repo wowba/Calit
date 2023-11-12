@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, ReactElement } from "react";
+import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
 
 interface Props {
@@ -44,10 +45,26 @@ export const ModalTitle = styled.div`
 export default function ModalCommon(name: ModalInfo) {
   const { modalIndex, modalSelected, children } = name;
   const [activeIndex, setActiveIndex] = useState<number>();
+  const [historyIdx, setHistoryIdx] = useState<number>(
+    window.history.state.idx,
+  );
+  const location = useLocation();
 
   useEffect(() => {
     setActiveIndex(modalSelected);
   }, [modalSelected]);
+
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [location.pathname]);
+
+  // 페이지 뒤로가기 동작시 변경된 화면에서도 선택된 헤더 모달의 Index가 전달되어 모달이 잠시 켜졌다 사라지는 오류 발생함
+  // window 객체의 history 프로퍼티를 통해 브라우저 히스토리에 접근
+  // state의 idx가 변경된 경우(화면 이동) 렌더링 과정에서 activeindex 기본값으로 변경
+  if (historyIdx !== window.history.state.idx) {
+    setHistoryIdx(window.history.state.idx);
+    setActiveIndex(-1);
+  }
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

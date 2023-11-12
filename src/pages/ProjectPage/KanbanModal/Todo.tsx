@@ -3,57 +3,186 @@ import styled from "styled-components";
 import React from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import { useSearchParams } from "react-router-dom";
+import { doc, updateDoc } from "firebase/firestore";
+import { useRecoilValue } from "recoil";
+
+import trashIcon from "../../../assets/icons/trashIcon.svg";
+import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import { db } from "../../../firebaseSDK";
 
 interface ContainerProps {
   $isDragging: boolean;
 }
 
-const Container = styled.div<ContainerProps>`
+const TodoLayout = styled.div<ContainerProps>`
+  position: relative;
+
   border: 1px solid lightgrey;
-  border-radius: 2px;
-  padding: 8px;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.5rem 0.3rem 0.5rem;
   margin-bottom: 8px;
   transition: background-color 0.2s ease;
-  background-color: ${(props) => (props.$isDragging ? "lightgreen" : "white")};
+  background-color: ${(props) => (props.$isDragging ? "#F5F5F5" : "white")};
+  box-shadow: ${(props) =>
+    props.$isDragging ? "4px 4px 1px 1px rgba(0, 0, 0, 0.2)" : "none"};
+`;
+
+const TodoTagListBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+`;
+
+const TodoTagList = styled.div`
+  padding: 0.125rem 1rem;
+
+  border-radius: 0.5rem;
+
+  font-size: ${(props) => props.theme.Fs.size12};
+  font-weight: 900;
+`;
+
+const TodoNameBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  margin: 0.25rem 0 0.5rem 0;
+`;
+
+const TodoNameParagraph = styled.p`
+  font-size: ${(props) => props.theme.Fs.size18};
+  font-weight: 900;
+`;
+
+const TodoInfoParagraph = styled.span`
+  font-size: ${(props) => props.theme.Fs.size12};
+  font-weight: 400;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const TodoUserListBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.125rem;
+`;
+
+const TodoUserImage = styled.img`
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+const TodoTrashIcon = styled.img`
+  position: absolute;
+  top: 0.5rem;
+  left: 15.5rem;
+
+  z-index: 2;
+  cursor: pointer;
+  visibility: hidden;
 `;
 
 interface TodoProps {
   todo: {
     id: string;
     name: string;
+    info: string;
+    todo_tag_list: { color: string; label: string }[];
+    user_list: { image: string; label: string; value: string }[];
+    stage_id: string;
   };
   index: number;
 }
 
 function Todo({ todo, index }: TodoProps) {
   const [, setSearchParams] = useSearchParams();
+  const projectId = window.location.pathname.substring(1);
   const urlQueryString = new URLSearchParams(window.location.search);
-  const kanbanID = String(urlQueryString.get("kanbanID"));
+  const kanbanId = String(urlQueryString.get("kanbanID"));
+  const kanbanRef = doc(db, "project", projectId, "kanban", kanbanId);
+  const todoRef = doc(
+    db,
+    "project",
+    projectId,
+    "kanban",
+    kanbanId,
+    "todo",
+    todo.id,
+  );
+
+  const kanbanDataState = useRecoilValue(kanbanState);
 
   const handleTodoClick = () => {
     setSearchParams({
-      kanbanID,
+      kanbanID: kanbanId,
       todoID: todo.id,
+    });
+  };
+
+  const handleTodoDeleteBtnClick = async (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    const updatedStageList = kanbanDataState
+      .get(kanbanId)
+      .stage_list.map((stage: { id: string; todoIds: string[] }) => {
+        if (stage.id === todo.stage_id) {
+          const updatedTodoIds = stage.todoIds.filter((id) => id !== todo.id);
+          return { ...stage, todoIds: updatedTodoIds };
+        }
+        return stage;
+      });
+    await updateDoc(kanbanRef, {
+      stage_list: updatedStageList,
+    });
+    await updateDoc(todoRef, {
+      is_deleted: true,
     });
   };
 
   return (
     <Draggable draggableId={todo.id} index={index}>
       {(provided, snapshot) => (
-        <Container
+        <TodoLayout
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           $isDragging={snapshot.isDragging}
-          style={{
-            ...provided.draggableProps.style,
-            left: "auto !important",
-            top: "auto !important",
-          }}
           onClick={handleTodoClick}
         >
-          {todo.name}
-        </Container>
+          <TodoTagListBox>
+            {todo.todo_tag_list.map((tag) => (
+              <TodoTagList
+                key={tag.label}
+                style={{ backgroundColor: `${tag.color}` }}
+              >
+                {tag.label}
+              </TodoTagList>
+            ))}
+          </TodoTagListBox>
+          <TodoNameBox>
+            <TodoNameParagraph>{todo.name}</TodoNameParagraph>
+            <TodoInfoParagraph>{todo.info}</TodoInfoParagraph>
+          </TodoNameBox>
+
+          <TodoUserListBox>
+            {todo.user_list.map((user) => (
+              <TodoUserImage
+                key={user.label}
+                src={user.image}
+                alt={user.label}
+              />
+            ))}
+          </TodoUserListBox>
+          <TodoTrashIcon
+            src={trashIcon}
+            alt="스테이지 삭제"
+            onClick={handleTodoDeleteBtnClick}
+          />
+        </TodoLayout>
       )}
     </Draggable>
   );

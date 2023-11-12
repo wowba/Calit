@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { useLocation } from "react-router-dom";
@@ -64,27 +64,6 @@ const CreateKanbanModalBtnBox = styled.div`
   margin-top: 1.5rem;
 `;
 
-const CreateKanbanModalBackground = styled.button<{ $isShow: boolean }>`
-  position: fixed;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  background-color: transparent;
-  z-index: 998;
-
-  cursor: default;
-
-  ${(props) =>
-    !props.$isShow &&
-    css`
-      display: none;
-    `}
-`;
-
 interface Props {
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -101,6 +80,23 @@ export default function CreateKanbanModal(props: Props) {
   const [kanbanName, setKanbanName] = useState("");
   const [userList, setUserList] = useState<any[]>([]);
   const [color, setColor] = useState("#3888d8");
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent): void {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setIsShow(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
   const resetCreateKanbanModalState = () => {
     setUserList([]);
@@ -189,83 +185,77 @@ export default function CreateKanbanModal(props: Props) {
   };
 
   return (
-    <>
-      <CreateKanbanModalLayout $isShow={isShow}>
-        <CreateKanbanModalTitleParagraph>
-          칸반 생성
-        </CreateKanbanModalTitleParagraph>
-        <CreateKanbanModalInfoBox>
-          <p>이름</p>
-          <CommonInputLayout
-            type="text"
-            placeholder="이름을 작성하세요"
-            onChange={handleInputChange}
-            value={kanbanName}
-            $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
-            $dynamicWidth="20rem"
-            $isHover
-          />
-        </CreateKanbanModalInfoBox>
-        <CreateKanbanModalInfoBox>
-          <p>색상</p>
-          <input
-            type="color"
-            value={color}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setColor(e.target.value)
-            }
-          />
-        </CreateKanbanModalInfoBox>
-        <CreateKanbanModalInfoBox>
-          <p>시작일</p>
-          <DatePicker
-            date={startDate}
-            onChange={(arg: Date) => setStartDate(arg)}
-            $width="10rem"
-            $height="1.5rem"
-            $padding="0.25rem 0.25rem 0.25rem 0.25rem"
-            $isHover
-            $fontsize="1.125rem"
-          />
-        </CreateKanbanModalInfoBox>
-        <CreateKanbanModalInfoBox>
-          <p>종료일</p>
-          <DatePicker
-            date={endDate}
-            onChange={(arg: Date) => setEndDate(arg)}
-            $width="10rem"
-            $height="1.5rem"
-            $padding="0.25rem 0.25rem 0.25rem 0.25rem"
-            $isHover
-            $fontsize="1.125rem"
-          />
-        </CreateKanbanModalInfoBox>
-        <CreateKanbanModalInfoBox>
-          <p>담당자</p>
-          <CommonSelectMemberLayout
-            userList={userList}
-            setUserList={setUserList}
-            // eslint-disable-next-line no-console
-            onBlur={() => false}
-          />
-        </CreateKanbanModalInfoBox>
-        <CreateKanbanModalBtnBox>
-          <ConfirmBtn
-            $dynamicWidth="4rem"
-            $dynamicColor="#D0D0D0"
-            onClick={handleModalCloseClick}
-          >
-            취소
-          </ConfirmBtn>
-          <ConfirmBtn $dynamicWidth="4rem" onClick={handleCreateBtnClick}>
-            생성
-          </ConfirmBtn>
-        </CreateKanbanModalBtnBox>
-      </CreateKanbanModalLayout>
-      <CreateKanbanModalBackground
-        $isShow={isShow}
-        onClick={handleModalCloseClick}
-      />
-    </>
+    <CreateKanbanModalLayout ref={wrapperRef} $isShow={isShow}>
+      <CreateKanbanModalTitleParagraph>
+        칸반 생성
+      </CreateKanbanModalTitleParagraph>
+      <CreateKanbanModalInfoBox>
+        <p>이름</p>
+        <CommonInputLayout
+          type="text"
+          placeholder="이름을 작성하세요"
+          onChange={handleInputChange}
+          value={kanbanName}
+          $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
+          $dynamicWidth="20rem"
+          $isHover
+        />
+      </CreateKanbanModalInfoBox>
+      <CreateKanbanModalInfoBox>
+        <p>색상</p>
+        <input
+          type="color"
+          value={color}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setColor(e.target.value)
+          }
+        />
+      </CreateKanbanModalInfoBox>
+      <CreateKanbanModalInfoBox>
+        <p>시작일</p>
+        <DatePicker
+          date={startDate}
+          onChange={(arg: Date) => setStartDate(arg)}
+          $width="10rem"
+          $height="1.5rem"
+          $padding="0.25rem 0.25rem 0.25rem 0.25rem"
+          $isHover
+          $fontsize="1.125rem"
+        />
+      </CreateKanbanModalInfoBox>
+      <CreateKanbanModalInfoBox>
+        <p>종료일</p>
+        <DatePicker
+          date={endDate}
+          onChange={(arg: Date) => setEndDate(arg)}
+          $width="10rem"
+          $height="1.5rem"
+          $padding="0.25rem 0.25rem 0.25rem 0.25rem"
+          $isHover
+          $fontsize="1.125rem"
+        />
+      </CreateKanbanModalInfoBox>
+      <CreateKanbanModalInfoBox>
+        <p>담당자</p>
+        <CommonSelectMemberLayout
+          userList={userList}
+          setUserList={setUserList}
+          // eslint-disable-next-line no-console
+          onBlur={() => false}
+        />
+      </CreateKanbanModalInfoBox>
+      <CreateKanbanModalBtnBox>
+        <ConfirmBtn
+          $dynamicWidth="4rem"
+          $dynamicColor="#D0D0D0"
+          onClick={handleModalCloseClick}
+        >
+          취소
+        </ConfirmBtn>
+        <ConfirmBtn $dynamicWidth="4rem" onClick={handleCreateBtnClick}>
+          생성
+        </ConfirmBtn>
+      </CreateKanbanModalBtnBox>
+    </CreateKanbanModalLayout>
   );
 }
