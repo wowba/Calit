@@ -1,6 +1,5 @@
 /* eslint-disable no-alert */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useState, KeyboardEvent } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
