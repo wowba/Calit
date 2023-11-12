@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import CalendarModal from "./CalendarModal/CalendarModal";
 import KanbanModal from "./KanbanModal/KanbanModal";
 import TodoModal from "./TodoModal/TodoModal";
@@ -15,6 +15,7 @@ import {
   ProjectModalTabContainer,
   ProjectModalTabText,
 } from "../../components/layout/ProjectModalLayout";
+import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 
 const ProjectLayout = styled.div`
   position: relative;
@@ -44,6 +45,8 @@ export default function Project() {
 
   const [isKanbanShow, setIsKanbanShow] = useState(false);
   const [isTodoShow, setIsTodoShow] = useState(false);
+
+  const [isLoaded, setIsLoaded] = useRecoilState(todoLoaded);
 
   let calendarTabColor = "#FFD43B";
   let kanbanTabColor = "#ffea7a";
@@ -110,6 +113,7 @@ export default function Project() {
       if (searchParams.has("todoID")) {
         setIsTodoShow(true);
       }
+      setIsLoaded(true);
     });
 
     // eslint-disable-next-line consistent-return
@@ -144,7 +148,7 @@ export default function Project() {
         </ProjectModalTabBox>
         <ProjectModalTabBox
           $left={10.25}
-          $isShow={isKanbanShow}
+          $isShow={isLoaded ? isKanbanShow : true}
           onClick={handleKanbanTabClick}
         >
           <ProjectModalTabBackground $color={kanbanTabColor} />

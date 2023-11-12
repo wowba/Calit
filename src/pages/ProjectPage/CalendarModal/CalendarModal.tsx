@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import {
   DateSelectArg,
@@ -13,7 +14,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, {
   EventResizeDoneArg,
 } from "@fullcalendar/interaction";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { SetURLSearchParams } from "react-router-dom";
 import _ from "lodash";
@@ -29,6 +30,7 @@ import { db } from "../../../firebaseSDK";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
 import paint from "../../../assets/icons/paint.svg";
+import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -299,6 +301,9 @@ export default function CalendarModal({ setSearchParams }: Props) {
 
   const [kanbanEvents, setKanbanEvents] = useState(Array<EventInput>);
 
+  const projectId = window.location.pathname.substring(1);
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
+
   useEffect(() => {
     const data = [...kanbanDataState];
     const result: EventInput[] = data.map((item) => ({
@@ -326,6 +331,37 @@ export default function CalendarModal({ setSearchParams }: Props) {
       event: { _def: eventInfo },
     } = eventArg;
     setSearchParams({ kanbanID: eventInfo.publicId });
+
+    // local storage에 최근 칸반 주소 저장
+    const output = localStorage.getItem("recentKanban");
+    if (output) {
+      if (projectId in recentKanbanId) {
+        if (recentKanbanId[projectId].includes(eventInfo.publicId)) {
+          const newIds = recentKanbanId[projectId].filter(
+            (id: string) => id !== eventInfo.publicId,
+          );
+          setRecentKanbanId((prev: any) => ({
+            ...prev,
+            [projectId]: [...newIds, eventInfo.publicId],
+          }));
+          return;
+        }
+        if (recentKanbanId[projectId].length >= 3) {
+          const newIds = recentKanbanId[projectId].slice(1);
+          setRecentKanbanId((prev: any) => ({
+            ...prev,
+            [projectId]: [...newIds, eventInfo.publicId],
+          }));
+          return;
+        }
+      }
+    }
+    setRecentKanbanId((prev: any) => ({
+      ...prev,
+      [projectId]: Array.isArray(prev[projectId])
+        ? [...prev[projectId], eventInfo.publicId]
+        : [eventInfo.publicId],
+    }));
   };
 
   const handleEventDrop = async (eventArg: EventDropArg) => {

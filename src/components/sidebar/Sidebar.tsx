@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import trashIcon from "../assets/icons/trashIcon.svg";
-import defaultProjectImg from "../assets/images/deafultProjectImg.jpg";
-import projectState from "../recoil/atoms/project/projectState";
+import trashIcon from "../../assets/icons/trashIcon.svg";
+import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
+import projectState from "../../recoil/atoms/project/projectState";
+import RecentKanban from "./RecentKanban";
 
 const SidebarLayout = styled.div`
   display: flex;
@@ -55,20 +56,23 @@ const TrashBoxImg = styled.img`
 
 export default function Sidebar() {
   const { projectData } = useRecoilValue(projectState);
+
   return (
     <SidebarLayout>
-      <ProjectInfoBox>
-        <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
-        <ProjectProfileImg
-          src={
-            projectData.project_img_URL
-              ? projectData.project_img_URL
-              : defaultProjectImg
-          }
-          alt="Project Profile Img"
-        />
-      </ProjectInfoBox>
-
+      <div>
+        <ProjectInfoBox>
+          <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
+          <ProjectProfileImg
+            src={
+              projectData.project_img_URL
+                ? projectData.project_img_URL
+                : defaultProjectImg
+            }
+            alt="Project Profile Img"
+          />
+        </ProjectInfoBox>
+        <RecentKanban />
+      </div>
       <TrashBox>
         <TrashBoxImg src={trashIcon} alt="TrashIcon" />
       </TrashBox>

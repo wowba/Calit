@@ -13,7 +13,7 @@ import {
 import styled from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import Sidebar from "../Sidebar";
+import Sidebar from "../sidebar/Sidebar";
 import { db } from "../../firebaseSDK";
 import projectState from "../../recoil/atoms/project/projectState";
 import userState from "../../recoil/atoms/login/userDataState";

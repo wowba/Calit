@@ -16,6 +16,8 @@ import {
 import ErrorPage from "../../../components/ErrorPage";
 import KanbanStageBox from "./KanbanStageBox";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
+import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
+import LoadingPage from "../../../components/LoadingPage";
 
 const KanbanContainer = styled(ProjectModalContentBox)`
   padding: 2rem;
@@ -78,6 +80,8 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   const currentKanban =
     kanbanDataState.get(kanbanId) || kanbanDataState.get(lastKanbanId);
 
+  const isLoaded = useRecoilValue(todoLoaded);
+
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
       return;
@@ -108,6 +112,15 @@ export default function KanbanModal({ isKanbanShow }: Props) {
       <ProjectModalLayout $isShow={isKanbanShow}>
         <ProjectModalContentBox>
           <ErrorPage isKanban404 />
+        </ProjectModalContentBox>
+      </ProjectModalLayout>
+    );
+  }
+  if (!isLoaded) {
+    return (
+      <ProjectModalLayout $isShow>
+        <ProjectModalContentBox>
+          <LoadingPage />
         </ProjectModalContentBox>
       </ProjectModalLayout>
     );
