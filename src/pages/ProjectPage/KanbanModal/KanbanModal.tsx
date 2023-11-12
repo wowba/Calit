@@ -16,12 +16,13 @@ import {
 import ErrorPage from "../../../components/ErrorPage";
 import KanbanStageBox from "./KanbanStageBox";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
+import projectState from "../../../recoil/atoms/project/projectState";
 import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
 import LoadingPage from "../../../components/LoadingPage";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const KanbanContainer = styled(ProjectModalContentBox)`
-  padding: 2rem;
+  padding: 2rem 2rem 0.5rem 2rem;
 `;
 
 const KanbanInfoLayout = styled.div`
@@ -81,6 +82,9 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   const currentKanban =
     kanbanDataState.get(kanbanId) || kanbanDataState.get(lastKanbanId);
 
+  const { deleted_kanban_info_list: deletedKanbanIdList } =
+    useRecoilValue(projectState).projectData;
+
   const isLoaded = useRecoilValue(todoLoaded);
 
   const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
@@ -94,6 +98,14 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   }, [kanbanId, isKanbanShow, currentKanban]);
 
   const handleDelete = async () => {
+    const projectRef = doc(db, "project", projectId);
+    const deletedKanbanInfo = {
+      id: kanbanId,
+      name: currentKanban.name,
+    };
+    await updateDoc(projectRef, {
+      deleted_kanban_info_list: [deletedKanbanInfo, ...deletedKanbanIdList],
+    });
     // 사이드바 최근 칸반 목록에서 삭제
     const newIds = recentKanbanId[projectId].filter(
       (id: string) => id !== kanbanId,
@@ -106,6 +118,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
     await updateDoc(kanbanRef, {
       is_deleted: true,
     });
+
     navigate(`/${projectId}`);
   };
 

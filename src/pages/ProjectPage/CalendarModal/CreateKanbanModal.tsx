@@ -83,13 +83,20 @@ export default function CreateKanbanModal(props: Props) {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  const resetCreateKanbanModalState = () => {
+    setUserList([]);
+    setKanbanName("");
+    setColor("#3888d8");
+    setIsShow(false);
+  };
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent): void {
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(e.target as Node)
       ) {
-        setIsShow(false);
+        resetCreateKanbanModalState();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -97,13 +104,6 @@ export default function CreateKanbanModal(props: Props) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [wrapperRef]);
-
-  const resetCreateKanbanModalState = () => {
-    setUserList([]);
-    setKanbanName("");
-    setColor("#3888d8");
-    setIsShow(false);
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKanbanName(e.target.value);

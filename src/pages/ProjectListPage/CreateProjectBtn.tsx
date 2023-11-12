@@ -50,6 +50,7 @@ interface ProjectData {
   modified_date: FieldValue;
   creater: string;
   is_deleted: boolean;
+  deleted_kanban_info_list: { id: string; name: string }[];
 }
 
 export default function CreateProjectBtn() {
@@ -68,6 +69,7 @@ export default function CreateProjectBtn() {
       modified_date: serverTimestamp(),
       creater: email,
       is_deleted: false,
+      deleted_kanban_info_list: [],
     };
 
     const docRef = await addDoc(collection(db, "project"), projectData);
