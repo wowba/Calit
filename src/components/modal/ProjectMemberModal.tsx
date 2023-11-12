@@ -1,8 +1,11 @@
+/* eslint-disable no-alert */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, KeyboardEvent } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
+
 import { db } from "../../firebaseSDK";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import rightArrow from "../../assets/icons/rightArrow.svg";
@@ -13,6 +16,7 @@ import closeIcon from "../../assets/icons/closeIcon.svg";
 import userState from "../../recoil/atoms/login/userDataState";
 import CommonSelectMemberLayout from "../layout/CommonSelectMemberLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
+import userListState from "../../recoil/atoms/userList/userListState";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -121,19 +125,32 @@ const WaitingName = styled.span`
 `;
 
 export default function ProjectMemberModal() {
-  const {
-    user_list: userList,
-    invited_list: invitedList,
-    creater,
-  } = useRecoilValue(projectState).projectData;
-  const filteredUserList = userList.filter((item: string) => item !== creater);
+  const { invited_list: invitedList, creater } =
+    useRecoilValue(projectState).projectData;
 
-  const [userData, setUserData] = useState<any[]>([]);
   const [inputEmailValue, setInputEmailValue] = useState("");
   const [modalIndex, setModalIndex] = useState(0);
 
   const { email: userId } = useRecoilValue(userState).userData;
   const [nameList, setNameList] = useState<any[]>([]);
+
+  const userListData = useRecoilValue(userListState);
+  const userData: { userImage: string; userName: string }[] = [];
+  const userList: string[] = [];
+
+  // Key prop warning
+  // 자꾸 key prop 에러가 발생... 해결 방법을 찾지 못함
+  userListData.forEach((user) => {
+    if (!user.is_kicked) {
+      userData.push({
+        userImage: user.profile_img_URL,
+        userName: user.name,
+      });
+      userList.push(user.email);
+    }
+  });
+
+  const filteredUserList = userList.filter((user: string) => user !== creater);
 
   // 모달 열고 닫기
   const handleInviteClick = () => {
@@ -151,25 +168,6 @@ export default function ProjectMemberModal() {
     }
   };
 
-  // user_list 통해 user 데이터 가져오기
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await Promise.all(
-        userList.map(async (id: string) => {
-          const userRef = doc(db, "user", id);
-          const userSnap: any = await getDoc(userRef);
-          return {
-            userImage: userSnap.data().profile_img_URL,
-            userName: userSnap.data().name,
-          };
-        }),
-      );
-      setUserData(data);
-    };
-
-    fetchData();
-  }, [userList]);
-
   // url에서 project id 가져오기 (링크 복사 기능)
   const { pathname } = useLocation();
   const projectId = pathname.substring(1);
@@ -180,6 +178,15 @@ export default function ProjectMemberModal() {
     if (e.key === "Enter") {
       if (inputEmailValue.includes("@gmail.com")) {
         const curInvitedList = [...invitedList];
+        if (
+          userListData.get(inputEmailValue) ||
+          curInvitedList.includes(inputEmailValue)
+        ) {
+          alert("이미 초대되었습니다.");
+          setInputEmailValue("");
+          return;
+        }
+
         curInvitedList.push(inputEmailValue);
         await updateDoc(docRef, {
           invited_list: curInvitedList,
@@ -188,7 +195,6 @@ export default function ProjectMemberModal() {
         setInputEmailValue("");
       } else {
         setInputEmailValue("");
-        // eslint-disable-next-line no-alert
         alert("Gmail 주소를 입력해주세요");
       }
     }
@@ -204,7 +210,6 @@ export default function ProjectMemberModal() {
       setInputEmailValue("");
     } else {
       setInputEmailValue("");
-      // eslint-disable-next-line no-alert
       alert("Gmail 주소를 입력해주세요");
     }
   };
@@ -236,6 +241,17 @@ export default function ProjectMemberModal() {
             project_list: updateProjectList,
           });
         }
+        // user 의 is_kicked = true 변경
+        const projectUserRef = doc(
+          db,
+          "project",
+          projectId,
+          "user",
+          selected.value,
+        );
+        await updateDoc(projectUserRef, {
+          is_kicked: true,
+        });
       });
       // 프로젝트의 user_list에서 유저 삭제
       const valuesArray = nameList.map((item) => item.value);

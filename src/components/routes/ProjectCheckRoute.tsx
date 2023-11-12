@@ -22,6 +22,7 @@ import ErrorPage from "../ErrorPage";
 import headerState from "../../recoil/atoms/header/headerState";
 import LoadingPage from "../LoadingPage";
 import userListState from "../../recoil/atoms/userList/userListState";
+import { createUser } from "../../api/CreateCollection";
 
 const ProjectLayout = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ export default function ProjectCheckRoute() {
   const setKanbanDataState = useSetRecoilState(kanbanState);
   const setUserDataState = useSetRecoilState(userListState);
 
-  const { email } = useRecoilValue(userState).userData;
+  const { email: loginEmail } = useRecoilValue(userState).userData;
 
   const [is403, setIs403] = useState(false);
   const [is404, setIs404] = useState(false);
@@ -54,13 +55,18 @@ export default function ProjectCheckRoute() {
       // 초대 리스트에 있을경우 동작하는 로직
       if (
         projectDoc.exists() &&
-        projectDoc.data().invited_list.includes(email)
+        projectDoc.data().invited_list.includes(loginEmail)
       ) {
         passed = true;
         // user의 project_list에 project 추가
-        const userRef = doc(db, "user", email);
+        const userRef = doc(db, "user", loginEmail);
         const userSnap: any = await getDoc(userRef);
-        const projectList = userSnap.data().project_list;
+        const {
+          projectList,
+          email,
+          name,
+          profile_img_URL: profileImgUrl,
+        } = userSnap.data();
         projectList.push(pathname.replace("/", ""));
         await updateDoc(userRef, {
           project_list: projectList,
@@ -78,12 +84,20 @@ export default function ProjectCheckRoute() {
           invited_list: updatedInvitedList,
           modified_date: serverTimestamp(),
         });
+        // project의 user 하위 컬렉션에 초대된 유저 추가
+        await createUser(pathname, email, {
+          email,
+          name,
+          intro: "",
+          profile_img_URL: profileImgUrl,
+          is_kicked: false,
+        });
       }
       // 프로젝트 존재 및 userList 검증
       if (
         projectDoc.exists() &&
         !projectDoc.data().is_deleted &&
-        (projectDoc.data().user_list.includes(email) || passed)
+        (projectDoc.data().user_list.includes(loginEmail) || passed)
       ) {
         setIsProjectLoaded(true);
         setProjectDataState({
