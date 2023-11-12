@@ -335,29 +335,29 @@ export default function CalendarModal({ setSearchParams }: Props) {
     setSearchParams({ kanbanID: eventInfo.publicId });
 
     // local storage에 최근 칸반 주소 저장
-    const output = localStorage.getItem("recentKanban");
-    if (output) {
-      if (projectId in recentKanbanId) {
-        if (recentKanbanId[projectId].includes(eventInfo.publicId)) {
-          const newIds = recentKanbanId[projectId].filter(
-            (id: string) => id !== eventInfo.publicId,
-          );
-          setRecentKanbanId((prev: any) => ({
-            ...prev,
-            [projectId]: [...newIds, eventInfo.publicId],
-          }));
-          return;
-        }
-        if (recentKanbanId[projectId].length >= 3) {
-          const newIds = recentKanbanId[projectId].slice(1);
-          setRecentKanbanId((prev: any) => ({
-            ...prev,
-            [projectId]: [...newIds, eventInfo.publicId],
-          }));
-          return;
-        }
+    if (projectId in recentKanbanId) {
+      // 이미 최근목록에 존재하는 칸반 접속 시 순서 최신화
+      if (recentKanbanId[projectId].includes(eventInfo.publicId)) {
+        const newIds = recentKanbanId[projectId].filter(
+          (id: string) => id !== eventInfo.publicId,
+        );
+        setRecentKanbanId((prev: any) => ({
+          ...prev,
+          [projectId]: [...newIds, eventInfo.publicId],
+        }));
+        return;
+      }
+      // 최근목록 길이 제한
+      if (recentKanbanId[projectId].length >= 3) {
+        const newIds = recentKanbanId[projectId].slice(1);
+        setRecentKanbanId((prev: any) => ({
+          ...prev,
+          [projectId]: [...newIds, eventInfo.publicId],
+        }));
+        return;
       }
     }
+
     setRecentKanbanId((prev: any) => ({
       ...prev,
       [projectId]: Array.isArray(prev[projectId])

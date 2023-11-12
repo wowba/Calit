@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { db } from "../../../firebaseSDK";
@@ -18,6 +18,7 @@ import KanbanStageBox from "./KanbanStageBox";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
 import LoadingPage from "../../../components/LoadingPage";
+import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const KanbanContainer = styled(ProjectModalContentBox)`
   padding: 2rem;
@@ -82,6 +83,8 @@ export default function KanbanModal({ isKanbanShow }: Props) {
 
   const isLoaded = useRecoilValue(todoLoaded);
 
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
+
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
       return;
@@ -91,6 +94,15 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   }, [kanbanId, isKanbanShow, currentKanban]);
 
   const handleDelete = async () => {
+    // 사이드바 최근 칸반 목록에서 삭제
+    const newIds = recentKanbanId[projectId].filter(
+      (id: string) => id !== kanbanId,
+    );
+    setRecentKanbanId((prev: any) => ({
+      ...prev,
+      [projectId]: [...newIds],
+    }));
+
     await updateDoc(kanbanRef, {
       is_deleted: true,
     });
