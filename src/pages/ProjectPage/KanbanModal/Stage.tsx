@@ -61,6 +61,8 @@ const StageTrashIcon = styled.img`
 `;
 
 const TodoList = styled.div<TodoListProps>`
+  overflow-y: scroll;
+
   flex-grow: 1;
 
   background-color: ${(props) =>

@@ -16,9 +16,10 @@ import {
 import ErrorPage from "../../../components/ErrorPage";
 import KanbanStageBox from "./KanbanStageBox";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
+import projectState from "../../../recoil/atoms/project/projectState";
 
 const KanbanContainer = styled(ProjectModalContentBox)`
-  padding: 2rem;
+  padding: 2rem 2rem 0.5rem 2rem;
 `;
 
 const KanbanInfoLayout = styled.div`
@@ -78,6 +79,9 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   const currentKanban =
     kanbanDataState.get(kanbanId) || kanbanDataState.get(lastKanbanId);
 
+  const { deleted_kanban_info_list: deletedKanbanIdList } =
+    useRecoilValue(projectState).projectData;
+
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
       return;
@@ -87,9 +91,18 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   }, [kanbanId, isKanbanShow, currentKanban]);
 
   const handleDelete = async () => {
+    const projectRef = doc(db, "project", projectId);
+    const deletedKanbanInfo = {
+      id: kanbanId,
+      name: currentKanban.name,
+    };
+    await updateDoc(projectRef, {
+      deleted_kanban_info_list: [deletedKanbanInfo, ...deletedKanbanIdList],
+    });
     await updateDoc(kanbanRef, {
       is_deleted: true,
     });
+
     navigate(`/${projectId}`);
   };
 
