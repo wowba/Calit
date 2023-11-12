@@ -7,7 +7,13 @@ import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 
 const KanbanUrlBox = styled.div`
-  background-color: green;
+  border-radius: 5px;
+  background-color: #eaeaea;
+  margin: 3px 0px;
+  transition: background-color 0.5s ease-in-out;
+  &:hover {
+    background-color: #cacaca;
+  }
 `;
 export default function RecentKanban() {
   const [, setSearchParams] = useSearchParams();
