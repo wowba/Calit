@@ -62,7 +62,7 @@ export default function ProjectCheckRoute() {
         const userRef = doc(db, "user", loginEmail);
         const userSnap: any = await getDoc(userRef);
         const {
-          projectList,
+          project_list: projectList,
           email,
           name,
           profile_img_URL: profileImgUrl,
