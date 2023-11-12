@@ -102,6 +102,8 @@ export default function ProjectCheckRoute() {
         projectDoc.data().user_list.includes(loginEmail)
       ) {
         setIsInviteChecked(true);
+      } else if (!projectDoc.exists()) {
+        setIs404(true);
       } else {
         setIs403(true);
       }
@@ -110,6 +112,7 @@ export default function ProjectCheckRoute() {
 
     return () => {
       setIs403(false);
+      setIs404(false);
       setIsInviteChecked(false);
     };
   }, [pathname]);
