@@ -1,6 +1,19 @@
-import { FieldValue, addDoc, collection } from "firebase/firestore";
+import {
+  FieldValue,
+  addDoc,
+  collection,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../firebaseSDK";
 
+interface UserData {
+  email: string;
+  name: string;
+  intro: string;
+  is_kicked: boolean;
+  profile_img_URL: string;
+}
 interface KanbanData {
   user_list: Array<string>;
   stage_list: Array<Object>;
@@ -31,6 +44,15 @@ interface TodoUpdateData {
   detail: string;
   created_date: FieldValue;
 }
+
+export const createUser = async (
+  documentId: string,
+  userId: string,
+  data: UserData,
+): Promise<void> => {
+  const userRef = doc(db, "project", documentId, "user", userId);
+  await setDoc(userRef, data);
+};
 
 export const createKanban = async (
   documentId: string,

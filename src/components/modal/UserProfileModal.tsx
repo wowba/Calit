@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { doc, updateDoc } from "firebase/firestore";
@@ -19,6 +18,7 @@ import CommonTextArea from "../layout/CommonTextArea";
 import rightArrow from "../../assets/icons/rightArrow.svg";
 import loginState from "../../recoil/atoms/login/loginState";
 import userData from "../../recoil/atoms/login/userDataState";
+import userListState from "../../recoil/atoms/userList/userListState";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -63,19 +63,25 @@ const LogoutBtn = styled.button`
 `;
 
 export default function UserProfile() {
+  const navigate = useNavigate();
   const [userDataState, setUserDataState] = useRecoilState(userData);
+  const projectId = window.location.pathname.substring(1);
+  const userListData = useRecoilValue(userListState);
+
+  const { email: loginEmail }: any = userDataState.userData;
   const {
     email,
     name,
     profile_img_URL: profileImgUrl,
     intro,
-  }: any = userDataState.userData;
-  const userRef = doc(db, "user", email);
+  }: any = userListData.get(loginEmail);
+
+  const userRef = doc(db, "project", projectId, "user", email);
 
   const imgInputRef = useRef<HTMLInputElement>(null);
   const setLoginState = useSetRecoilState(loginState);
-  const navigate = useNavigate();
 
+  const inputNameRef = useRef<HTMLInputElement>(null);
   const [inputName, setInputName] = useState(name);
   const [inputIntro, setInputIntro] = useState(intro);
 
@@ -100,7 +106,7 @@ export default function UserProfile() {
         return;
       }
     }
-    const storageRef = ref(storage, `userImg/${email}`);
+    const storageRef = ref(storage, `${projectId}/userImg/${email}`);
     try {
       await deleteObject(storageRef);
       await uploadBytes(storageRef, imgFile);
@@ -163,11 +169,17 @@ export default function UserProfile() {
       </UserProfileImgBox>
       <UserInfoBox>
         <CommonInputLayout
+          ref={inputNameRef}
           value={inputName}
           $dynamicWidth="auto"
           style={{ fontWeight: 700 }}
           onChange={handleNameChange}
           onBlur={handleNameBlur}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              inputNameRef.current!.blur();
+            }
+          }}
         />
         <CommonTextArea
           value={inputIntro}
