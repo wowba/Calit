@@ -21,6 +21,7 @@ import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import ErrorPage from "../ErrorPage";
 import headerState from "../../recoil/atoms/header/headerState";
 import LoadingPage from "../LoadingPage";
+import userListState from "../../recoil/atoms/userList/userListState";
 
 const ProjectLayout = styled.div`
   display: flex;
@@ -29,10 +30,15 @@ const ProjectLayout = styled.div`
 
 export default function ProjectCheckRoute() {
   const { pathname } = useLocation();
+
   const [isProjectLoaded, setIsProjectLoaded] = useState(false);
   const [isKanbanLoaded, setIsKanbanLoaded] = useState(false);
+  const [isUserListLoaded, setIsUserListLoaded] = useState(false);
+
   const setProjectDataState = useSetRecoilState(projectState);
   const setKanbanDataState = useSetRecoilState(kanbanState);
+  const setUserDataState = useSetRecoilState(userListState);
+
   const { email } = useRecoilValue(userState).userData;
 
   const [is403, setIs403] = useState(false);
@@ -124,6 +130,29 @@ export default function ProjectCheckRoute() {
       }
       setIsKanbanLoaded(true);
     });
+    // 유저 컬렉션 onSnapshot
+    const userQuery = query(collection(db, "project", pathname, "user"));
+    const unsubUserList = onSnapshot(userQuery, (userSnapshot) => {
+      const addedMap = new Map();
+      userSnapshot.docChanges().forEach((change) => {
+        // 최초 Snapshot 생성 혹은 프로젝트에 유저가 추가된 경우
+        if (change.type === "added") {
+          addedMap.set(change.doc.id, change.doc.data());
+        }
+        // 유저를 수정할 경우
+        if (change.type === "modified") {
+          setUserDataState((prev) => {
+            prev.set(change.doc.id, change.doc.data());
+            return new Map([...prev]);
+          });
+        }
+      });
+      if (addedMap.size > 0) {
+        setUserDataState((prev) => new Map([...prev, ...addedMap]));
+      }
+      setIsUserListLoaded(true);
+    });
+
     // 클린업 함수. 칸반 데이터 초기화 및 실시간 연결 해제
     return () => {
       setKanbanDataState((prev) => {
@@ -133,10 +162,15 @@ export default function ProjectCheckRoute() {
       setProjectDataState({
         projectData: null,
       });
+      setUserDataState((prev) => {
+        prev.clear();
+        return prev;
+      });
       setIs403(false);
       setIs404(false);
       unsubProject();
       unsubKanban();
+      unsubUserList();
       setHeaderState("list");
     };
   }, [pathname]);
@@ -149,7 +183,7 @@ export default function ProjectCheckRoute() {
     return <ErrorPage isProject403 />;
   }
 
-  return isProjectLoaded && isKanbanLoaded ? (
+  return isProjectLoaded && isKanbanLoaded && isUserListLoaded ? (
     <ProjectLayout>
       <Sidebar />
       <Outlet />

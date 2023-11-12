@@ -22,6 +22,7 @@ import UserProfile from "./modal/UserProfileModal";
 // 모달 공통 컴포넌트
 import ModalCommon from "./layout/ModalCommonLayout";
 import headerState from "../recoil/atoms/header/headerState";
+import userListState from "../recoil/atoms/userList/userListState";
 
 interface Props {
   $whichPage?: string;
@@ -91,7 +92,7 @@ const modals = [
   {
     key: "profile",
     icon: "userProfile",
-    type: "list",
+    type: "project",
     content: <UserProfile />,
   },
 ];
@@ -100,7 +101,9 @@ export default function Header() {
   const currentHeaderState = useRecoilValue(headerState);
 
   const userDataState = useRecoilValue(userData);
-  const { profile_img_URL: profileImgUrl }: any = userDataState.userData;
+  const { email: loginEmail }: any = userDataState.userData;
+  const userListData = useRecoilValue(userListState);
+
   const [selectedModal, setSelectedModal] = useState(-1);
   const navigate = useNavigate();
 
@@ -129,7 +132,10 @@ export default function Header() {
                         objectFit: "cover",
                         borderRadius: "50%",
                       }}
-                      src={profileImgUrl}
+                      src={
+                        userListData.get(loginEmail) &&
+                        userListData.get(loginEmail).profile_img_URL
+                      }
                       alt="modalIcon"
                     />
                   ) : (

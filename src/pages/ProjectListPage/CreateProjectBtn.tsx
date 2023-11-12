@@ -14,7 +14,7 @@ import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import icon_plus_circle from "../../assets/icons/icon_plus_circle.svg";
 import loginState from "../../recoil/atoms/login/loginState";
-import { createKanban } from "../../api/CreateCollection";
+import { createKanban, createUser } from "../../api/CreateCollection";
 
 const CreateBtn = styled.button`
   display: inline;
@@ -93,7 +93,13 @@ export default function CreateProjectBtn() {
       });
     }
 
-    // alert("프로젝트가 생성되었습니다!");
+    await createUser(docRef.id, userCredential.email, {
+      email: userCredential.email,
+      name: userCredential.displayName,
+      intro: "",
+      profile_img_URL: userCredential.photoURL,
+      is_kicked: false,
+    });
   };
 
   return (
