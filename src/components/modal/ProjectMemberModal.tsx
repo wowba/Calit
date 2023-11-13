@@ -68,28 +68,24 @@ const UserName = styled.div`
 const BtnBox = styled.span`
   display: flex;
 `;
-const InviteBtn = styled.button`
+
+interface Props {
+  $modalIndex: number;
+}
+const InviteBtn = styled.button<Props>`
   display: flex;
   margin: 1rem 1rem 0 0;
   > img {
     transition: transform 0.3s ease;
-  }
-  &:hover {
-    & > img {
-      transform: rotate(90deg);
-    }
+    ${({ $modalIndex }) => $modalIndex === 1 && "transform: rotate(90deg);"}
   }
 `;
-const GetOutBtn = styled.button`
+const GetOutBtn = styled.button<Props>`
   display: flex;
   margin: 1rem 0 0;
   > img {
     transition: transform 0.3s ease;
-  }
-  &:hover {
-    & > img {
-      transform: rotate(90deg);
-    }
+    ${({ $modalIndex }) => $modalIndex === 2 && "transform: rotate(90deg);"}
   }
 `;
 // const SelectInput = styled.select`
@@ -279,12 +275,20 @@ export default function ProjectMemberModal() {
         </ModalTeamMembers>
       </ModalScrollContainer>
       <BtnBox>
-        <InviteBtn type="button" onClick={handleInviteClick}>
+        <InviteBtn
+          $modalIndex={modalIndex}
+          type="button"
+          onClick={handleInviteClick}
+        >
           초대하기
           <img src={rightArrow} alt="열기" />
         </InviteBtn>
         {creater === userId && (
-          <GetOutBtn type="button" onClick={handleGetOutClick}>
+          <GetOutBtn
+            $modalIndex={modalIndex}
+            type="button"
+            onClick={handleGetOutClick}
+          >
             내보내기
             <img src={rightArrow} alt="열기" />
           </GetOutBtn>
