@@ -217,7 +217,6 @@ function Stage({
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 $isDraggingOver={snapshot.isDraggingOver}
-                className="todolists"
               >
                 <>
                   {todos.map((todo, idx) => (
