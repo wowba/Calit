@@ -348,7 +348,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
         return;
       }
       // 최근목록 길이 제한
-      if (recentKanbanId[projectId].length >= 3) {
+      if (recentKanbanId[projectId].length >= 7) {
         const newIds = recentKanbanId[projectId].slice(1);
         setRecentKanbanId((prev: any) => ({
           ...prev,

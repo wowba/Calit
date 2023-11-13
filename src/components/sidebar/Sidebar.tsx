@@ -1,13 +1,17 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { css } from "styled-components";
 import { useRecoilValue } from "recoil";
+import { useLocation } from "react-router-dom";
+import { doc, updateDoc } from "firebase/firestore";
 import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
 import projectState from "../../recoil/atoms/project/projectState";
 import RecentKanban from "./RecentKanban";
-import TrashBox from "../TrashBox";
+import trashIcon from "../../assets/icons/trashIcon.svg";
+import { db } from "../../firebaseSDK";
 
 const SidebarLayout = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: space-between;
 
@@ -21,31 +25,116 @@ const ProjectInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin: 1.75rem 0 0 0;
 `;
 
 const ProjectTitleParagraph = styled.p`
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 900;
-  margin-bottom: 0.25rem;
+  margin: 0.5rem;
 `;
 
 const ProjectProfileImg = styled.img`
   width: 100%;
   height: 7rem;
-
   object-fit: cover;
-
   border-radius: 0.5rem;
+`;
+
+const Line = styled.div`
+  height: 1.5px;
+  width: 100%;
+  background-color: #cacaca;
+  border-radius: 5px;
+`;
+
+const TrashBoxBtn = styled.div`
+  transition: all 0.2s;
+
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 2.3rem;
+  background-color: ${(props) => props.theme.Color.yellow2};
+  &:hover {
+    background-color: ${(props) => props.theme.Color.yellow1};
+    cursor: pointer;
+  }
+
+  border-radius: 0.3rem;
+
+  z-index: 3;
+`;
+const TrashBoxImg = styled.img`
+  width: 1.2rem;
+`;
+const DeletedListLayout = styled.div<{ $isShow: boolean }>`
+  position: fixed;
+  overflow: hidden;
+  width: 11.5rem;
+  height: ${(props) => (props.$isShow ? "24rem" : "0")};
+  padding: 1rem 1rem 0 1rem;
+  transition:
+    height 1s ease,
+    color 0.7s ease-in;
+  background-color: #f5f5f5;
+  border-radius: 0.3rem;
+  bottom: 2.4rem;
+  color: ${(props) => (props.$isShow ? "black" : "transparent")};
+  ${(props) =>
+    !props.$isShow &&
+    css`
+      bottom: 2.2rem;
+    `};
+`;
+
+const DeletedKanbanBox = styled.div<{ $isShow: boolean }>`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const DeletedKanbanName = styled.p`
+  width: 7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export default function Sidebar() {
   const { projectData } = useRecoilValue(projectState);
 
+  const { pathname } = useLocation();
+
+  const { deleted_kanban_info_list: deletedKanbanInfoList } =
+    useRecoilValue(projectState).projectData;
+
+  const [isListShow, setIsListShow] = useState(false);
+
+  const handleTrashBoxBtnClick = () => {
+    setIsListShow((prev) => !prev);
+  };
+  const handleRestoreCLick = async (id: string) => {
+    const updatedDeletedKanbanIdList = deletedKanbanInfoList.filter(
+      (kanbanInfo: { id: string; name: string }) => kanbanInfo.id !== id,
+    );
+    const projectRef = doc(db, "project", pathname);
+    await updateDoc(projectRef, {
+      deleted_kanban_info_list: updatedDeletedKanbanIdList,
+    });
+    const kanbanRef = doc(db, "project", pathname, "kanban", id);
+    await updateDoc(kanbanRef, {
+      is_deleted: false,
+    });
+  };
+
   return (
     <SidebarLayout>
-      <div>
+      <div style={{ height: "100%" }}>
         <ProjectInfoBox>
-          <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
           <ProjectProfileImg
             src={
               projectData.project_img_URL
@@ -54,10 +143,30 @@ export default function Sidebar() {
             }
             alt="Project Profile Img"
           />
+          <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
+          <Line />
         </ProjectInfoBox>
         <RecentKanban />
       </div>
-      <TrashBox />
+      <TrashBoxBtn onClick={handleTrashBoxBtnClick}>
+        <TrashBoxImg src={trashIcon} alt="TrashIcon" />
+      </TrashBoxBtn>
+      <DeletedListLayout $isShow={isListShow}>
+        {deletedKanbanInfoList.length === 0 ? "삭제된 칸반이 없습니다." : ""}
+        {deletedKanbanInfoList.map(
+          (kanbanInfo: { id: string; name: string }) => (
+            <DeletedKanbanBox key={kanbanInfo.id} $isShow={isListShow}>
+              <DeletedKanbanName>{kanbanInfo.name}</DeletedKanbanName>
+              <button
+                type="button"
+                onClick={() => handleRestoreCLick(kanbanInfo.id)}
+              >
+                복구
+              </button>
+            </DeletedKanbanBox>
+          ),
+        )}
+      </DeletedListLayout>
     </SidebarLayout>
   );
 }
