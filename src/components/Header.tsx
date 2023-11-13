@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
-import userData from "../recoil/atoms/login/userDataState";
+import { signOut } from "firebase/auth";
 
+import userData from "../recoil/atoms/login/userDataState";
 import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
+
+// 헤더 아이콘
+import logout from "../assets/headerIcon/logout.svg";
 
 // 모달 아이콘
 import memberIcon from "../assets/icons/headerMemberIcon.svg";
@@ -23,6 +27,8 @@ import UserProfile from "./modal/UserProfileModal";
 import ModalCommon from "./layout/ModalCommonLayout";
 import headerState from "../recoil/atoms/header/headerState";
 import userListState from "../recoil/atoms/userList/userListState";
+import loginState from "../recoil/atoms/login/loginState";
+import { auth } from "../firebaseSDK";
 
 interface Props {
   $whichPage?: string;
@@ -64,7 +70,6 @@ const modals = [
   {
     key: "member",
     icon: <img style={{ width: "1.5rem" }} src={memberIcon} alt="modalIcon" />,
-    type: "project",
     content: <ProjectMember />,
   },
   {
@@ -72,7 +77,6 @@ const modals = [
     icon: (
       <img style={{ width: "1.5rem" }} src={bookmarkIcon} alt="modalIcon" />
     ),
-    type: "project",
     content: <BookMark />,
   },
   {
@@ -80,39 +84,60 @@ const modals = [
     icon: (
       <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
     ),
-    type: "list",
     content: <Tutorial />,
   },
   // {
   //   key: "log",
   //   icon: <img style={{ width: "1.5rem" }} src={logIcon} alt="modalIcon" />,
-  //   type: "project",
   //   content: <Log />,
   // },
   {
     key: "profile",
     icon: "userProfile",
-    type: "project",
     content: <UserProfile />,
+  },
+];
+
+const listPageModals = [
+  {
+    key: "tutorial",
+    icon: (
+      <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
+    ),
+    content: <Tutorial />,
+  },
+  {
+    key: "logout",
+    icon: <img style={{ width: "1.5rem" }} src={logout} alt="logout" />,
+    content: null,
   },
 ];
 
 export default function Header() {
   const currentHeaderState = useRecoilValue(headerState);
 
-  const userDataState = useRecoilValue(userData);
-  const { email: loginEmail }: any = userDataState.userData;
-  const userListData = useRecoilValue(userListState);
-
   const [selectedModal, setSelectedModal] = useState(-1);
   const navigate = useNavigate();
 
-  const listPageModals = modals.filter(
-    (modal) => modal.type === currentHeaderState,
-  );
+  const setLoginState = useSetRecoilState(loginState);
+  const [userDataState, setUserDataState] = useRecoilState(userData);
+  const { email: loginEmail }: any = userDataState.userData;
+  const userListData = useRecoilValue(userListState);
 
   const handleClick = (idx: number) => {
     setSelectedModal(idx);
+  };
+
+  const handleLogoutBtnClick = () => {
+    setLoginState({
+      isLogin: false,
+      userCredential: {},
+    });
+    setUserDataState({
+      userDataState: {},
+    });
+    navigate("/login");
+    signOut(auth);
   };
 
   return (
@@ -121,7 +146,14 @@ export default function Header() {
       <HeaderIconBox>
         {(currentHeaderState === "list" ? listPageModals : modals).map(
           (modal, index) => (
-            <HeaderModalBox key={modal.key} onClick={() => handleClick(index)}>
+            <HeaderModalBox
+              key={modal.key}
+              onClick={
+                modal.key === "logout"
+                  ? handleLogoutBtnClick
+                  : () => handleClick(index)
+              }
+            >
               <ModalCommon modalSelected={selectedModal} modalIndex={index}>
                 <>
                   {modal.icon === "userProfile" ? (
