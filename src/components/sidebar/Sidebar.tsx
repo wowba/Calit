@@ -74,7 +74,7 @@ const TrashBoxImg = styled.img`
 `;
 const DeletedListLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
-  overflow: hidden;
+  overflow: scroll;
   width: 11.5rem;
   height: ${(props) => (props.$isShow ? "24rem" : "0")};
   padding: 1rem 1rem 0 1rem;
@@ -85,16 +85,35 @@ const DeletedListLayout = styled.div<{ $isShow: boolean }>`
   border-radius: 0.3rem;
   bottom: 2.4rem;
   color: ${(props) => (props.$isShow ? "black" : "transparent")};
+  font-size: 0.95rem;
   ${(props) =>
     !props.$isShow &&
     css`
       bottom: 2.2rem;
     `};
+  &::-webkit-scrollbar {
+    width: 8px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+`;
+const SubtitleText = styled.div`
+  font-weight: 900;
+  margin: 0 0 1rem;
 `;
 
 const DeletedKanbanBox = styled.div<{ $isShow: boolean }>`
   display: flex;
   gap: 0.5rem;
+  margin: 0.5rem 0;
 `;
 
 const DeletedKanbanName = styled.p`
@@ -152,7 +171,9 @@ export default function Sidebar() {
         <TrashBoxImg src={trashIcon} alt="TrashIcon" />
       </TrashBoxBtn>
       <DeletedListLayout $isShow={isListShow}>
+        <SubtitleText>🛠️ 쓰레기통</SubtitleText>
         {deletedKanbanInfoList.length === 0 ? "삭제된 칸반이 없습니다." : ""}
+
         {deletedKanbanInfoList.map(
           (kanbanInfo: { id: string; name: string }) => (
             <DeletedKanbanBox key={kanbanInfo.id} $isShow={isListShow}>
@@ -161,7 +182,11 @@ export default function Sidebar() {
                 type="button"
                 onClick={() => handleRestoreCLick(kanbanInfo.id)}
               >
-                복구
+                <img
+                  style={{ margin: "0 0 0 1rem" }}
+                  src={trashIcon}
+                  alt="복구"
+                />
               </button>
             </DeletedKanbanBox>
           ),

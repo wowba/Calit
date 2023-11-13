@@ -71,6 +71,10 @@ export default function RecentKanban() {
     <RecentKanbanContainer>
       <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
       <RecentKanbanList>
+        {reversedUrls === null || reversedUrls.length === 0
+          ? " 방문한 칸반이 없습니다."
+          : ""}
+
         {reversedUrls
           ? reversedUrls.map((kanbanID: string) => (
               <KanbanUrlBox
