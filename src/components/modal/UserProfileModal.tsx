@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import {
   deleteObject,
@@ -19,6 +19,7 @@ import rightArrow from "../../assets/icons/rightArrow.svg";
 import loginState from "../../recoil/atoms/login/loginState";
 import userData from "../../recoil/atoms/login/userDataState";
 import userListState from "../../recoil/atoms/userList/userListState";
+import projectState from "../../recoil/atoms/project/projectState";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -67,8 +68,10 @@ export default function UserProfile() {
   const [userDataState, setUserDataState] = useRecoilState(userData);
   const projectId = window.location.pathname.substring(1);
   const userListData = useRecoilValue(userListState);
+  const { projectData } = useRecoilValue(projectState);
 
-  const { email: loginEmail }: any = userDataState.userData;
+  const { email: loginEmail, project_list: projectList }: any =
+    userDataState.userData;
   const {
     email,
     name,
@@ -76,7 +79,7 @@ export default function UserProfile() {
     intro,
   }: any = userListData.get(loginEmail);
 
-  const userRef = doc(db, "project", projectId, "user", email);
+  const projectUserRef = doc(db, "project", projectId, "user", email);
 
   const imgInputRef = useRef<HTMLInputElement>(null);
   const setLoginState = useSetRecoilState(loginState);
@@ -114,7 +117,7 @@ export default function UserProfile() {
       await uploadBytes(storageRef, imgFile);
     } finally {
       const url = await getDownloadURL(storageRef);
-      await updateDoc(userRef, {
+      await updateDoc(projectUserRef, {
         profile_img_URL: url,
       });
     }
@@ -122,7 +125,7 @@ export default function UserProfile() {
 
   const handleNameBlur = async () => {
     if (inputName) {
-      await updateDoc(userRef, {
+      await updateDoc(projectUserRef, {
         name: inputName,
       });
     }
@@ -130,7 +133,7 @@ export default function UserProfile() {
 
   const handleIntroBlur = async () => {
     if (inputIntro) {
-      await updateDoc(userRef, {
+      await updateDoc(projectUserRef, {
         intro: inputIntro,
       });
     }
@@ -146,6 +149,32 @@ export default function UserProfile() {
     });
     navigate("/login");
     signOut(auth);
+  };
+
+  const handleProjectExitBtnClick = async () => {
+    // 유저의 project_list에서 프로젝트 삭제
+    const userRef = doc(db, "user", email);
+    if (projectList.includes(projectId)) {
+      const updateProjectList = projectList.filter(
+        (project: string) => project !== projectId,
+      );
+      await updateDoc(userRef, {
+        project_list: updateProjectList,
+      });
+    }
+    // user 의 is_kicked = true 변경
+    await updateDoc(projectUserRef, {
+      is_kicked: true,
+    });
+    // 프로젝트의 user_list에서 유저 삭제
+    const projectRef = doc(db, "project", projectId);
+    const updatedUserList = projectData.user_list;
+    updatedUserList.filter((user: string) => user !== email);
+    await updateDoc(projectRef, {
+      user_list: updatedUserList,
+      modified_date: serverTimestamp(),
+    });
+    navigate("/");
   };
 
   return (
@@ -190,16 +219,32 @@ export default function UserProfile() {
         />
       </UserInfoBox>
 
-      <LogoutBtn type="button" onClick={handleLogoutBtnClick}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <span>로그아웃</span> <img src={rightArrow} alt="" />
-        </div>
-      </LogoutBtn>
+      <div style={{ display: "flex" }}>
+        <LogoutBtn type="button" onClick={handleLogoutBtnClick}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontSize: "0.95rem",
+            }}
+          >
+            <span>로그아웃</span> <img src={rightArrow} alt="" />
+          </div>
+        </LogoutBtn>
+        {projectData.creater === email ? null : (
+          <LogoutBtn type="button" onClick={handleProjectExitBtnClick}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                fontSize: "0.95rem",
+              }}
+            >
+              <span>프로젝트 나가기</span> <img src={rightArrow} alt="" />
+            </div>
+          </LogoutBtn>
+        )}
+      </div>
     </ModalArea>
   );
 }
