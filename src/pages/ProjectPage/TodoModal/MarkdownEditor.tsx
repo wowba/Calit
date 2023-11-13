@@ -15,7 +15,7 @@ const AddUpdateTitle = styled.div`
 `;
 const UpdateContainer = styled.div`
   background-color: #eaeaea;
-  height: calc(100% - 4.4rem);
+  height: calc(100% - 3.2rem);
   overflow: scroll;
   padding: 1.2rem 1.2rem 0 1.2rem;
   border-radius: 10px;
@@ -69,7 +69,6 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
   };
 
   return (
-    // <div style={{ height: "100%" }}>
     <UpdateContainer>
       <AddUpdateTitle>
         <span
@@ -96,7 +95,7 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
       <span
         style={{
           fontWeight: "900",
-          fontSize: "0.9rem",
+          // fontSize: "0.9rem",
           margin: "1.5rem 0 0",
           display: "inline-block",
         }}
@@ -114,6 +113,5 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
         ))}
       </UpdateList>
     </UpdateContainer>
-    // </div>
   );
 }

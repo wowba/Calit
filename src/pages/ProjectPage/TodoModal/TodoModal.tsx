@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from "react";
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
@@ -23,30 +23,51 @@ type Props = {
   isTodoShow: boolean;
 };
 
+const boxShadowAnimation = keyframes`
+  0% {
+    box-shadow: none;
+  }
+  40% {
+    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
+  }
+  70% {
+    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: none;
+  }
+`;
+
 // 스타일
-const TodoContainer = styled(ProjectModalContentBox)`
+const TodoContainer = styled(ProjectModalContentBox)<{
+  $isTodoShow: boolean;
+}>`
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
+  ${(props) =>
+    !props.$isTodoShow &&
+    css`
+      animation: ${boxShadowAnimation} 1s forwards;
+    `}
 `;
 const TodoTopContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin: 0 0 2rem;
+  margin: 0 0 1.5rem;
 `;
 const TodoTitle = styled.div`
   display: inline-block;
   font-weight: 900;
   font-size: 1.2rem;
-  /* margin: 0 1rem 2rem 0; */
 `;
 const TodoSubtitle = styled.div`
   display: inline-block;
   font-weight: 900;
   font-size: 0.9rem;
-  margin: 0 1rem 1rem 0;
+  margin: 0.2rem 1rem 1rem 0;
 `;
 
 const Container = styled.div`
@@ -71,7 +92,7 @@ const Contour = styled.div`
   background-color: #eaeaea;
   width: 100%;
   height: 0.2rem;
-  transform: translateY(-1.5rem);
+  transform: translateY(-1rem);
   border-radius: 1px;
 `;
 
@@ -124,9 +145,9 @@ export default function TodoModal({ isTodoShow }: Props) {
   useEffect(() => {
     if (textarea.current) {
       textarea.current.style.height = "auto";
-      textarea.current.style.height = `${textarea.current.scrollHeight}px`;
+      textarea.current.style.height = `${textarea.current.scrollHeight + 5}px`;
     }
-  }, [inputTodoInfo]);
+  }, [isTodoShow, inputTodoInfo]);
 
   // Input 및 Textarea 이벤트 로직(Enter키, Focus상태)
   // 1. Enter키
@@ -203,13 +224,7 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   return (
     <ProjectModalLayout $isShow={isTodoShow}>
-      <TodoContainer
-        style={{
-          boxShadow: isTodoShow
-            ? "none"
-            : "0px 0px 10px 6px rgba(0, 0, 0, 0.05)",
-        }}
-      >
+      <TodoContainer $isTodoShow={isTodoShow}>
         <div style={{ padding: "0 2rem 0 0" }}>
           <TodoTopContainer>
             <TodoTitle>
