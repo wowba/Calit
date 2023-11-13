@@ -80,7 +80,7 @@ const TodoUserImage = styled.img`
 const TodoTrashIcon = styled.img`
   position: absolute;
   top: 0.5rem;
-  left: 15.5rem;
+  left: 15rem;
 
   z-index: 2;
   cursor: pointer;
