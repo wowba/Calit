@@ -338,7 +338,13 @@ export default function ProjectMemberModal() {
         )}
         {modalIndex === 2 && (
           <GetOutContainer>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
               {/* <SelectInput
                 style={{ height: "100%", display: "inline-block" }}
                 onChange={(e) => setSelectedUser(e.target.value)}
