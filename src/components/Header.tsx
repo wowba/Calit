@@ -37,7 +37,7 @@ const HeaderLayout = styled.div<Props>`
   justify-content: space-between;
   align-items: center;
   padding: ${(props) =>
-    props.$whichPage === "list" ? " 0rem calc(6rem + 20px)" : "0rem 1rem"};
+    props.$whichPage === "list" ? " 0rem 124px" : "0rem 1rem"};
   border-bottom: 1.5px solid #ebebeb;
   transition: padding 0.8s ease;
 `;

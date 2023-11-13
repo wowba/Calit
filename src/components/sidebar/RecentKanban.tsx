@@ -6,15 +6,43 @@ import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 
-const KanbanUrlBox = styled.div`
-  border-radius: 5px;
-  background-color: #eaeaea;
-  margin: 3px 0px;
-  transition: background-color 0.5s ease-in-out;
-  &:hover {
-    background-color: #cacaca;
+const RecentKanbanContainer = styled.div`
+  margin: 1px;
+  height: 17rem;
+`;
+const RecentKanbanTitle = styled.div`
+  font-weight: 900;
+  margin: 1rem 0;
+`;
+
+const RecentKanbanList = styled.div`
+  overflow: scroll;
+  height: 100%;
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
+
+const KanbanUrlBox = styled.div`
+  border-radius: 5px;
+  width: 100%;
+  border: 1px solid #ffd43b;
+  margin: 3px 0px;
+  padding: 3px;
+  transition: background-color 0.3s ease-in-out;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  &:hover {
+    background-color: #ffd43b;
+  }
+`;
+
 export default function RecentKanban() {
   const [, setSearchParams] = useSearchParams();
   const setIsLoaded = useSetRecoilState(todoLoaded);
@@ -40,15 +68,24 @@ export default function RecentKanban() {
   };
 
   return (
-    <>
-      <span>Recent Kanban</span>
-      {reversedUrls
-        ? reversedUrls.map((kanbanID: string) => (
-            <KanbanUrlBox key={kanbanID} onClick={() => handleClick(kanbanID)}>
-              <span>{kanbanData.get(kanbanID).name}</span>
-            </KanbanUrlBox>
-          ))
-        : null}
-    </>
+    <RecentKanbanContainer>
+      <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
+      <RecentKanbanList>
+        {reversedUrls === null || reversedUrls.length === 0
+          ? " 방문한 칸반이 없습니다."
+          : ""}
+
+        {reversedUrls
+          ? reversedUrls.map((kanbanID: string) => (
+              <KanbanUrlBox
+                key={kanbanID}
+                onClick={() => handleClick(kanbanID)}
+              >
+                <span>{kanbanData.get(kanbanID).name}</span>
+              </KanbanUrlBox>
+            ))
+          : null}
+      </RecentKanbanList>
+    </RecentKanbanContainer>
   );
 }

@@ -20,7 +20,13 @@ const ProjectListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(33%, auto));
   margin: 20px 0px;
-  justify-content: start;
+  justify-items: stretch;
+`;
+
+const Footer = styled.div`
+  width: 100%;
+  background-color: white;
+  height: 7rem;
 `;
 
 export default function ProjectList() {
@@ -60,24 +66,27 @@ export default function ProjectList() {
   }, [name, projectImgUrl, projectIntro, projectList]);
 
   return (
-    <div style={{ margin: "2.5rem 6.5rem" }}>
-      <ProjectListTitle>
-        <img src={ProjectListIcon} alt="Project List" />
-      </ProjectListTitle>
-      <InvitationBtn />
-      <ProjectListContainer>
-        <CreateProjectBtn />
-        {projectData.map((project: any) => (
-          <ProjectCard
-            key={project.id}
-            projectId={project.id}
-            projectImgUrl={project.imgUrl}
-            projectName={project.name}
-            projectIntro={project.projectIntro}
-            fetchProjectData={fetchProjectData}
-          />
-        ))}
-      </ProjectListContainer>
-    </div>
+    <>
+      <div style={{ margin: "2.5rem 6.5rem" }}>
+        <ProjectListTitle>
+          <img src={ProjectListIcon} alt="Project List" />
+        </ProjectListTitle>
+        <InvitationBtn />
+        <ProjectListContainer>
+          <CreateProjectBtn />
+          {projectData.map((project: any) => (
+            <ProjectCard
+              key={project.id}
+              projectId={project.id}
+              projectImgUrl={project.imgUrl}
+              projectName={project.name}
+              projectIntro={project.projectIntro}
+              fetchProjectData={fetchProjectData}
+            />
+          ))}
+        </ProjectListContainer>
+      </div>
+      <Footer />
+    </>
   );
 }
