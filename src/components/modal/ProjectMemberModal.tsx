@@ -200,7 +200,7 @@ export default function ProjectMemberModal() {
         Swal.fire({
           icon: "error",
           title: "gmail 주소를 입력해주세요.",
-          text: "프로젝트 초대를 위해 초대할 사용자의 gmail을 입력해주세요.",
+          text: "프로젝트에 초대할 사용자의 gmail을 입력해주세요.",
         });
         setInputEmailValue("");
       }
