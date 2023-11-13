@@ -70,7 +70,7 @@ const TodoList = styled.div<TodoListProps>`
   border: 1px solid #d5d5d5;
   border-radius: 0.5rem;
 
-  padding: 0.5rem;
+  padding: 0.5rem calc(0.5rem - 3px) 0.5rem 0.5rem;
 
   &::-webkit-scrollbar {
     width: 8px;
