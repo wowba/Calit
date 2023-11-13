@@ -103,6 +103,10 @@ export default function CommonSelectMemberLayout(props: Props) {
           ...baseStyles,
           paddingRight: "0",
         }),
+        container: (baseStyles) => ({
+          ...baseStyles,
+          flex: "1",
+        }),
       }}
     />
   );
