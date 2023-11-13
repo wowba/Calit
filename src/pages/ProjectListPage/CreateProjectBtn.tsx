@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import styled from "styled-components";
+import Swal from "sweetalert2";
 import { useRecoilValue } from "recoil";
 import { db } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
@@ -59,48 +60,67 @@ export default function CreateProjectBtn() {
   const { userCredential } = useRecoilValue(loginState);
 
   const handleClick = async () => {
-    // 새 프로젝트 생성
-    const projectData: ProjectData = {
-      user_list: [email],
-      invited_list: [],
-      bookmark_list: [],
-      name: "",
-      project_intro: "",
-      project_img_URL: "",
-      created_date: serverTimestamp(),
-      modified_date: serverTimestamp(),
-      creater: email,
-      is_deleted: false,
-      deleted_kanban_info_list: [],
-    };
+    // 프로젝트 생성 알림
+    Swal.fire({
+      title: "새 프로젝트를 생성하시겠습니까?",
+      icon: "warning",
 
-    const docRef = await addDoc(collection(db, "project"), projectData);
-    // onSnapshot 감시를 위한 dummy kanban
-    createKanban(docRef.id, {
-      user_list: [],
-      stage_list: [],
-      start_date: new Date(),
-      end_date: new Date(),
-      created_date: serverTimestamp(),
-      modified_date: serverTimestamp(),
-      name: "dummyKanban",
-      is_deleted: true,
-      color: "#3888d8",
-    });
-    // 유저의 project_list 업데이트
-    if (userCredential) {
-      const userRef = doc(db, "user", userCredential.email);
-      await updateDoc(userRef, {
-        project_list: arrayUnion(docRef.id),
-      });
-    }
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "생성",
+      cancelButtonColor: "#ee6a6a",
+      cancelButtonText: "취소",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "프로젝트가 생성되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
+        // 새 프로젝트 생성
+        const projectData: ProjectData = {
+          user_list: [email],
+          invited_list: [],
+          bookmark_list: [],
+          name: "",
+          project_intro: "",
+          project_img_URL: "",
+          created_date: serverTimestamp(),
+          modified_date: serverTimestamp(),
+          creater: email,
+          is_deleted: false,
+          deleted_kanban_info_list: [],
+        };
 
-    await createUser(docRef.id, userCredential.email, {
-      email: userCredential.email,
-      name: userCredential.displayName,
-      intro: "",
-      profile_img_URL: userCredential.photoURL,
-      is_kicked: false,
+        const docRef = await addDoc(collection(db, "project"), projectData);
+        // onSnapshot 감시를 위한 dummy kanban
+        createKanban(docRef.id, {
+          user_list: [],
+          stage_list: [],
+          start_date: new Date(),
+          end_date: new Date(),
+          created_date: serverTimestamp(),
+          modified_date: serverTimestamp(),
+          name: "dummyKanban",
+          is_deleted: true,
+          color: "#3888d8",
+        });
+        // 유저의 project_list 업데이트
+        if (userCredential) {
+          const userRef = doc(db, "user", userCredential.email);
+          await updateDoc(userRef, {
+            project_list: arrayUnion(docRef.id),
+          });
+        }
+
+        await createUser(docRef.id, userCredential.email, {
+          email: userCredential.email,
+          name: userCredential.displayName,
+          intro: "",
+          profile_img_URL: userCredential.photoURL,
+          is_kicked: false,
+        });
+      }
     });
   };
 
