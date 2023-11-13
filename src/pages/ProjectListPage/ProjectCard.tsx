@@ -14,8 +14,6 @@ interface Props {
 }
 
 export const ProjectCardUnit = styled.div`
-  display: inline;
-  max-width: 400px;
   min-width: 230px;
   height: 226px;
   border: 1px solid transparent;
@@ -139,7 +137,7 @@ export default function ProjectCard({
             whiteSpace: "nowrap",
             fontWeight: "700",
             fontSize: "1rem",
-            backgroundColor: "#eaeaea",
+            backgroundColor: "#ededed",
           }}
           onChange={(e) => setInputNameValue(e.target.value)}
           onBlur={handleTitleBlur}
@@ -151,8 +149,8 @@ export default function ProjectCard({
           alt={rectangle}
         />
         <CommonTextArea
-          $dynamicWidth="96%"
-          $dynamicPadding="3px"
+          $dynamicWidth="calc(100% - 0.7rem)"
+          $dynamicPadding="5px"
           placeholder="프로젝트 소개를 입력해주세요"
           style={{
             position: "absolute",
@@ -160,6 +158,7 @@ export default function ProjectCard({
             left: "6px",
             height: "85px",
             fontSize: "0.9rem",
+            backgroundColor: "#ededed",
           }}
           onChange={(e) => setInputIntroValue(e.target.value)}
           onBlur={handleIntroBlur}

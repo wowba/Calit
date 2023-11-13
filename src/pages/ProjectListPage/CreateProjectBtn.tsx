@@ -17,8 +17,7 @@ import loginState from "../../recoil/atoms/login/loginState";
 import { createKanban, createUser } from "../../api/CreateCollection";
 
 const CreateBtn = styled.button`
-  display: inline;
-  max-width: 400px;
+  display: inline-block;
   min-width: 230px;
   height: 226px;
   border: 1px solid transparent;
