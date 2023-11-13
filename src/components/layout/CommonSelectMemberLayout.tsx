@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 /* eslint-disable react/no-unstable-nested-components */
 import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -44,11 +46,13 @@ export default function CommonSelectMemberLayout(props: Props) {
     const fetchData = async (list: any) => {
       const data = list.map((id: string) => {
         const user = userListData.get(id);
-        return {
-          image: user.profile_img_URL,
-          value: user.email,
-          label: user.name,
-        };
+        if (!user.is_kicked) {
+          return {
+            image: user.profile_img_URL,
+            value: user.email,
+            label: user.name,
+          };
+        }
       });
       setUserData(data);
     };
