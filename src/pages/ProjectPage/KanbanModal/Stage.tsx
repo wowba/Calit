@@ -71,6 +71,19 @@ const TodoList = styled.div<TodoListProps>`
   border-radius: 0.5rem;
 
   padding: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    overflow-y: scroll;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
 `;
 interface TodoListProps {
   $isDraggingOver: boolean;
@@ -204,6 +217,7 @@ function Stage({
                 {...provided.droppableProps}
                 ref={provided.innerRef}
                 $isDraggingOver={snapshot.isDraggingOver}
+                className="todolists"
               >
                 <>
                   {todos.map((todo, idx) => (
