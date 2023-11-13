@@ -13,10 +13,23 @@ const TutorialTextContent = styled.div`
   white-space: pre-line;
   max-height: 15rem;
   overflow: scroll;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    overflow-y: scroll;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
 `;
 const TutorialTextParagraph = styled.p`
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 900;
   margin-bottom: 10px;
 `;
 
