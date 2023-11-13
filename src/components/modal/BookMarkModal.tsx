@@ -2,6 +2,7 @@ import React, { useState, KeyboardEvent } from "react";
 import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
+import Swal from "sweetalert2";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
 import ConfirmBtn from "../layout/ConfirmBtnLayout";
@@ -81,14 +82,20 @@ export default function Bookmark() {
     if (inputUrlValue) {
       // 같은 주소가 중복해서 북마크 등록되지 않게 검증
       if (bookmarkCheck(inputUrlValue)) {
-        // eslint-disable-next-line no-alert
-        alert("이미 등록된 주소입니다.");
+        Swal.fire({
+          icon: "error",
+          title: "이미 등록된 주소입니다.",
+          text: "같은 주소를 중복 등록할 수 없습니다.",
+        });
         return;
       }
 
       if (!inputUrlValidation(inputUrlValue)) {
-        // eslint-disable-next-line no-alert
-        alert("올바른 URL 주소를 입력해주세요.");
+        Swal.fire({
+          icon: "error",
+          title: "올바른 URL을 입력해주세요.",
+          text: "http/https 또는 www로 시작하는 URL을 정확히 입력해주세요.",
+        });
         return;
       }
 
@@ -108,8 +115,11 @@ export default function Bookmark() {
       setInputUrlValue("");
       setInputTextValue("");
     } else {
-      // eslint-disable-next-line no-alert
-      alert("URL 주소를 입력해주세요.");
+      Swal.fire({
+        icon: "error",
+        title: "URL을 입력해주세요.",
+        text: "URL이 입력되지 않았습니다.",
+      });
     }
   };
 
@@ -160,7 +170,7 @@ export default function Bookmark() {
           style={{ marginBottom: "4px" }}
           value={inputUrlValue}
           onChange={(e) => setInputUrlValue(e.target.value)}
-          onKeyDown={handleEnterPress}
+          onKeyUp={handleEnterPress}
           $isHover
         />
         <CommonInputLayout
@@ -172,7 +182,7 @@ export default function Bookmark() {
           style={{ marginBottom: "4px" }}
           value={inputTextValue}
           onChange={(e) => setInputTextValue(e.target.value)}
-          onKeyDown={handleEnterPress}
+          onKeyUp={handleEnterPress}
           $isHover
         />
         <ConfirmBtn

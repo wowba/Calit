@@ -10,6 +10,7 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
+import Swal from "sweetalert2";
 
 import { auth, db, storage } from "../../firebaseSDK";
 import { ModalArea } from "../layout/ModalCommonLayout";
@@ -101,8 +102,11 @@ export default function UserProfile() {
       const maxSize = 5 * 1024 * 1024; // 5MB 제한
       const fileSize = imgFile.size;
       if (fileSize > maxSize) {
-        // eslint-disable-next-line
-        alert("5mb 이하의 이미지만 업로드 가능합니다.");
+        Swal.fire({
+          icon: "error",
+          title: "이미지를 다시 업로드해주세요.",
+          text: "5mb 이하의 이미지만 업로드 가능합니다.",
+        });
         return;
       }
     }

@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 
 import { useLocation } from "react-router-dom";
 import { serverTimestamp } from "firebase/firestore";
+import Swal from "sweetalert2";
 import { createKanban, createTodo } from "../../../api/CreateCollection";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
@@ -111,13 +112,20 @@ export default function CreateKanbanModal(props: Props) {
 
   const handleCreateBtnClick = async () => {
     if (!kanbanName) {
-      // eslint-disable-next-line no-alert
-      alert("칸반 제목을 입력해 주세요.");
+      Swal.fire({
+        icon: "error",
+        title: "칸반 제목을 입력해 주세요.",
+        text: "제목이 없는 칸반은 등록할 수 없습니다.",
+      });
       return false;
     }
     if (userList.length === 0) {
-      // eslint-disable-next-line no-alert
-      alert("담당자를 최소 한 명 이상 할당해주세요.");
+      Swal.fire({
+        icon: "error",
+        title: "담당자를 할당해주세요.",
+        text: "칸반에는 최소 한 명 이상의 담당자가 필요합니다.",
+      });
+
       return false;
     }
     const DEFAULT_STAGES = [

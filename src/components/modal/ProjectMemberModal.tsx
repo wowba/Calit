@@ -1,9 +1,9 @@
-/* eslint-disable no-alert */
 import React, { useState, KeyboardEvent } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
+import Swal from "sweetalert2";
 
 import { db } from "../../firebaseSDK";
 import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
@@ -181,7 +181,11 @@ export default function ProjectMemberModal() {
           userListData.get(inputEmailValue) ||
           curInvitedList.includes(inputEmailValue)
         ) {
-          alert("이미 초대되었습니다.");
+          Swal.fire({
+            icon: "error",
+            title: "이미 초대된 사용자입니다.",
+            text: "같은 사용자를 중복 초대할 수 없습니다.",
+          });
           setInputEmailValue("");
           return;
         }
@@ -193,8 +197,12 @@ export default function ProjectMemberModal() {
         });
         setInputEmailValue("");
       } else {
+        Swal.fire({
+          icon: "error",
+          title: "gmail 주소를 입력해주세요.",
+          text: "프로젝트 초대를 위해 초대할 사용자의 gmail을 입력해주세요.",
+        });
         setInputEmailValue("");
-        alert("Gmail 주소를 입력해주세요");
       }
     }
   };
@@ -208,9 +216,13 @@ export default function ProjectMemberModal() {
       });
       setInputEmailValue("");
     } else {
-      setInputEmailValue("");
-      alert("Gmail 주소를 입력해주세요");
+      Swal.fire({
+        icon: "error",
+        title: "gmail 주소를 입력해주세요.",
+        text: "프로젝트에 초대할 사용자의 gmail을 입력해주세요.",
+      });
     }
+    setInputEmailValue("");
   };
 
   // 삭제 버튼
@@ -303,7 +315,7 @@ export default function ProjectMemberModal() {
                 style={{ backgroundColor: "#efefef" }}
                 value={inputEmailValue}
                 onChange={(e) => setInputEmailValue(e.target.value)}
-                onKeyDown={handleEnterPress}
+                onKeyUp={handleEnterPress}
               />
               <ConfirmBtn
                 $dynamicWidth="4rem"
