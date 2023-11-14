@@ -5,6 +5,7 @@ import styled from "styled-components";
 import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
+import deleteIcon from "../../assets/icons/closeIcon.svg";
 
 const RecentKanbanContainer = styled.div`
   margin: 1px;
@@ -24,22 +25,28 @@ const RecentKanbanList = styled.div`
 `;
 
 const KanbanUrlBox = styled.div<{ $backgroundColor: string }>`
+  display: flex;
+  justify-content: space-between;
   border-radius: 5px;
   width: 100%;
   margin: 3px 0px;
   padding: 8px 10px;
   transition: all 0.3s ease-in-out;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-  word-wrap: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   background-color: ${(props) => props.$backgroundColor};
   cursor: pointer;
-
+  > span {
+    max-width: 90%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
   &:hover {
+    /* transform: scale(110%); */
   }
 `;
 
@@ -67,6 +74,8 @@ export default function RecentKanban() {
     setSearchParams({ kanbanID });
   };
 
+  const handleDelete = () => {};
+
   return (
     <RecentKanbanContainer>
       <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
@@ -76,19 +85,26 @@ export default function RecentKanban() {
           : ""}
 
         {reversedUrls
-          ? reversedUrls
-              .filter(
-                (kanbanID: string) => !kanbanData.get(kanbanID).is_deleted,
-              )
-              .map((kanbanID: string) => (
-                <KanbanUrlBox
-                  $backgroundColor={kanbanData.get(kanbanID).color}
-                  key={kanbanID}
-                  onClick={() => handleClick(kanbanID)}
-                >
-                  <span>{kanbanData.get(kanbanID).name}</span>
-                </KanbanUrlBox>
-              ))
+          ? reversedUrls.map((kanbanID: string) => (
+              <KanbanUrlBox
+                $backgroundColor={
+                  kanbanData.has(kanbanID)
+                    ? kanbanData.get(kanbanID).color
+                    : "gray"
+                }
+                key={kanbanID}
+                onClick={() => handleClick(kanbanID)}
+              >
+                <span>
+                  {kanbanData.has(kanbanID)
+                    ? kanbanData.get(kanbanID).name
+                    : "제거된 칸반입니다"}
+                </span>
+                <button type="button" onClick={handleDelete}>
+                  <img src={deleteIcon} alt="삭제" />
+                </button>
+              </KanbanUrlBox>
+            ))
           : null}
       </RecentKanbanList>
     </RecentKanbanContainer>
