@@ -209,7 +209,6 @@ function Stage({
                   }
                 }}
               />
-              <p>({todos.length})</p>
               <TodoPlusIcon
                 src={icon_plus_circle}
                 alt="투두 추가"
