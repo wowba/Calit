@@ -92,10 +92,13 @@ export default function CreateKanbanModal(props: Props) {
   };
 
   useEffect(() => {
+    const sweetAlertComponent =
+      document.getElementsByClassName("swal2-container");
     function handleClickOutside(e: MouseEvent): void {
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        !wrapperRef.current.contains(e.target as Node) &&
+        !sweetAlertComponent[0]
       ) {
         resetCreateKanbanModalState();
       }
