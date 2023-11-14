@@ -30,14 +30,14 @@ const ProjectModalTabBox = styled.div<{
   z-index: 998;
 
   width: 9rem;
-  position: absolute;
+  position: fixed;
   left: ${(props) => `${props.$left}rem`};
 
-  top: 0.75rem;
+  top: 3.75rem;
   ${(props) =>
     !props.$isShow &&
     css`
-      top: calc(100% - 1.5rem);
+      top: calc(100% - 2.5rem);
     `};
 
   &:hover {
