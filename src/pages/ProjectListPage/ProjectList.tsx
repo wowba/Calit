@@ -7,7 +7,7 @@ import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
 import CreateProjectBtn from "./CreateProjectBtn";
-import ProjectListIcon from "../../assets/logo/ProjectListLogo.svg";
+import ProjectListIcon from "../../assets/logo/ProjectlistLogo.svg";
 
 const ProjectListTitle = styled.div`
   font-size: 2rem;
