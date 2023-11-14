@@ -23,13 +23,12 @@ const RecentKanbanList = styled.div`
   }
 `;
 
-const KanbanUrlBox = styled.div`
+const KanbanUrlBox = styled.div<{ $backgroundColor: string }>`
   border-radius: 5px;
   width: 100%;
-  border: 1px solid #ffd43b;
   margin: 3px 0px;
-  padding: 3px;
-  transition: background-color 0.3s ease-in-out;
+  padding: 8px 10px;
+  transition: all 0.3s ease-in-out;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
@@ -37,9 +36,10 @@ const KanbanUrlBox = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  background-color: ${(props) => props.$backgroundColor};
+  cursor: pointer;
 
   &:hover {
-    background-color: #ffd43b;
   }
 `;
 
@@ -72,18 +72,23 @@ export default function RecentKanban() {
       <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
       <RecentKanbanList>
         {reversedUrls === null || reversedUrls.length === 0
-          ? " 방문한 칸반이 없습니다."
+          ? "방문한 칸반이 없습니다."
           : ""}
 
         {reversedUrls
-          ? reversedUrls.map((kanbanID: string) => (
-              <KanbanUrlBox
-                key={kanbanID}
-                onClick={() => handleClick(kanbanID)}
-              >
-                <span>{kanbanData.get(kanbanID).name}</span>
-              </KanbanUrlBox>
-            ))
+          ? reversedUrls
+              .filter(
+                (kanbanID: string) => !kanbanData.get(kanbanID).is_deleted,
+              )
+              .map((kanbanID: string) => (
+                <KanbanUrlBox
+                  $backgroundColor={kanbanData.get(kanbanID).color}
+                  key={kanbanID}
+                  onClick={() => handleClick(kanbanID)}
+                >
+                  <span>{kanbanData.get(kanbanID).name}</span>
+                </KanbanUrlBox>
+              ))
           : null}
       </RecentKanbanList>
     </RecentKanbanContainer>
