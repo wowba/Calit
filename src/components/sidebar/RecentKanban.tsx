@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
@@ -55,10 +55,10 @@ export default function RecentKanban() {
   const setIsLoaded = useSetRecoilState(todoLoaded);
   const projectId = window.location.pathname.substring(1);
 
-  const recentKanbanUrl = useRecoilValue(recentKanbanState);
-  const reversedUrls =
-    projectId in recentKanbanUrl
-      ? [...recentKanbanUrl[projectId]].reverse()
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
+  const reversedIds =
+    projectId in recentKanbanId
+      ? [...recentKanbanId[projectId]].reverse()
       : null;
   const kanbanData = useRecoilValue(kanbanState);
   const urlQueryString = new URLSearchParams(window.location.search);
@@ -74,18 +74,27 @@ export default function RecentKanban() {
     setSearchParams({ kanbanID });
   };
 
-  const handleDelete = () => {};
+  const handleDelete = (event: any, kanbanID: string) => {
+    event?.stopPropagation();
+    const newIds = recentKanbanId[projectId].filter(
+      (id: string) => id !== kanbanID,
+    );
+    setRecentKanbanId((prev: any) => ({
+      ...prev,
+      [projectId]: [...newIds],
+    }));
+  };
 
   return (
     <RecentKanbanContainer>
       <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
       <RecentKanbanList>
-        {reversedUrls === null || reversedUrls.length === 0
+        {reversedIds === null || reversedIds.length === 0
           ? "방문한 칸반이 없습니다."
           : ""}
 
-        {reversedUrls
-          ? reversedUrls.map((kanbanID: string) => (
+        {reversedIds
+          ? reversedIds.map((kanbanID: string) => (
               <KanbanUrlBox
                 $backgroundColor={
                   kanbanData.has(kanbanID)
@@ -100,7 +109,10 @@ export default function RecentKanban() {
                     ? kanbanData.get(kanbanID).name
                     : "제거된 칸반입니다"}
                 </span>
-                <button type="button" onClick={handleDelete}>
+                <button
+                  type="button"
+                  onClick={(event) => handleDelete(event, kanbanID)}
+                >
                   <img src={deleteIcon} alt="삭제" />
                 </button>
               </KanbanUrlBox>
