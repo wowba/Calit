@@ -25,7 +25,7 @@ import {
 } from "../../../components/layout/ProjectModalLayout";
 import CreateKanbanModal from "./CreateKanbanModal";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
-import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
+import fullCalendarDateFormat from "../../../utils/fullCalendarDateFormat";
 import { db } from "../../../firebaseSDK";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
@@ -310,8 +310,8 @@ export default function CalendarModal({ setSearchParams }: Props) {
     const data = [...kanbanDataState];
     const result: EventInput[] = data.map((item) => ({
       id: item[0],
-      start: yearMonthDayFormat(item[1].start_date.seconds),
-      end: yearMonthDayFormat(item[1].end_date.seconds),
+      start: fullCalendarDateFormat(item[1].start_date.seconds),
+      end: fullCalendarDateFormat(item[1].end_date.seconds),
       title: item[1].name,
       backgroundColor: item[1].color,
       textColor: getTextColorByBackgroundColor(item[1].color),
