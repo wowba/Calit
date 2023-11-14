@@ -3,7 +3,6 @@ import styled from "styled-components";
 interface Props {
   $dynamicWidth?: string;
   $dynamicMaxHeight?: string;
-  $dynamicRow?: string;
   $dynamicPadding?: string;
   onBlur: any;
 }
@@ -12,7 +11,6 @@ const CommonTextArea = styled.textarea<Props>`
   width: ${(props) => (props.$dynamicWidth ? props.$dynamicWidth : "100%")};
   max-height: ${(props) =>
     props.$dynamicMaxHeight ? props.$dynamicMaxHeight : "22.5rem"};
-  rows: ${(props) => (props.$dynamicRow ? props.$dynamicRow : "1")};
   padding: ${(props) =>
     props.$dynamicPadding ? props.$dynamicPadding : "0.3rem"};
   overflow: scroll;

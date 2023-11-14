@@ -334,6 +334,7 @@ export default function ProjectMemberModal() {
               초대 대기열
             </div>
             <WaitingList>
+              {invitedList.length === 0 ? "초대된 사람이 없습니다." : ""}
               {invitedList.map((email: string) => (
                 <WaitingContainer key={email}>
                   <WaitingName>{email.split("@")[0]}</WaitingName>
@@ -346,7 +347,7 @@ export default function ProjectMemberModal() {
             <button
               type="button"
               onClick={() => handleCopyClipBoard(projectId)}
-              style={{ fontWeight: 700 }}
+              style={{ fontWeight: 400 }}
             >
               🔗 Copy Link
             </button>

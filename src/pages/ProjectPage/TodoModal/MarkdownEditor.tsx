@@ -14,12 +14,11 @@ const AddUpdateTitle = styled.div`
   margin: 0 0 0.7rem;
 `;
 const UpdateContainer = styled.div`
-  background-color: #eaeaea;
   height: calc(100% - 3.2rem);
   overflow: scroll;
-  padding: 1.2rem 1.2rem 0 1.2rem;
+  padding: 1.2rem 0.5rem 0 0.5rem;
   border-radius: 10px;
-  border: 0.5px solid #eaeaea;
+  border: 0.5px solid white;
   &::-webkit-scrollbar {
     width: 8px;
     overflow-y: scroll;
@@ -70,15 +69,13 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
 
   return (
     <UpdateContainer>
+      <MDEditor
+        // @ts-ignore
+        onChange={setValue}
+        value={value}
+        preview="edit"
+      />
       <AddUpdateTitle>
-        <span
-          style={{
-            fontWeight: "900",
-            fontSize: "0.9rem",
-          }}
-        >
-          업데이트 등록
-        </span>
         <ConfirmBtn
           type="submit"
           onClick={handleSubmit}
@@ -89,19 +86,6 @@ export default function MarkdownEditor({ todoRef, todoDataState }: any) {
           등록
         </ConfirmBtn>
       </AddUpdateTitle>
-
-      {/* @ts-ignore */}
-      <MDEditor value={value} onChange={setValue} preview="edit" />
-      <span
-        style={{
-          fontWeight: "900",
-          // fontSize: "0.9rem",
-          margin: "1.5rem 0 0",
-          display: "inline-block",
-        }}
-      >
-        업데이트 내역
-      </span>
       <UpdateList>
         {todoDataState.update_list.map((updateContent: any, index: number) => (
           <UpdateContentBox
