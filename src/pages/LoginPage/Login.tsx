@@ -21,7 +21,10 @@ const LoginLayout = styled.div`
   align-items: center;
 
   background-image: url(${loginBackground});
-  background-size: 100%;
+  background-size: over;
+  background-repeat: no-repeat;
+
+  box-shadow: inset 0 10rem 10rem -5rem rgba(0, 0, 0, 0.1);
 `;
 
 const LoginLogo = styled(loginLogo)`
@@ -29,32 +32,42 @@ const LoginLogo = styled(loginLogo)`
 `;
 
 const LoginIntroParagraph = styled.p`
-  font-weight: 900;
-  font-size: 1.5rem;
+  font-weight: 700;
+  font-size: 1.25rem;
 
   margin: 0 0 5rem 0;
 `;
 
 const GoogleLoginBtn = styled.button`
+  transition: all 0.5s ease;
+
+  position: fixed;
+
+  bottom: 5rem;
+
   display: flex;
   align-items: center;
   gap: 1rem;
 
-  background-color: #fbf8f1;
+  background-color: ${(props) => props.theme.Color.yellow2};
   padding: 0.5rem 1rem 0.5rem 1rem;
   border-radius: 0.5rem;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.24);
 
   margin: 0 0 2rem 0;
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.yellow1};
+  }
 `;
 
 const GoogleLoginImg = styled.img`
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
 `;
 
 const GoogleLoginText = styled.span`
-  font-weight: 400;
+  font-weight: 600;
   font-size: 1.5rem;
 `;
 
