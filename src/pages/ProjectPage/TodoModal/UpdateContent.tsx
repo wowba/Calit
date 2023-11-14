@@ -30,7 +30,7 @@ const UpdateContent = styled.div`
   margin: 0.5rem 0;
   border-radius: 10px;
   background-color: white;
-  padding: 1rem;
+  padding: 1rem 0;
 `;
 
 const ChangeUpdateModal = styled(CommonSettingModal)`

@@ -18,6 +18,7 @@ import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMem
 import TagSelectLayout from "./TagSelectLayout";
 import ErrorPage from "../../../components/ErrorPage";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
+import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 
 type Props = {
@@ -129,6 +130,7 @@ export default function TodoModal({ isTodoShow }: Props) {
   const [inputTodoName, setInputTodoName] = useState("");
   const [inputTodoInfo, setInputTodoInfo] = useState("");
   const [userList, setUserList] = useState<any[]>([]);
+  const [isUpdateClick, setIsUpdateClick] = useState(false);
 
   useEffect(() => {
     if (!isTodoShow || todoId === "null" || !currentTodo) {
@@ -306,9 +308,23 @@ export default function TodoModal({ isTodoShow }: Props) {
         <div>
           <TodoTopContainer>
             <TodoTitle>업데이트</TodoTitle>
+            <button
+              type="button"
+              onClick={() => {
+                setIsUpdateClick((prev) => !prev);
+              }}
+              style={{ width: "1rem", height: "1rem", margin: "0 1rem 0 0" }}
+            >
+              <img src={icon_plus_circle} alt="투두 업데이트 추가" />
+            </button>
           </TodoTopContainer>
           <Contour />
-          <MarkdownEditor todoRef={todoRef} todoDataState={currentTodo} />
+          <MarkdownEditor
+            todoRef={todoRef}
+            todoDataState={currentTodo}
+            isUpdateClick={isUpdateClick}
+            setIsUpdateClick={setIsUpdateClick}
+          />
         </div>
       </TodoContainer>
     </ProjectModalLayout>
