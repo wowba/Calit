@@ -1,10 +1,10 @@
-/* eslint-disable no-alert */
 import React, { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
 
+import Swal from "sweetalert2";
 import { db } from "../../../firebaseSDK";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
@@ -148,7 +148,11 @@ export default function KanbanModal({ isKanbanShow }: Props) {
         name: inputKanbanName,
       });
     } else {
-      alert("이름을 입력해 주세요");
+      Swal.fire({
+        icon: "error",
+        title: "칸반 이름을 입력해 주세요.",
+        text: "칸반을 빈 이름으로 수정할 수 없습니다.",
+      });
     }
   };
 
@@ -202,9 +206,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
             <KanbanDateParagraph>
               {`${yearMonthDayFormat(
                 currentKanban.start_date.seconds,
-              )} - ${yearMonthDayFormat(
-                currentKanban.end_date.seconds - 60 * 60 * 24,
-              )}`}
+              )} - ${yearMonthDayFormat(currentKanban.end_date.seconds)}`}
             </KanbanDateParagraph>
           </KanbanInfoBox>
           <KanbanProgressBox>

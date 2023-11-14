@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { useSearchParams } from "react-router-dom";
 
 import { collection, onSnapshot, query, where } from "firebase/firestore";
@@ -10,34 +9,14 @@ import TodoModal from "./TodoModal/TodoModal";
 import { db } from "../../firebaseSDK";
 import todoState from "../../recoil/atoms/todo/todoState";
 import {
+  ProjectLayout,
   ProjectModalTabBackground,
   ProjectModalTabBox,
   ProjectModalTabContainer,
   ProjectModalTabText,
+  ProjectLayoutFooter,
 } from "../../components/layout/ProjectModalLayout";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
-
-const ProjectLayout = styled.div`
-  position: relative;
-
-  width: calc(100% - 14rem);
-  height: 100%;
-  padding: 0.75rem 1rem 0 0.5rem;
-`;
-
-const ProjectLayoutFooter = styled.div`
-  position: fixed;
-  z-index: 999;
-  top: calc(100% - 0.6rem);
-
-  /* 사이드바 width 변경시 수정 필요. */
-  width: calc(100% - 15.5rem);
-  height: 0.6rem;
-
-  border-radius: 0 0.6rem 0 0;
-  background-color: #ffea7a;
-  box-shadow: -2px 4px 20px 0px rgba(0, 0, 0, 0.1);
-`;
 
 export default function Project() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -137,7 +116,7 @@ export default function Project() {
       {/* 각 모달 탭 */}
       <ProjectModalTabContainer>
         <ProjectModalTabBox
-          $left={1.5}
+          $left={14.5}
           onClick={handleCalendarTabClick}
           $isShow
         >
@@ -147,7 +126,7 @@ export default function Project() {
           </ProjectModalTabText>
         </ProjectModalTabBox>
         <ProjectModalTabBox
-          $left={10.25}
+          $left={23.5}
           $isShow={isLoaded ? isKanbanShow : true}
           onClick={handleKanbanTabClick}
         >
@@ -156,7 +135,7 @@ export default function Project() {
             Kanban
           </ProjectModalTabText>
         </ProjectModalTabBox>
-        <ProjectModalTabBox $left={19} $isShow={isTodoShow}>
+        <ProjectModalTabBox $left={32.5} $isShow={isTodoShow}>
           <ProjectModalTabBackground $color={todoTabColor} />
           <ProjectModalTabText $top={0.28} $left={3.3}>
             Todo

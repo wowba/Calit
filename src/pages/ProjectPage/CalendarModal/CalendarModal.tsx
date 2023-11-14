@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import {
   DateSelectArg,
@@ -311,7 +310,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
     const result: EventInput[] = data.map((item) => ({
       id: item[0],
       start: fullCalendarDateFormat(item[1].start_date.seconds),
-      end: fullCalendarDateFormat(item[1].end_date.seconds),
+      end: fullCalendarDateFormat(item[1].end_date.seconds + 60 * 60 * 24),
       title: item[1].name,
       backgroundColor: item[1].color,
       textColor: getTextColorByBackgroundColor(item[1].color),
@@ -322,6 +321,8 @@ export default function CalendarModal({ setSearchParams }: Props) {
 
   const handleSelect = (info: DateSelectArg) => {
     const calendarApi = info.view.calendar;
+    const infoEndDate = info.end;
+    infoEndDate.setDate(info.end.getDate() - 1);
     setStartDate(info.start);
     setEndDate(info.end);
     setIsShowCreateKanbanModal(true);
@@ -381,6 +382,9 @@ export default function CalendarModal({ setSearchParams }: Props) {
       "kanban",
       eventInfo.publicId,
     );
+
+    end.setDate(end.getDate() - 1);
+
     await updateDoc(kanbanRef, {
       start_date: start,
       end_date: end,
@@ -403,6 +407,8 @@ export default function CalendarModal({ setSearchParams }: Props) {
       "kanban",
       eventInfo.publicId,
     );
+
+    end.setDate(end.getDate() - 1);
 
     await updateDoc(kanbanRef, {
       end_date: end,

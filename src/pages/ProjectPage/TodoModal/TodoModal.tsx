@@ -3,6 +3,7 @@ import styled, { css, keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
+import Swal from "sweetalert2";
 import { db } from "../../../firebaseSDK";
 import {
   ProjectModalLayout,
@@ -172,8 +173,11 @@ export default function TodoModal({ isTodoShow }: Props) {
       });
     } else {
       // inputTodoName이 없을 때 유효성 검사 통과 못하게
-      // eslint-disable-next-line no-alert
-      alert("제목을 입력해주세요");
+      Swal.fire({
+        icon: "error",
+        title: "투두 제목을 입력해 주세요.",
+        text: "투두를 빈 이름으로 수정할 수 없습니다.",
+      });
     }
   };
 

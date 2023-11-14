@@ -8,20 +8,18 @@ import userData from "../recoil/atoms/login/userDataState";
 import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
 
 // 헤더 아이콘
-import logout from "../assets/headerIcon/logout.svg";
-
-// 모달 아이콘
-import memberIcon from "../assets/icons/headerMemberIcon.svg";
-import bookmarkIcon from "../assets/icons/headerBookmarkIcon.svg";
-import tutorialIcon from "../assets/icons/headerInfoIcon.svg";
-// import logIcon from "../assets/icons/headerBellIcon.svg";
+import logoutIcon from "../assets/headerIcon/logout.svg";
+import tutorialIcon from "../assets/headerIcon/tutorial.svg";
+import bookmarkIcon from "../assets/headerIcon/bookmark.svg";
+import memberIcon from "../assets/headerIcon/member.svg";
+// import logIcon from "../assets/headerIcon/log.svg"
 
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
 import BookMark from "./modal/BookMarkModal";
 import Tutorial from "./modal/TutorialModal";
-// import Log from "./modal/LogModal";
 import UserProfile from "./modal/UserProfileModal";
+// import Log from "./modal/LogModal";
 
 // 모달 공통 컴포넌트
 import ModalCommon from "./layout/ModalCommonLayout";
@@ -69,13 +67,13 @@ const HeaderLogo = styled(headerLogo)`
 const modals = [
   {
     key: "member",
-    icon: <img style={{ width: "1.5rem" }} src={memberIcon} alt="modalIcon" />,
+    icon: <img style={{ height: "1.5rem" }} src={memberIcon} alt="modalIcon" />,
     content: <ProjectMember />,
   },
   {
     key: "bookmark",
     icon: (
-      <img style={{ width: "1.5rem" }} src={bookmarkIcon} alt="modalIcon" />
+      <img style={{ height: "1.5rem" }} src={bookmarkIcon} alt="modalIcon" />
     ),
     content: <BookMark />,
   },
@@ -108,7 +106,7 @@ const listPageModals = [
   },
   {
     key: "logout",
-    icon: <img style={{ width: "1.5rem" }} src={logout} alt="logout" />,
+    icon: <img style={{ width: "1.5rem" }} src={logoutIcon} alt="logout" />,
     content: null,
   },
 ];
