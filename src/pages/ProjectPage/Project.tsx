@@ -10,9 +10,7 @@ import { db } from "../../firebaseSDK";
 import todoState from "../../recoil/atoms/todo/todoState";
 import {
   ProjectLayout,
-  ProjectModalTabBackground,
   ProjectModalTabBox,
-  ProjectModalTabContainer,
   ProjectModalTabText,
   ProjectLayoutFooter,
 } from "../../components/layout/ProjectModalLayout";
@@ -28,15 +26,26 @@ export default function Project() {
   const [isLoaded, setIsLoaded] = useRecoilState(todoLoaded);
 
   let calendarTabColor = "#FFD43B";
-  let kanbanTabColor = "#ffea7a";
-  let todoTabColor = "#ffea7a";
+  let calendarTextColor = "white";
+
+  let kanbanTabColor = "transparent";
+  let kanbanTextColor = "#FFD43B";
+
+  let todoTabColor = "transparent";
+  let todoTextColor = "#FFD43B";
 
   if (searchParams.has("kanbanID")) {
-    calendarTabColor = "#ffea7a";
+    calendarTabColor = "transparent";
+    calendarTextColor = "#FFD43B";
+
     kanbanTabColor = "#FFD43B";
+    kanbanTextColor = "white";
     if (searchParams.has("todoID")) {
       todoTabColor = "#FFD43B";
-      kanbanTabColor = "#ffea7a";
+      todoTextColor = "white";
+
+      kanbanTabColor = "transparent";
+      kanbanTextColor = "#FFD43B";
     }
   }
 
@@ -114,34 +123,35 @@ export default function Project() {
   return (
     <ProjectLayout>
       {/* 각 모달 탭 */}
-      <ProjectModalTabContainer>
-        <ProjectModalTabBox
-          $left={14.5}
-          onClick={handleCalendarTabClick}
-          $isShow
-        >
-          <ProjectModalTabBackground $color={calendarTabColor} />
-          <ProjectModalTabText $top={0.28} $left={2.5}>
-            Calender
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
-        <ProjectModalTabBox
-          $left={23.5}
-          $isShow={isLoaded ? isKanbanShow : true}
-          onClick={handleKanbanTabClick}
-        >
-          <ProjectModalTabBackground $color={kanbanTabColor} />
-          <ProjectModalTabText $top={0.28} $left={2.8}>
-            Kanban
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
-        <ProjectModalTabBox $left={32.5} $isShow={isTodoShow}>
-          <ProjectModalTabBackground $color={todoTabColor} />
-          <ProjectModalTabText $top={0.28} $left={3.3}>
-            Todo
-          </ProjectModalTabText>
-        </ProjectModalTabBox>
-      </ProjectModalTabContainer>
+      <ProjectModalTabBox
+        $left={14.5}
+        onClick={handleCalendarTabClick}
+        $isShow
+        $color={calendarTabColor}
+      >
+        <ProjectModalTabText $top={0.28} $left={2.5} $color={calendarTextColor}>
+          Calender
+        </ProjectModalTabText>
+      </ProjectModalTabBox>
+      <ProjectModalTabBox
+        $left={24}
+        $isShow={isLoaded ? isKanbanShow : true}
+        onClick={handleKanbanTabClick}
+        $color={kanbanTabColor}
+      >
+        <ProjectModalTabText $top={0.28} $left={2.8} $color={kanbanTextColor}>
+          Kanban
+        </ProjectModalTabText>
+      </ProjectModalTabBox>
+      <ProjectModalTabBox
+        $left={33.5}
+        $isShow={isTodoShow}
+        $color={todoTabColor}
+      >
+        <ProjectModalTabText $top={0.28} $left={3.3} $color={todoTextColor}>
+          Todo
+        </ProjectModalTabText>
+      </ProjectModalTabBox>
 
       {/* 캘린더 */}
       <CalendarModal setSearchParams={setSearchParams} />

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { doc, updateDoc } from "firebase/firestore";
@@ -21,28 +21,10 @@ import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
 import LoadingPage from "../../../components/LoadingPage";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
-const boxShadowAnimationDown = keyframes`
-  0% {
-    box-shadow: none;
-  }
-  20% {
-    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
-  }
-  70% {
-    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
-  }
-  100% {
-    box-shadow: none;
-  }
-`;
-
 const KanbanContainer = styled(ProjectModalContentBox)<{
   $isKanbanShow: boolean;
 }>`
   padding: 2rem 2rem 0.5rem 2rem;
-  animation: ${(props) =>
-      props.$isKanbanShow ? "none" : boxShadowAnimationDown}
-    1s alternate;
 `;
 
 const KanbanInfoLayout = styled.div`
