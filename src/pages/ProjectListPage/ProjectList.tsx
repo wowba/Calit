@@ -12,15 +12,13 @@ import ProjectListIcon from "../../assets/logo/ProjectlistLogo.svg";
 const ProjectListTitle = styled.div`
   font-size: 2rem;
   font-weight: 900;
-  > img {
-    scale: 85%;
-  }
+
+  margin: 0 0 0 1.25rem;
 `;
 const ProjectListContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(33%, auto));
+  grid-template-columns: repeat(3, 1fr);
   margin: 20px 0px;
-  justify-items: stretch;
 `;
 
 const Footer = styled.div`
