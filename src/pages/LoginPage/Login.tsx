@@ -86,6 +86,7 @@ export default function Login() {
             project_list: [],
             profile_img_URL: user.photoURL,
             email: user.email,
+            name: user.displayName,
             is_deleted: false,
           });
         }
