@@ -42,7 +42,7 @@ export default function InvitationBtn() {
         onKeyDown={handleEnterPress}
         style={{
           width: isClicked ? "100%" : "0",
-          height: "2rem",
+          height: "2.3rem",
           maxWidth: "250px",
           padding: "0.2rem 0.5rem",
           margin: "0 0 0 0.5rem",
