@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { ReactComponent as ProjectModalTabSVG } from "../../assets/ProjectModalTab.svg";
+import { ReactComponent as ProjectModalTabSVG } from "../../assets/images/projectModalTab.svg";
 
 const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
   transition: all 1s ease;
@@ -77,7 +77,7 @@ const ProjectModalContentBox = styled.div<Props>`
   height: 100%;
 
   background-color: white;
-  border-radius: 0.6rem 0.6rem 0 0;
+  border-radius: 0 0.6rem 0 0;
   overflow: scroll;
   transition: box-shadow 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
   -ms-overflow-style: none;
