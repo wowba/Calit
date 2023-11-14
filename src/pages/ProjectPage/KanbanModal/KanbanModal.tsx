@@ -211,7 +211,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
           </KanbanInfoBox>
           <KanbanProgressBox>
             <KanbanProgress value={progress[1]} max={progress[0]} />
-            {progress[1]} / {progress[0]}
+            {progress[0] ? Math.floor((progress[1] / progress[0]) * 100) : 0}%
           </KanbanProgressBox>
         </KanbanInfoLayout>
         <KanbanStageBox
