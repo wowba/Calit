@@ -382,6 +382,9 @@ export default function CalendarModal({ setSearchParams }: Props) {
       "kanban",
       eventInfo.publicId,
     );
+
+    end.setDate(end.getDate() - 1);
+
     await updateDoc(kanbanRef, {
       start_date: start,
       end_date: end,
@@ -404,6 +407,8 @@ export default function CalendarModal({ setSearchParams }: Props) {
       "kanban",
       eventInfo.publicId,
     );
+
+    end.setDate(end.getDate() - 1);
 
     await updateDoc(kanbanRef, {
       end_date: end,
