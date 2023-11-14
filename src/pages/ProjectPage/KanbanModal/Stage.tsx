@@ -1,10 +1,10 @@
-/* eslint-disable no-alert */
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/react-in-jsx-scope */
 import styled from "styled-components";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
+import Swal from "sweetalert2";
 
 import { useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
@@ -142,15 +142,27 @@ function Stage({
         stage_list: updatedStageList,
       });
     } else {
-      alert("이름을 입력해 주세요");
+      Swal.fire({
+        icon: "error",
+        title: "스테이지 이름을 입력해 주세요.",
+        text: "스테이지를 빈 이름으로 수정할 수 없습니다.",
+      });
     }
   };
 
   const handleStageDeleteBtnClick = async () => {
     if (todos.length > 0) {
-      alert("투두가 존재하는 스테이지는 삭제할 수 없습니다.");
+      Swal.fire({
+        icon: "error",
+        title: "스테이지를 삭제할 수 없습니다.",
+        text: "투두가 존재하는 스테이지는 삭제할 수 없습니다.",
+      });
     } else if (stage.id === "default-3") {
-      alert("완료 확인 스테이지는 삭제할 수 없습니다.");
+      Swal.fire({
+        icon: "error",
+        title: "스테이지를 삭제할 수 없습니다.",
+        text: "완료 확인 스테이지는 삭제할 수 없습니다.",
+      });
     } else {
       const updatedStageList: {
         id: string;

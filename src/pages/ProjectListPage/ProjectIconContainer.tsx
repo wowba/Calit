@@ -8,17 +8,18 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import Swal from "sweetalert2";
 import { db, storage } from "../../firebaseSDK";
 import userState from "../../recoil/atoms/login/userDataState";
 import settingIcon from "../../assets/icons/settingIcon.svg";
 import linkIcon from "../../assets/icons/linkIcon.svg";
 import pictureIcon from "../../assets/icons/pictureIcon.svg";
 import trashIcon from "../../assets/icons/trashIcon.svg";
-import DeleteModal from "./DeleteModal";
 import deleteStorageImg from "../../utils/deleteStorageImg";
 import handleCopyClipBoard from "../../utils/handleCopyClipBoard";
 import CommonSettingModal from "../../components/layout/CommonSettingModal";
+import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 
 const Container = styled.div`
   display: flex;
@@ -64,7 +65,7 @@ export default function ProjectIconContainer({
   const [isOpened, setIsOpened] = useState(false);
   const { email } = useRecoilValue(userState).userData;
   const [isQualifed, setIsQualifed] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
 
   const docRef = doc(db, "project", projectId);
 
@@ -94,8 +95,11 @@ export default function ProjectIconContainer({
       const maxSize = 5 * 1024 * 1024; // 5MB 제한
       const fileSize = imgFile.size;
       if (fileSize > maxSize) {
-        // eslint-disable-next-line
-        alert("5mb 이하의 이미지만 업로드 가능합니다.");
+        Swal.fire({
+          icon: "error",
+          title: "이미지를 다시 업로드해주세요.",
+          text: "5mb 이하의 이미지만 업로드 가능합니다.",
+        });
         return;
       }
     }
@@ -117,45 +121,63 @@ export default function ProjectIconContainer({
   };
 
   const handleOpen = () => {
-    setOpenModal(true);
+    // 프로젝트 삭제 알림
+    Swal.fire({
+      title: "프로젝트를 삭제하시겠습니까?",
+      icon: "warning",
+
+      showCancelButton: true,
+      confirmButtonColor: "#ee6a6a",
+      confirmButtonText: "삭제",
+      cancelButtonColor: "lightgray",
+      cancelButtonText: "취소",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "프로젝트가 삭제되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
+
+        // 최근 칸반 목록 초기화
+        const newRecentList = { ...recentKanbanId };
+        delete newRecentList[projectId];
+        setRecentKanbanId(newRecentList);
+        //   논리적 삭제
+        await updateDoc(docRef, {
+          is_deleted: true,
+        });
+        fetchProjectData();
+      }
+    });
   };
 
   return (
-    <>
-      <Container>
-        <LinkIcon
-          src={linkIcon}
-          alt="공유"
-          onClick={() => handleCopyClipBoard(projectId)}
-        />
-        {isQualifed && (
-          <SettingIcon src={settingIcon} alt="설정" onClick={handleClick} />
-        )}
-        {isOpened && (
-          <ChangeComponentModal $upArrow $dynamicChildMargin="0.01rem">
-            <label htmlFor="file-input">
-              <ChangeIcon src={pictureIcon} alt="변경" />
-              {}
-              <ChangePicInput
-                id="file-input"
-                type="file"
-                accept="image/"
-                onChange={handleBgImg}
-              />
-            </label>
-
-            <DeleteIcon src={trashIcon} alt="삭제" onClick={handleOpen} />
-          </ChangeComponentModal>
-        )}
-      </Container>
-      {openModal && (
-        <DeleteModal
-          projectId={projectId}
-          openModal={openModal}
-          setOpenModal={setOpenModal}
-          fetchProjectData={fetchProjectData}
-        />
+    <Container>
+      <LinkIcon
+        src={linkIcon}
+        alt="공유"
+        onClick={() => handleCopyClipBoard(projectId)}
+      />
+      {isQualifed && (
+        <SettingIcon src={settingIcon} alt="설정" onClick={handleClick} />
       )}
-    </>
+      {isOpened && (
+        <ChangeComponentModal $upArrow $dynamicChildMargin="0.01rem">
+          <label htmlFor="file-input">
+            <ChangeIcon src={pictureIcon} alt="변경" />
+            {}
+            <ChangePicInput
+              id="file-input"
+              type="file"
+              accept="image/"
+              onChange={handleBgImg}
+            />
+          </label>
+
+          <DeleteIcon src={trashIcon} alt="삭제" onClick={handleOpen} />
+        </ChangeComponentModal>
+      )}
+    </Container>
   );
 }
