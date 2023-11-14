@@ -310,7 +310,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
     const result: EventInput[] = data.map((item) => ({
       id: item[0],
       start: yearMonthDayFormat(item[1].start_date.seconds),
-      end: yearMonthDayFormat(item[1].end_date.seconds),
+      end: yearMonthDayFormat(item[1].end_date.seconds + 60 * 60 * 24),
       title: item[1].name,
       backgroundColor: item[1].color,
       textColor: getTextColorByBackgroundColor(item[1].color),
@@ -321,6 +321,8 @@ export default function CalendarModal({ setSearchParams }: Props) {
 
   const handleSelect = (info: DateSelectArg) => {
     const calendarApi = info.view.calendar;
+    const infoEndDate = info.end;
+    infoEndDate.setDate(info.end.getDate() - 1);
     setStartDate(info.start);
     setEndDate(info.end);
     setIsShowCreateKanbanModal(true);

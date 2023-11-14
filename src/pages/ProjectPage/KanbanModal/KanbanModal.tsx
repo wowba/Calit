@@ -202,9 +202,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
             <KanbanDateParagraph>
               {`${yearMonthDayFormat(
                 currentKanban.start_date.seconds,
-              )} - ${yearMonthDayFormat(
-                currentKanban.end_date.seconds - 60 * 60 * 24,
-              )}`}
+              )} - ${yearMonthDayFormat(currentKanban.end_date.seconds)}`}
             </KanbanDateParagraph>
           </KanbanInfoBox>
           <KanbanProgressBox>
