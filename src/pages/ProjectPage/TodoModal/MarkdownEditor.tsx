@@ -14,7 +14,6 @@ const AddUpdateTitle = styled.div`
   margin: 0 0 0.7rem;
 `;
 const UpdateContainer = styled.div`
-  background-color: white;
   height: calc(100% - 3.2rem);
   overflow: scroll;
   padding: 1.2rem 0.5rem 0 0.5rem;
