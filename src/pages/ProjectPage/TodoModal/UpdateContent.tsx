@@ -17,20 +17,17 @@ const UpdateListHeader = styled.div`
 `;
 const ManagedUser = styled.div`
   display: flex;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
 `;
 const SettingContainer = styled.div`
   display: flex;
   position: relative;
 `;
 
-const Contour = styled.div`
-  background-color: #eaeaea;
-  height: 0.1rem;
-  border-radius: 1px;
-  margin: 0.5rem auto;
-`;
 const UpdateContent = styled.div`
-  margin: 1rem 0 1rem;
+  margin: 0.5rem 0;
   border-radius: 10px;
   background-color: white;
   padding: 1rem;
@@ -114,7 +111,9 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           {data.writer}
         </ManagedUser>
         <SettingContainer>
-          <span>{yearMonthDayFormat(data.created_date.seconds)}</span>
+          <span style={{ fontSize: "0.8rem", color: "gray" }}>
+            {yearMonthDayFormat(data.created_date.seconds)}
+          </span>
           <button
             type="button"
             onClick={() => setIsSettingOpened(!isSettingOpened)}
@@ -150,7 +149,6 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           )}
         </SettingContainer>
       </UpdateListHeader>
-      <Contour />
       {isEditing ? (
         <MDEditor
           value={markdownContent}
