@@ -1,7 +1,5 @@
 import styled, { css } from "styled-components";
 
-import { ReactComponent as ProjectModalTabSVG } from "../../assets/images/projectModalTab.svg";
-
 const ProjectLayout = styled.div`
   position: relative;
 
@@ -26,50 +24,42 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
     `};
 `;
 
-const ProjectModalTabContainer = styled.div`
-  display: flex;
-`;
-
 const ProjectModalTabBox = styled.div<{
   $left: number;
+  $color: string;
   $isShow?: boolean;
 }>`
-  transition: all 1s ease;
+  transition: 0.5s ease;
+  transition-property: background-color;
   z-index: 998;
 
   width: 9rem;
+  height: 2rem;
+
+  border-radius: 1rem;
+  background-color: ${(props) => `${props.$color}`};
+
   position: fixed;
   left: ${(props) => `${props.$left}rem`};
 
-  top: 3.75rem;
-  ${(props) =>
-    !props.$isShow &&
-    css`
-      top: calc(100% - 2.5rem);
-    `};
+  top: 3.4rem;
 
   &:hover {
     cursor: pointer;
-    > svg {
-      fill: ${(props) =>
-        props.$isShow
-          ? props.theme.Color.yellow1
-          : props.theme.Color.btnColor2};
+    background-color: ${(props) =>
+      props.$isShow ? props.theme.Color.yellow1 : props.theme.Color.btnColor2};
+
+    > span {
+      color: white;
     }
   }
 `;
 
-const ProjectModalTabBackground = styled(ProjectModalTabSVG)<{
+const ProjectModalTabText = styled.span<{
+  $top: number;
+  $left: number;
   $color: string;
 }>`
-  transition: all 0.2s ease;
-
-  width: 9rem;
-  height: 2rem;
-  fill: ${(props) => `${props.$color}`};
-`;
-
-const ProjectModalTabText = styled.span<{ $top: number; $left: number }>`
   position: absolute;
   top: ${(props) => `${props.$top}rem`};
   left: ${(props) => `${props.$left}rem`};
@@ -77,6 +67,8 @@ const ProjectModalTabText = styled.span<{ $top: number; $left: number }>`
   font-size: ${(props) => props.theme.Fs.size16};
   font-weight: 800;
   scale: 1.1;
+
+  color: ${(props) => props.$color};
 `;
 interface Props {
   $isKanbanOrTodoShow?: boolean;
@@ -110,10 +102,8 @@ const ProjectLayoutFooter = styled.div`
 export {
   ProjectLayout,
   ProjectModalLayout,
-  ProjectModalTabContainer,
   ProjectModalTabBox,
   ProjectModalTabText,
-  ProjectModalTabBackground,
   ProjectModalContentBox,
   ProjectLayoutFooter,
 };

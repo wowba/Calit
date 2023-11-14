@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, KeyboardEvent } from "react";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
@@ -24,21 +24,6 @@ type Props = {
   isTodoShow: boolean;
 };
 
-const boxShadowAnimation = keyframes`
-  0% {
-    box-shadow: none;
-  }
-  40% {
-    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
-  }
-  70% {
-    box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.1);
-  }
-  100% {
-    box-shadow: none;
-  }
-`;
-
 // 스타일
 const TodoContainer = styled(ProjectModalContentBox)<{
   $isTodoShow: boolean;
@@ -47,11 +32,6 @@ const TodoContainer = styled(ProjectModalContentBox)<{
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
-  ${(props) =>
-    !props.$isTodoShow &&
-    css`
-      animation: ${boxShadowAnimation} 1s forwards;
-    `}
 `;
 const TodoTopContainer = styled.div`
   display: flex;
