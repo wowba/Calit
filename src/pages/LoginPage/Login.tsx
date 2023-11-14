@@ -24,7 +24,7 @@ const LoginLayout = styled.div`
   background-size: over;
   background-repeat: no-repeat;
 
-  box-shadow: inset 0 10rem 10rem -5rem rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 6rem 6rem -5rem rgba(0, 0, 0, 0.1);
 `;
 
 const LoginLogo = styled(loginLogo)`
@@ -32,7 +32,7 @@ const LoginLogo = styled(loginLogo)`
 `;
 
 const LoginIntroParagraph = styled.p`
-  font-weight: 700;
+  font-weight: 900;
   font-size: 1.25rem;
 
   margin: 0 0 5rem 0;
