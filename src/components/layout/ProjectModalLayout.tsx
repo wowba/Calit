@@ -5,7 +5,7 @@ const ProjectLayout = styled.div`
 
   width: calc(100% - 14rem);
   height: 100%;
-  padding: 0.75rem 1rem 0 0.5rem;
+  padding: 0.75rem 1rem 0 0;
 `;
 
 const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
@@ -13,15 +13,18 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
 
   // 헤더 및 사이드바 CSS 변경시 width, height 수정 요망
-  width: calc(100% - 15.5rem);
-  height: calc(100% - 5.5rem);
+  width: calc(100% - 16rem);
+  height: calc(100% - 7rem);
 
-  top: calc(5.75rem);
+  top: calc(7rem);
   ${(props) =>
     !props.$isShow &&
     css`
-      top: calc(100% - 0.6rem);
+      top: 100%;
     `};
+
+  border-radius: 0.6rem;
+  border: 1.5px solid ${(props) => props.theme.Color.borderColor};
 `;
 
 const ProjectModalTabBox = styled.div<{
@@ -42,12 +45,14 @@ const ProjectModalTabBox = styled.div<{
   position: fixed;
   left: ${(props) => `${props.$left}rem`};
 
-  top: 3.4rem;
+  top: 4.1rem;
 
   &:hover {
     cursor: pointer;
     background-color: ${(props) =>
-      props.$isShow ? props.theme.Color.yellow1 : props.theme.Color.btnColor2};
+      props.$isShow
+        ? props.theme.Color.mainColor1
+        : props.theme.Color.btnColor2};
 
     > span {
       color: white;
@@ -64,8 +69,8 @@ const ProjectModalTabText = styled.span<{
   top: ${(props) => `${props.$top}rem`};
   left: ${(props) => `${props.$left}rem`};
 
-  font-size: ${(props) => props.theme.Fs.size16};
-  font-weight: 800;
+  font-size: ${(props) => props.theme.Fs.size20};
+  font-weight: 900;
   scale: 1.1;
 
   color: ${(props) => props.$color};
@@ -73,30 +78,17 @@ const ProjectModalTabText = styled.span<{
 interface Props {
   $isKanbanOrTodoShow?: boolean;
 }
+
 const ProjectModalContentBox = styled.div<Props>`
   height: 100%;
 
-  background-color: white;
-  border-radius: 0 0.6rem 0 0;
+  background-color: ${(props) => props.theme.Color.backgroundColor2};
+  border-radius: 0.6rem;
   overflow: scroll;
-  transition: box-shadow 0.8s cubic-bezier(0.075, 0.82, 0.165, 1);
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
   }
-`;
-
-const ProjectLayoutFooter = styled.div`
-  position: fixed;
-  z-index: 999;
-  top: calc(100% - 0.6rem);
-
-  /* 사이드바 width 변경시 수정 필요. */
-  width: calc(100% - 15.5rem);
-  height: 0.6rem;
-
-  border-radius: 0 0.6rem 0 0;
-  background-color: #ffea7a;
 `;
 
 export {
@@ -105,5 +97,4 @@ export {
   ProjectModalTabBox,
   ProjectModalTabText,
   ProjectModalContentBox,
-  ProjectLayoutFooter,
 };

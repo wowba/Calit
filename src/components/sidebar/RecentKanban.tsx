@@ -15,7 +15,8 @@ const RecentKanbanContainer = styled.div`
 `;
 const RecentKanbanTitle = styled.div`
   font-weight: 900;
-  margin: 1rem 0;
+  font-size: 1.5rem;
+  margin: 0 0 0.25rem 0;
 `;
 
 const RecentKanbanList = styled.div`
@@ -89,7 +90,7 @@ export default function RecentKanban() {
 
   return (
     <RecentKanbanContainer>
-      <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
+      <RecentKanbanTitle>Recent Kanban</RecentKanbanTitle>
       <RecentKanbanList>
         {reversedIds === null || reversedIds.length === 0
           ? "방문한 칸반이 없습니다."

@@ -23,7 +23,7 @@ const ProjectListContainer = styled.div`
 
 const Footer = styled.div`
   width: 100%;
-  background-color: white;
+  background-color: ${(props) => props.theme.Color.backgroundColor1};
   height: 7rem;
 `;
 

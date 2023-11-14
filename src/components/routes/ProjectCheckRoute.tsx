@@ -27,7 +27,7 @@ import { createUser } from "../../api/CreateCollection";
 
 const ProjectLayout = styled.div`
   display: flex;
-  height: calc(100% - 4rem);
+  height: calc(100% - 3rem);
 `;
 
 export default function ProjectCheckRoute() {
