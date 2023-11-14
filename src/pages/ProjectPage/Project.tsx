@@ -12,7 +12,6 @@ import {
   ProjectLayout,
   ProjectModalTabBox,
   ProjectModalTabText,
-  ProjectLayoutFooter,
 } from "../../components/layout/ProjectModalLayout";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 
@@ -25,27 +24,27 @@ export default function Project() {
 
   const [isLoaded, setIsLoaded] = useRecoilState(todoLoaded);
 
-  let calendarTabColor = "#FFD43B";
+  let calendarTabColor = "#FF7A00";
   let calendarTextColor = "white";
 
   let kanbanTabColor = "transparent";
-  let kanbanTextColor = "#FFD43B";
+  let kanbanTextColor = "#FF7A00";
 
   let todoTabColor = "transparent";
-  let todoTextColor = "#FFD43B";
+  let todoTextColor = "#FF7A00";
 
   if (searchParams.has("kanbanID")) {
     calendarTabColor = "transparent";
-    calendarTextColor = "#FFD43B";
+    calendarTextColor = "#FF7A00";
 
-    kanbanTabColor = "#FFD43B";
+    kanbanTabColor = "#FF7A00";
     kanbanTextColor = "white";
     if (searchParams.has("todoID")) {
-      todoTabColor = "#FFD43B";
+      todoTabColor = "#FF7A00";
       todoTextColor = "white";
 
       kanbanTabColor = "transparent";
-      kanbanTextColor = "#FFD43B";
+      kanbanTextColor = "#FF7A00";
     }
   }
 
@@ -124,31 +123,27 @@ export default function Project() {
     <ProjectLayout>
       {/* 각 모달 탭 */}
       <ProjectModalTabBox
-        $left={14.5}
+        $left={15}
         onClick={handleCalendarTabClick}
         $isShow
         $color={calendarTabColor}
       >
-        <ProjectModalTabText $top={0.28} $left={2.5} $color={calendarTextColor}>
+        <ProjectModalTabText $top={0.05} $left={2} $color={calendarTextColor}>
           Calender
         </ProjectModalTabText>
       </ProjectModalTabBox>
       <ProjectModalTabBox
-        $left={24}
+        $left={24.5}
         $isShow={isLoaded ? isKanbanShow : true}
         onClick={handleKanbanTabClick}
         $color={kanbanTabColor}
       >
-        <ProjectModalTabText $top={0.28} $left={2.8} $color={kanbanTextColor}>
+        <ProjectModalTabText $top={0.05} $left={2.3} $color={kanbanTextColor}>
           Kanban
         </ProjectModalTabText>
       </ProjectModalTabBox>
-      <ProjectModalTabBox
-        $left={33.5}
-        $isShow={isTodoShow}
-        $color={todoTabColor}
-      >
-        <ProjectModalTabText $top={0.28} $left={3.3} $color={todoTextColor}>
+      <ProjectModalTabBox $left={34} $isShow={isTodoShow} $color={todoTabColor}>
+        <ProjectModalTabText $top={0.05} $left={3.1} $color={todoTextColor}>
           Todo
         </ProjectModalTabText>
       </ProjectModalTabBox>
@@ -159,7 +154,6 @@ export default function Project() {
       <KanbanModal isKanbanShow={isKanbanShow} />
       {/* 투두 */}
       <TodoModal isTodoShow={isTodoShow} />
-      <ProjectLayoutFooter />
     </ProjectLayout>
   );
 }

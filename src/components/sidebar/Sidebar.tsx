@@ -15,23 +15,22 @@ const SidebarLayout = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  width: 14rem;
+  width: 15rem;
   height: 100%;
 
-  padding: 1rem 1.25rem 1.25rem 1.25rem;
+  padding: 4rem 1.25rem 1.25rem 1.25rem;
 `;
 
 const ProjectInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 1.75rem 0 0 0;
 `;
 
 const ProjectTitleParagraph = styled.p`
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 900;
-  margin: 0.5rem;
+  margin: 0.25rem 0 2.8rem 0;
 `;
 
 const ProjectProfileImg = styled.img`
@@ -39,13 +38,6 @@ const ProjectProfileImg = styled.img`
   height: 7rem;
   object-fit: cover;
   border-radius: 0.5rem;
-`;
-
-const Line = styled.div`
-  height: 1.5px;
-  width: 100%;
-  background-color: #cacaca;
-  border-radius: 5px;
 `;
 
 const TrashBoxBtn = styled.div`
@@ -61,9 +53,8 @@ const TrashBoxBtn = styled.div`
 
   width: 11.5rem;
   height: 2.3rem;
-  background-color: ${(props) => props.theme.Color.yellow2};
+  background-color: ${(props) => props.theme.Color.mainColor1};
   &:hover {
-    background-color: ${(props) => props.theme.Color.yellow1};
     cursor: pointer;
   }
 
@@ -165,7 +156,6 @@ export default function Sidebar() {
             alt="Project Profile Img"
           />
           <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
-          <Line />
         </ProjectInfoBox>
         <RecentKanban />
       </div>

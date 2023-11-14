@@ -10,7 +10,7 @@ const GlobalStyle = createGlobalStyle`
   /* css reset */
   *{margin:0;padding:0;font:inherit;color:inherit;}
   *, :after, :before {box-sizing:border-box;}
-  :root {-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;cursor:default;line-height:1.5;overflow-wrap:break-word;word-break:break-word;tab-size:4}
+  :root {-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;text-size-adjust:100%;cursor:default;line-height:1.5;overflow-wrap:break-word;word-break:break-word;tab-size:4;background-color:#F9F9F9}
   html, body, #root {height:100%;}
   img, picture, video, canvas, svg {display: block;max-width:100%;}
   button {background:none;border:0;cursor:pointer;}
@@ -34,6 +34,13 @@ const GlobalStyle = createGlobalStyle`
 
 const theme = {
   Color: {
+    mainColor1: "#FF7A00",
+
+    backgroundColor1: "#F9F9F9",
+    backgroundColor2: "#FCFCFC",
+
+    borderColor: "#D9D9D9",
+
     btnColor1: "#ee6a6a",
     btnColor2: "#d0d0d0",
     btnHoverColor1: "#D05f5f",

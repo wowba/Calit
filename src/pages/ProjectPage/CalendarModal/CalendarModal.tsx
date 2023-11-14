@@ -34,7 +34,7 @@ import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const CalendarBox = styled.div`
   height: 100%;
-  padding: 0 1rem 1.6rem 1rem;
+  padding: 0 1rem 1rem 1rem;
 
   // FullCalendar 라이브러리 디자인
   .fc {
@@ -527,7 +527,6 @@ export default function CalendarModal({ setSearchParams }: Props) {
     <ProjectModalLayout $isShow>
       <ProjectModalContentBox
         style={{
-          boxShadow: " 0px 0px 25px 5px rgba(0, 0, 0, 0.1)",
           position: "relative",
         }}
       >
