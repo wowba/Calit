@@ -51,13 +51,15 @@ const Line = styled.div`
 const TrashBoxBtn = styled.div`
   transition: all 0.2s;
 
-  position: relative;
+  position: fixed;
 
   display: flex;
   justify-content: center;
   align-items: center;
 
-  width: 100%;
+  top: calc(100% - 3.3rem);
+
+  width: 11.5rem;
   height: 2.3rem;
   background-color: ${(props) => props.theme.Color.yellow2};
   &:hover {

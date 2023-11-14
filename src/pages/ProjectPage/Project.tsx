@@ -136,18 +136,14 @@ export default function Project() {
     <ProjectLayout>
       {/* 각 모달 탭 */}
       <ProjectModalTabContainer>
-        <ProjectModalTabBox
-          $left={1.5}
-          onClick={handleCalendarTabClick}
-          $isShow
-        >
+        <ProjectModalTabBox $left={16} onClick={handleCalendarTabClick} $isShow>
           <ProjectModalTabBackground $color={calendarTabColor} />
           <ProjectModalTabText $top={0.28} $left={2.5}>
             Calender
           </ProjectModalTabText>
         </ProjectModalTabBox>
         <ProjectModalTabBox
-          $left={10.25}
+          $left={24.75}
           $isShow={isLoaded ? isKanbanShow : true}
           onClick={handleKanbanTabClick}
         >
@@ -156,7 +152,7 @@ export default function Project() {
             Kanban
           </ProjectModalTabText>
         </ProjectModalTabBox>
-        <ProjectModalTabBox $left={19} $isShow={isTodoShow}>
+        <ProjectModalTabBox $left={33.5} $isShow={isTodoShow}>
           <ProjectModalTabBackground $color={todoTabColor} />
           <ProjectModalTabText $top={0.28} $left={3.3}>
             Todo
