@@ -2,12 +2,10 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-
 import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
-import deleteIcon from "../../assets/icons/closeIcon.svg";
-import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
+import deleteIcon from "../../assets/icons/Cross.svg";
 
 const RecentKanbanContainer = styled.div`
   margin: 1px;
@@ -15,8 +13,7 @@ const RecentKanbanContainer = styled.div`
 `;
 const RecentKanbanTitle = styled.div`
   font-weight: 900;
-  font-size: 1.5rem;
-  margin: 0 0 0.25rem 0;
+  margin: 1rem 0;
 `;
 
 const RecentKanbanList = styled.div`
@@ -33,7 +30,7 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
   border-radius: 5px;
   width: 100%;
   margin: 3px 0px;
-  padding: 0.3rem 0.5rem;
+  padding: 8px 10px;
   transition: all 0.3s ease-in-out;
   background-color: ${(props) => props.$backgroundColor};
   cursor: pointer;
@@ -90,7 +87,7 @@ export default function RecentKanban() {
 
   return (
     <RecentKanbanContainer>
-      <RecentKanbanTitle>Recent Kanban</RecentKanbanTitle>
+      <RecentKanbanTitle>💫 Recent Kanban</RecentKanbanTitle>
       <RecentKanbanList>
         {reversedIds === null || reversedIds.length === 0
           ? "방문한 칸반이 없습니다."
@@ -102,22 +99,12 @@ export default function RecentKanban() {
                 $backgroundColor={
                   kanbanData.has(kanbanID)
                     ? kanbanData.get(kanbanID).color
-                    : "gray"
+                    : "#B0B0B0"
                 }
                 key={kanbanID}
                 onClick={() => handleClick(kanbanID)}
               >
-                <span
-                  style={
-                    kanbanData.get(kanbanID).color
-                      ? {
-                          color: getTextColorByBackgroundColor(
-                            kanbanData.get(kanbanID).color,
-                          ),
-                        }
-                      : { color: "white" }
-                  }
-                >
+                <span>
                   {kanbanData.has(kanbanID)
                     ? kanbanData.get(kanbanID).name
                     : "제거된 칸반입니다"}
@@ -126,7 +113,7 @@ export default function RecentKanban() {
                   type="button"
                   onClick={(event) => handleDelete(event, kanbanID)}
                 >
-                  <img src={deleteIcon} alt="삭제" />
+                  <img style={{ scale: "0.7" }} src={deleteIcon} alt="삭제" />
                 </button>
               </KanbanIdBox>
             ))
