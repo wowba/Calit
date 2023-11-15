@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 import { doc, updateDoc } from "firebase/firestore";
 import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
+import tutorialIcon from "../../assets/headerIcon/tutorial.svg";
 import projectState from "../../recoil/atoms/project/projectState";
 import RecentKanban from "./RecentKanban";
 import trashIcon from "../../assets/icons/trashIcon.svg";
 import { db } from "../../firebaseSDK";
+import tutorialState from "../../recoil/atoms/tutorial/tutorialState";
+import tutorialCalendarState from "../../recoil/atoms/tutorial/tutorialCalendarState";
 
 const SidebarLayout = styled.div`
   display: flex;
@@ -65,6 +69,12 @@ const TrashBoxBtn = styled.div`
 const TrashBoxImg = styled.img`
   width: 1.2rem;
 `;
+
+const TutorialImg = styled.img`
+  width: 1.2rem;
+  cursor: pointer;
+`;
+
 const DeletedListLayout = styled.div<{ $isShow: boolean }>`
   position: fixed;
   overflow: scroll;
@@ -123,6 +133,8 @@ export default function Sidebar() {
 
   const { deleted_kanban_info_list: deletedKanbanInfoList } =
     useRecoilValue(projectState).projectData;
+  const setMainTutorialState = useSetRecoilState(tutorialState);
+  const setCalendarTutorialState = useSetRecoilState(tutorialCalendarState);
 
   const [isListShow, setIsListShow] = useState(false);
 
@@ -143,6 +155,38 @@ export default function Sidebar() {
     });
   };
 
+  // 튜토리얼 다시 보기
+  const handleRestoreTutorial = () => {
+    Swal.fire({
+      icon: "question",
+      title: "튜토리얼을 다시 보시겠습니까?",
+      confirmButtonText: "다시 보기",
+      cancelButtonText: "취소",
+      showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+    }).then((result) => {
+      // 확인 버튼 선택
+      if (result.isConfirmed) {
+        setMainTutorialState({
+          isMainTutorial: false,
+        });
+
+        setCalendarTutorialState({
+          isCalendarTutorial: false,
+        });
+
+        Swal.fire({
+          icon: "success",
+          title: "튜토리얼 다시 보기가 적용되었습니다!",
+          text: "이제 캘린더 튜토리얼을 다시 확인하실 수 있습니다.",
+          confirmButtonText: "확인",
+        });
+      }
+    });
+  };
+
   return (
     <SidebarLayout>
       <div style={{ height: "100%" }}>
@@ -158,6 +202,11 @@ export default function Sidebar() {
           <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
         </ProjectInfoBox>
         <RecentKanban />
+        <TutorialImg
+          src={tutorialIcon}
+          alt="TutorialIcon"
+          onClick={handleRestoreTutorial}
+        />
       </div>
       <TrashBoxBtn onClick={handleTrashBoxBtnClick}>
         <TrashBoxImg src={trashIcon} alt="TrashIcon" />

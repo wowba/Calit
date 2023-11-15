@@ -70,10 +70,12 @@ export default function Project() {
     if (!tutorialData) {
       Swal.fire({
         icon: "info",
-        title: "캘린더 페이지에 오신 것을 환영합니다!",
+        title: "프로젝트에 오신 것을 환영합니다!",
         text: "프로젝트 사용법이 궁금하시다면, 하단의 튜토리얼 보기 버튼을 눌러주세요!",
         showCancelButton: true,
-        reverseButtons: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
         confirmButtonText: "튜토리얼 보기",
         cancelButtonText: "다시보지 않기",
       }).then((result) => {
