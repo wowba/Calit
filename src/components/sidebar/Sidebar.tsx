@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -70,9 +71,26 @@ const TrashBoxImg = styled.img`
   width: 1.2rem;
 `;
 
+const TutorialBox = styled.div`
+  position: fixed;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  top: calc(100% - 3.3rem);
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  border-radius: 0.3rem;
+
+  z-index: 3;
+`;
+
 const TutorialImg = styled.img`
-  width: 1.2rem;
-  cursor: pointer;
+  height: 1.5rem;
 `;
 
 const DeletedListLayout = styled.div<{ $isShow: boolean }>`
@@ -202,13 +220,15 @@ export default function Sidebar() {
           <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
         </ProjectInfoBox>
         <RecentKanban />
-        <TutorialImg
-          src={tutorialIcon}
-          alt="TutorialIcon"
-          onClick={handleRestoreTutorial}
-        />
+        <TutorialBox>
+          <TutorialImg
+            src={tutorialIcon}
+            alt="TutorialIcon"
+            onClick={handleRestoreTutorial}
+          />
+        </TutorialBox>
       </div>
-      <TrashBoxBtn onClick={handleTrashBoxBtnClick}>
+      {/* <TrashBoxBtn onClick={handleTrashBoxBtnClick}>
         <TrashBoxImg src={trashIcon} alt="TrashIcon" />
       </TrashBoxBtn>
       <DeletedListLayout $isShow={isListShow}>
@@ -232,7 +252,7 @@ export default function Sidebar() {
             </DeletedKanbanBox>
           ),
         )}
-      </DeletedListLayout>
+      </DeletedListLayout> */}
     </SidebarLayout>
   );
 }
