@@ -3,21 +3,8 @@ import { styled } from "styled-components";
 import CommonPaginationLayout from "../layout/CommonPaginationLayout";
 
 const TutorialTextContent = styled.div`
-  white-space: pre-line;
-  overflow: scroll;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    overflow-y: scroll;
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-corner {
-    background-color: transparent;
-  }
+  display: flex;
+  flex-direction: column;
 `;
 
 const TutorialTextTitle = styled.p`
@@ -30,25 +17,25 @@ const TutorialTextParagraph = styled.p`
   white-space: pre-line;
   text-align: left;
   max-height: 10rem;
-  overflow: scroll;
+  word-break: keep-all;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-    overflow-y: scroll;
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-corner {
-    background-color: transparent;
-  }
+  // &::-webkit-scrollbar {
+  //   width: 8px;
+  //   overflow-y: scroll;
+  //   border-radius: 6px;
+  // }
+  // &::-webkit-scrollbar-thumb {
+  //   background: rgba(0, 0, 0, 0.3);
+  //   border-radius: 6px;
+  // }
+  // &::-webkit-scrollbar-corner {
+  //   background-color: transparent;
+  // }
 `;
 
 const TutorialButtonBox = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 `;
 

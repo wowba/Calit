@@ -7,7 +7,7 @@ const TutorialPaginationLayout = styled.div`
   justify-content: center;
   align-items: center;
   gap: 4px;
-  margin: 16px;
+  margin: 1rem 0;
 `;
 
 const TutorialPaginationButton = styled.button`
@@ -15,18 +15,10 @@ const TutorialPaginationButton = styled.button`
   border-radius: 7px;
   padding: 5px 10px;
   margin: 0;
-  background: black;
-  color: white;
   font-size: 1rem;
-
-  &:hover {
-    background: #4b3de3;
-    cursor: pointer;
-    transform: translateY(-2px);
-  }
+  cursor: pointer;
 
   &[disabled] {
-    background: grey;
     cursor: revert;
     transform: revert;
   }

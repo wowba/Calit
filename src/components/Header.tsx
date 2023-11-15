@@ -31,6 +31,10 @@ import { auth } from "../firebaseSDK";
 interface Props {
   $whichPage?: string;
 }
+
+// 튜토리얼 아이콘도 요것처럼 페이지 이동하면 밀려나게..?
+// 밀려나면 사이드바 영역으로 들어감
+
 const HeaderLayout = styled.div<Props>`
   height: 3rem;
   display: flex;

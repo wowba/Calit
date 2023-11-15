@@ -65,6 +65,9 @@ export default function Project() {
       });
   };
 
+  // 모달 텍스트 가운데 중앙 정렬
+  // 리스트페이지에서도 아이콘 넣기
+
   // 캘린더 튜토리얼
   const fetchTutorialData = () => {
     if (!tutorialData) {
