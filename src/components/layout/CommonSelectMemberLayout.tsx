@@ -85,10 +85,10 @@ export default function CommonSelectMemberLayout(props: Props) {
         multiValue: (baseStyles) => ({
           ...baseStyles,
           padding: "0",
-          margin: "0",
-          border: "1px solid black",
+          margin: "0 0.2rem",
+          border: "1px solid #DFDFDF",
           borderRadius: "0.5rem",
-          backgroundColor: "transparent",
+          backgroundColor: "#f9f9f9",
         }),
         multiValueRemove: (baseStyles) => ({
           ...baseStyles,
@@ -99,9 +99,10 @@ export default function CommonSelectMemberLayout(props: Props) {
           width: "auto",
           transition: "all 0.3s",
           boxShadow: "none",
-          border: "1px solid transparent",
-          ":hover": { border: "1px solid black" },
-          ":focus": { border: "1px solid black" },
+          backgroundColor: "#fcfcfc",
+          border: "1px solid #fcfcfc",
+          ":hover": { border: "1px solid #dfdfdf" },
+          ":focus": { border: "1px solid #dfdfdf" },
         }),
         valueContainer: (baseStyles) => ({
           ...baseStyles,
