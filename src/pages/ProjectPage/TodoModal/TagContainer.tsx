@@ -10,7 +10,7 @@ const TagContainer = styled.div<Props>`
     props.$dynamicBg ? props.$dynamicBg : "#c9c9c9"};
   border-radius: 7px;
   white-space: nowrap;
-  padding: 3px 10px;
+  padding: 4px 10px;
   color: ${(props) => (props.$dynamicColor ? props.$dynamicColor : "#000")};
 `;
 

@@ -14,6 +14,12 @@ import paintIcon from "../../../assets/icons/Pantone.svg";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import todoState from "../../../recoil/atoms/todo/todoState";
 
+const CustomOptionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 0 0.5rem;
+`;
 const TodoColorModal = styled(ColorModal)`
   position: relative;
   z-index: 1000;
@@ -104,16 +110,11 @@ export default function CustomOptions({
   };
 
   return (
-    <article
+    <CustomOptionContainer
       ref={innerRef}
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...innerProps}
       className="custom-option"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "stretch",
-      }}
     >
       <TagContainer
         style={{ fontSize: "0.8rem", margin: "0.2rem" }}
@@ -160,6 +161,6 @@ export default function CustomOptions({
           onClick={handleModalCloseClick}
         />
       </div>
-    </article>
+    </CustomOptionContainer>
   );
 }

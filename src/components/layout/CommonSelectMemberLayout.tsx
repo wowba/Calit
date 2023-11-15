@@ -85,14 +85,27 @@ export default function CommonSelectMemberLayout(props: Props) {
         multiValue: (baseStyles) => ({
           ...baseStyles,
           padding: "0",
-          margin: "0 0.2rem",
-          border: "1px solid #DFDFDF",
-          borderRadius: "0.5rem",
-          backgroundColor: "#f9f9f9",
+          margin: "-2px -6px -2px -6px",
+          backgroundColor: "#fcfcfc",
+          transition: "all 0.2s ease",
+          ">div:nth-child(1)": {
+            backgroundColor: "#DFDFDF",
+            borderRadius: "0.5rem",
+            padding: "3px 8px 5px 7px",
+          },
+          ":hover": {
+            margin: "-2px 3px -2px -6px",
+            "div+div>svg": { fill: "#595959" },
+          },
         }),
         multiValueRemove: (baseStyles) => ({
           ...baseStyles,
-          borderRadius: "0.5rem",
+          margin: "0",
+          padding: "2px 5px 2px 2px",
+          height: "auto",
+          transition: "all 0.2s ease",
+          ":hover": { ">svg": { fill: "#595959" } },
+          ">svg": { fill: "transparent", transition: "all 0.2s ease" },
         }),
         control: (baseStyles) => ({
           ...baseStyles,
@@ -111,6 +124,11 @@ export default function CommonSelectMemberLayout(props: Props) {
         container: (baseStyles) => ({
           ...baseStyles,
           flex: "1",
+        }),
+        indicatorsContainer: (baseStyles) => ({
+          ...baseStyles,
+          visibility: "hidden",
+          width: "0",
         }),
       }}
     />

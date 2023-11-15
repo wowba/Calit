@@ -68,7 +68,7 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
         multiValue: (baseStyles) => ({
           ...baseStyles,
           padding: "0",
-          margin: "-2px -10px -2px -10px",
+          margin: "-2px -10px",
           borderRadius: "0.5rem",
           backgroundColor: "transparent",
           transition: "all 0.2s ease",
