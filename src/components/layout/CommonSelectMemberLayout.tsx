@@ -88,7 +88,7 @@ export default function CommonSelectMemberLayout(props: Props) {
           margin: "-2px -6px -2px -6px",
           backgroundColor: "#fcfcfc",
           transition: "all 0.2s ease",
-          ">div:nth-child(1)": {
+          ">div:first-of-type": {
             backgroundColor: "#fcfcfc",
             borderRadius: "0.5rem",
             padding: "3px 8px 5px 7px",
