@@ -6,6 +6,7 @@ import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 import deleteIcon from "../../assets/icons/Cross.svg";
+import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
 
 const RecentKanbanContainer = styled.div`
   margin: 1px;
@@ -104,7 +105,17 @@ export default function RecentKanban() {
                 key={kanbanID}
                 onClick={() => handleClick(kanbanID)}
               >
-                <span>
+                <span
+                  style={
+                    kanbanData.get(kanbanID).color
+                      ? {
+                          color: getTextColorByBackgroundColor(
+                            kanbanData.get(kanbanID).color,
+                          ),
+                        }
+                      : { color: "white" }
+                  }
+                >
                   {kanbanData.has(kanbanID)
                     ? kanbanData.get(kanbanID).name
                     : "제거된 칸반입니다"}
