@@ -71,7 +71,7 @@ export default function Project() {
       Swal.fire({
         icon: "info",
         title: "프로젝트에 오신 것을 환영합니다!",
-        text: "프로젝트 사용법이 궁금하시다면, 하단의 튜토리얼 보기 버튼을 눌러주세요!",
+        text: "상단 헤더 모달들이 궁금하시다면, 하단의 튜토리얼 보기 버튼을 눌러주세요!",
         showCancelButton: true,
         allowOutsideClick: false,
         allowEscapeKey: false,
