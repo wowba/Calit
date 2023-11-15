@@ -5,7 +5,7 @@ const ProjectLayout = styled.div`
 
   width: calc(100% - 14rem);
   height: 100%;
-  padding: 0.75rem 1rem 0 0;
+  padding: 1.75rem 1rem 1rem 0;
 `;
 
 const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
@@ -14,17 +14,17 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
 
   // 헤더 및 사이드바 CSS 변경시 width, height 수정 요망
   width: calc(100% - 16rem);
-  height: calc(100% - 7rem);
+  height: calc(100% - 9rem);
 
-  top: calc(7rem);
+  top: calc(8rem);
   ${(props) =>
     !props.$isShow &&
     css`
       top: 100%;
     `};
 
-  border-radius: 0.6rem;
-  border: 1.5px solid ${(props) => props.theme.Color.thickBorderColor};
+  border: ${(props) => props.theme.Border.thickBorder};
+  border-radius: ${(props) => props.theme.Br.default};
 `;
 
 const ProjectModalTabBox = styled.div<{
@@ -37,15 +37,15 @@ const ProjectModalTabBox = styled.div<{
   z-index: 998;
 
   width: 9rem;
-  height: 2rem;
+  height: 2.8rem;
 
-  border-radius: 1rem;
+  border-radius: 2rem;
   background-color: ${(props) => `${props.$color}`};
 
   position: fixed;
   left: ${(props) => `${props.$left}rem`};
 
-  top: 4.1rem;
+  top: 4.2rem;
 
   &:hover {
     cursor: pointer;
@@ -70,7 +70,7 @@ const ProjectModalTabText = styled.span<{
   left: ${(props) => `${props.$left}rem`};
 
   font-size: ${(props) => props.theme.Fs.size20};
-  font-weight: 900;
+  font-weight: 700;
   scale: 1.1;
 
   color: ${(props) => props.$color};
