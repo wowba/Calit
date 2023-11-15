@@ -104,6 +104,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
     const deletedKanbanInfo = {
       id: kanbanId,
       name: currentKanban.name,
+      color: currentKanban.color,
     };
     await updateDoc(projectRef, {
       deleted_kanban_info_list: [deletedKanbanInfo, ...deletedKanbanIdList],

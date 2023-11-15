@@ -14,9 +14,9 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
 
   // 헤더 및 사이드바 CSS 변경시 width, height 수정 요망
   width: calc(100% - 16rem);
-  height: calc(100% - 9rem);
+  height: calc(100% - 8rem);
 
-  top: calc(8rem);
+  top: calc(7rem);
   ${(props) =>
     !props.$isShow &&
     css`
@@ -31,22 +31,28 @@ const ProjectModalTabBox = styled.div<{
   $left: number;
   $color: string;
   $isShow?: boolean;
+  $textColor: string;
 }>`
   transition: 0.5s ease;
   transition-property: background-color;
   z-index: 998;
 
-  width: 9rem;
-  height: 2.8rem;
+  width: 7.5rem;
+  height: 2rem;
 
   border-radius: 2rem;
   background-color: ${(props) => `${props.$color}`};
 
   position: fixed;
   left: ${(props) => `${props.$left}rem`};
+  top: 4rem;
 
-  top: 4.2rem;
-
+  color: ${(props) => props.$textColor};
+  padding: 0.4rem 0;
+  text-align: center;
+  font-size: ${(props) => props.theme.Fs.default};
+  font-weight: 600;
+  scale: 1.1;
   &:hover {
     cursor: pointer;
     background-color: ${(props) =>
@@ -54,27 +60,10 @@ const ProjectModalTabBox = styled.div<{
         ? props.theme.Color.mainColor
         : props.theme.Color.inactiveGray};
 
-    > span {
-      color: white;
-    }
+    color: ${(props) => props.theme.Color.mainWhite};
   }
 `;
 
-const ProjectModalTabText = styled.span<{
-  $top: number;
-  $left: number;
-  $color: string;
-}>`
-  position: absolute;
-  top: ${(props) => `${props.$top}rem`};
-  left: ${(props) => `${props.$left}rem`};
-
-  font-size: ${(props) => props.theme.Fs.size20};
-  font-weight: 700;
-  scale: 1.1;
-
-  color: ${(props) => props.$color};
-`;
 interface Props {
   $isKanbanOrTodoShow?: boolean;
 }
@@ -95,6 +84,5 @@ export {
   ProjectLayout,
   ProjectModalLayout,
   ProjectModalTabBox,
-  ProjectModalTabText,
   ProjectModalContentBox,
 };

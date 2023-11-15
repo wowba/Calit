@@ -11,7 +11,6 @@ import todoState from "../../recoil/atoms/todo/todoState";
 import {
   ProjectLayout,
   ProjectModalTabBox,
-  ProjectModalTabText,
 } from "../../components/layout/ProjectModalLayout";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 
@@ -35,7 +34,7 @@ export default function Project() {
 
   if (searchParams.has("kanbanID")) {
     calendarTabColor = "transparent";
-    calendarTextColor = "#B0B0B0";
+    calendarTextColor = "#7064FF";
 
     kanbanTabColor = "#7064FF";
     kanbanTextColor = "#FCFCFC";
@@ -44,7 +43,7 @@ export default function Project() {
       todoTextColor = "#FCFCFC";
 
       kanbanTabColor = "transparent";
-      kanbanTextColor = "#B0B0B0";
+      kanbanTextColor = "#7064FF";
     }
   }
 
@@ -123,29 +122,30 @@ export default function Project() {
     <ProjectLayout>
       {/* 각 모달 탭 */}
       <ProjectModalTabBox
-        $left={15}
+        $left={15.2}
         onClick={handleCalendarTabClick}
         $isShow
         $color={calendarTabColor}
+        $textColor={calendarTextColor}
       >
-        <ProjectModalTabText $top={0.6} $left={2} $color={calendarTextColor}>
-          Calender
-        </ProjectModalTabText>
+        Calender
       </ProjectModalTabBox>
       <ProjectModalTabBox
-        $left={24.5}
+        $left={24.7}
         $isShow={isLoaded ? isKanbanShow : true}
         onClick={handleKanbanTabClick}
         $color={kanbanTabColor}
+        $textColor={kanbanTextColor}
       >
-        <ProjectModalTabText $top={0.6} $left={2.3} $color={kanbanTextColor}>
-          Kanban
-        </ProjectModalTabText>
+        Kanban
       </ProjectModalTabBox>
-      <ProjectModalTabBox $left={34} $isShow={isTodoShow} $color={todoTabColor}>
-        <ProjectModalTabText $top={0.6} $left={3.1} $color={todoTextColor}>
-          Todo
-        </ProjectModalTabText>
+      <ProjectModalTabBox
+        $left={34.2}
+        $isShow={isTodoShow}
+        $color={todoTabColor}
+        $textColor={todoTextColor}
+      >
+        Todo
       </ProjectModalTabBox>
 
       {/* 캘린더 */}
