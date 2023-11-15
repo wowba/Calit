@@ -28,7 +28,7 @@ import fullCalendarDateFormat from "../../../utils/fullCalendarDateFormat";
 import { db } from "../../../firebaseSDK";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgColor";
-import paint from "../../../assets/icons/paint.svg";
+import paint from "../../../assets/icons/Pantone.svg";
 import CalendarTutorialModal from "./CalendarTutorialModal";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
