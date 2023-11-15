@@ -32,6 +32,8 @@ import getBorderColorByBackgroundColor from "../../../utils/getBorderColorByBgCo
 import paint from "../../../assets/icons/Pantone.svg";
 import CalendarTutorialModal from "./CalendarTutorialModal";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
+import { ReactComponent as TrashIcon } from "../../../assets/icons/Delete.svg";
+import TrashModal from "./TrashModal";
 
 const CalendarBox = styled.div`
   height: 100%;
@@ -45,8 +47,8 @@ const CalendarBox = styled.div`
   // 달력 헤더 영역
   .fc-toolbar {
     height: 1.5rem;
-    margin-top: 2.5rem !important;
-    margin-bottom: 2.5rem !important;
+    margin-top: 1.6rem !important;
+    margin-bottom: 1.6rem !important;
     background-color: ${(props) => props.theme.Color.mainWhite};
   }
   // 헤더 각 요소 영역
@@ -62,7 +64,7 @@ const CalendarBox = styled.div`
     transform: translateY(0.1rem);
     margin-right: 0.75em;
 
-    font-size: 1.6rem;
+    font-size: ${(props) => props.theme.Fs.modalTitle};
     font-weight: 700;
     color: ${(props) => props.theme.Color.mainBlack};
   }
@@ -110,7 +112,7 @@ const CalendarBox = styled.div`
     width: 1.875rem !important;
     height: 1.875rem !important;
     .fc-icon {
-      scale: 0.8;
+      scale: 0.6;
     }
     &:active {
       background-color: #fbdf96 !important;
@@ -176,7 +178,7 @@ const CalendarBox = styled.div`
     padding: 0 0 0 0.5rem;
     text-transform: uppercase;
 
-    font-size: ${(props) => props.theme.Fs.size18};
+    font-size: ${(props) => props.theme.Fs.default};
     font-weight: 900;
   }
   th {
@@ -202,12 +204,12 @@ const CalendarBox = styled.div`
   }
   // 이벤트
   .fc-event-main {
-    margin: 0 0 0 0.25rem;
+    margin: 0.01rem 0 0.01rem 0.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
     > div {
-      padding: 0.05rem 0.025rem 0 0.025rem;
+      padding: 0.05rem 0.04rem 0 0.04rem;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -263,6 +265,35 @@ export const ColorModalBackground = styled.button<{ $isShow: boolean }>`
     `}
 `;
 
+const TrashBox = styled.div`
+  transition: all 0.2s ease;
+
+  width: 1.875rem;
+  height: 1.875rem;
+
+  position: absolute;
+
+  top: 1.25rem;
+  right: 1rem;
+
+  background-color: ${(props) => props.theme.Color.mainColor};
+  border-radius: ${(props) => props.theme.Br.small};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
+
+  > svg {
+    scale: 0.9;
+    fill: ${(props) => props.theme.Color.mainWhite};
+  }
+`;
+
 type Props = {
   setSearchParams: SetURLSearchParams;
 };
@@ -289,6 +320,7 @@ export default function CalendarModal({ setSearchParams }: Props) {
   });
   const [isColorModalShow, setIsColorModalShow] = useState(false);
   const [isTutorialModalShow, setIsTutorialModalShow] = useState(false);
+  const [isTrashModalShow, setIsTrashModalShow] = useState(false);
 
   const [kanbanEvents, setKanbanEvents] = useState(Array<EventInput>);
 
@@ -484,6 +516,10 @@ export default function CalendarModal({ setSearchParams }: Props) {
     setIsTutorialModalShow(true);
   };
 
+  const handleTrashBoxClick = () => {
+    setIsTrashModalShow(true);
+  };
+
   const fullCalendarSetting: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin, momentPlugin],
     selectable: true,
@@ -520,6 +556,11 @@ export default function CalendarModal({ setSearchParams }: Props) {
           position: "relative",
         }}
       >
+        <TrashBox onClick={handleTrashBoxClick}>
+          <TrashIcon />
+        </TrashBox>
+        <TrashModal isShow={isTrashModalShow} setIsShow={setIsTrashModalShow} />
+
         <CalendarBox>
           <FullCalendar
             // eslint-disable-next-line react/jsx-props-no-spreading
