@@ -18,7 +18,7 @@ const SidebarLayout = styled.div`
   width: 15rem;
   height: 100%;
 
-  padding: 4rem 1.25rem 1.25rem 1.25rem;
+  padding: 5rem 1.25rem 1.25rem 1.25rem;
 `;
 
 const ProjectInfoBox = styled.div`
