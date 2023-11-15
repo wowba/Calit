@@ -15,15 +15,17 @@ const ConfirmBtn = styled.button<Props>`
   height: ${(props) => (props.$dynamicHeight ? props.$dynamicHeight : "38px")};
   margin: ${(props) => (props.$dynamicMargin ? props.$dynamicMargin : "0rem")};
   background-color: ${(props) =>
-    props.$dynamicColor ? props.$dynamicColor : "#ee6a6a"};
+    props.$dynamicColor ? props.$dynamicColor : props.theme.Color.mainColor};
   color: ${(props) => (props.$fontColor ? props.$fontColor : "white")};
   border-radius: 7px;
   &:hover {
     transition: all 0.5s;
     background-color: ${(props) =>
-      props.$hoverBgColor ? props.$hoverBgColor : "#d05f5f"};
+      props.$hoverBgColor ? props.$hoverBgColor : props.theme.Color.hoverColor};
     color: ${(props) =>
-      props.$hoverFontColor ? props.$hoverFontColor : "white"};
+      props.$hoverFontColor
+        ? props.$hoverFontColor
+        : props.theme.Color.mainWhite};
   }
 `;
 export default ConfirmBtn;

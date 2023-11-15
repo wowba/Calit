@@ -14,6 +14,7 @@ import { ReactComponent as loginLogo } from "../../assets/logo/loginLogo.svg";
 
 const LoginLayout = styled.div`
   height: 100vh;
+  width: 100vw;
 
   display: flex;
   flex-direction: column;
@@ -21,21 +22,28 @@ const LoginLayout = styled.div`
   align-items: center;
 
   background-image: url(${loginBackground});
-  background-size: over;
-  background-repeat: no-repeat;
+  scale: 1.1;
+  background-size: 100%;
+  background-repeat: repeat;
+  background-position: 50% 10%;
 
-  box-shadow: inset 0 6rem 6rem -5rem rgba(0, 0, 0, 0.1);
+  box-shadow:
+    inset 0 6rem 6rem -5rem rgba(0, 0, 0, 0.1),
+    inset 0px -11rem 11rem -3rem rgba(255, 255, 255, 1);
 `;
 
 const LoginLogo = styled(loginLogo)`
-  width: 32rem;
+  width: 28rem;
+
+  transform: translateY(-5rem);
 `;
 
 const LoginIntroParagraph = styled.p`
-  font-weight: 900;
+  font-weight: 700;
   font-size: 1.25rem;
 
-  margin: 0 0 5rem 0;
+  margin: 1rem 0 8rem 0;
+  transform: translateY(-5rem);
 `;
 
 const GoogleLoginBtn = styled.button`
@@ -43,32 +51,46 @@ const GoogleLoginBtn = styled.button`
 
   position: fixed;
 
-  bottom: 5rem;
+  bottom: 13.5rem;
 
   display: flex;
   align-items: center;
   gap: 1rem;
 
-  background-color: ${(props) => props.theme.Color.yellow2};
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  height: 3.5rem;
+
+  background-color: ${(props) => props.theme.Color.mainColor};
+  padding: 1rem 3.5rem 1rem 3.5rem;
   border-radius: 0.5rem;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.24);
 
   margin: 0 0 2rem 0;
 
   &:hover {
-    background-color: ${(props) => props.theme.Color.yellow1};
+    background-color: ${(props) => props.theme.Color.hoverColor};
   }
 `;
 
-const GoogleLoginImg = styled.img`
+const GoogleLoginImgBox = styled.div`
+  background-color: ${(props) => props.theme.Color.mainWhite};
+  border-radius: 50%;
   width: 1.5rem;
   height: 1.5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const GoogleLoginImg = styled.img`
+  width: 1.2rem;
+  height: 1.2rem;
 `;
 
 const GoogleLoginText = styled.span`
-  font-weight: 600;
+  line-height: 0.3;
+  font-weight: 400;
   font-size: 1.5rem;
+  color: ${(props) => props.theme.Color.mainWhite};
 `;
 
 export default function Login() {
@@ -139,8 +161,10 @@ export default function Login() {
         세상에서 가장 쉬운 애자일 협업 툴
       </LoginIntroParagraph>
       <GoogleLoginBtn type="button" onClick={() => handleClickLogin()}>
-        <GoogleLoginImg src={googleLoginIcon} alt="googleLoginIcon" />
-        <GoogleLoginText>Google 계정으로 로그인</GoogleLoginText>
+        <GoogleLoginImgBox>
+          <GoogleLoginImg src={googleLoginIcon} alt="googleLoginIcon" />
+        </GoogleLoginImgBox>
+        <GoogleLoginText>Sign in with Google</GoogleLoginText>
       </GoogleLoginBtn>
     </LoginLayout>
   );

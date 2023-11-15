@@ -53,10 +53,6 @@ const AddStageBtn = styled.button`
   background-color: #ededed;
   border: 1px solid #d5d5d5;
   border-radius: 0.5rem;
-
-  &:hover {
-    background-color: ${(props) => props.theme.Color.btnHoverColor2};
-  }
 `;
 
 const StagePlusIcon = styled.img`

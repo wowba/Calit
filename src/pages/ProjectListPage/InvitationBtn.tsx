@@ -37,11 +37,7 @@ export default function InvitationBtn() {
 
   return (
     <InvitationBtnLayout>
-      <ConfirmBtn
-        type="button"
-        onClick={handleClick}
-        style={{ zIndex: "2", backgroundColor: "#FF7A00" }}
-      >
+      <ConfirmBtn type="button" onClick={handleClick} style={{ zIndex: "2" }}>
         초대링크로 입장
       </ConfirmBtn>
 

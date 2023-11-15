@@ -7,7 +7,6 @@ import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
 import CreateProjectBtn from "./CreateProjectBtn";
-import ProjectListIcon from "../../assets/logo/ProjectlistLogo.svg";
 
 const ProjectListTitle = styled.div`
   font-size: 2rem;
@@ -23,7 +22,7 @@ const ProjectListContainer = styled.div`
 
 const Footer = styled.div`
   width: 100%;
-  background-color: ${(props) => props.theme.Color.backgroundColor1};
+  background-color: ${(props) => props.theme.Color.backgroundColor};
   height: 7rem;
 `;
 
@@ -66,9 +65,7 @@ export default function ProjectList() {
   return (
     <>
       <div style={{ margin: "2.5rem 6.5rem" }}>
-        <ProjectListTitle>
-          <img src={ProjectListIcon} alt="Project List" />
-        </ProjectListTitle>
+        <ProjectListTitle>Project List</ProjectListTitle>
         <InvitationBtn />
         <ProjectListContainer>
           <CreateProjectBtn />

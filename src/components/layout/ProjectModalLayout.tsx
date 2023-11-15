@@ -24,7 +24,7 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
     `};
 
   border-radius: 0.6rem;
-  border: 1.5px solid ${(props) => props.theme.Color.borderColor};
+  border: 1.5px solid ${(props) => props.theme.Color.thickBorderColor};
 `;
 
 const ProjectModalTabBox = styled.div<{
@@ -51,8 +51,8 @@ const ProjectModalTabBox = styled.div<{
     cursor: pointer;
     background-color: ${(props) =>
       props.$isShow
-        ? props.theme.Color.mainColor1
-        : props.theme.Color.btnColor2};
+        ? props.theme.Color.mainColor
+        : props.theme.Color.inactiveGray};
 
     > span {
       color: white;
@@ -82,7 +82,7 @@ interface Props {
 const ProjectModalContentBox = styled.div<Props>`
   height: 100%;
 
-  background-color: ${(props) => props.theme.Color.backgroundColor2};
+  background-color: ${(props) => props.theme.Color.mainWhite};
   border-radius: 0.6rem;
   overflow: scroll;
   -ms-overflow-style: none;

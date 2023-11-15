@@ -20,38 +20,43 @@ const GlobalStyle = createGlobalStyle`
   /* font */
   * {
     @font-face {
-    font-family: 'Pretendard-Regular';
-    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-family: 'Roboto';
+    src: url('https://fonts.cdnfonts.com/css/roboto');
     font-weight: 400;
-    font-style: normal;
     }
   }
   * {
       box-sizing: border-box;
-      font-family: 'Pretendard-Regular';
+      font-family: 'Roboto';
   }
 `;
 
 const theme = {
   Color: {
-    mainColor1: "#FF7A00",
+    mainColor: "#7064FF",
+    hoverColor: "#4B3DE3",
+    activeColor: "#ECEBFF",
 
-    backgroundColor1: "#F9F9F9",
-    backgroundColor2: "#FCFCFC",
+    backgroundColor: "#F9F9F9",
+    mainWhite: "#FCFCFC",
 
-    borderColor: "#D9D9D9",
-
-    btnColor1: "#ee6a6a",
-    btnColor2: "#d0d0d0",
-    btnHoverColor1: "#D05f5f",
-    btnHoverColor2: "#c9c9c9",
-    yellow1: "#ffd43b",
-    yellow2: "#ffea7a",
-    gray1: "#eaeaea",
-    gray2: "#c9c9c9",
+    mainBlack: "#333333",
+    mainGray: "#595959",
+    inactiveGray: "#B0B0B0",
   },
 
+  Border: {
+    thickBorder: "1.5px solid #D9D9D9",
+    thinBorder: "1px solid #DFDFDF",
+  },
+
+  // Font-size
   Fs: {
+    sidebarTitle: "1.2rem",
+    modalTitle: "1.12rem",
+    tagTitle: "1.12rem",
+    default: "1rem",
+
     size28: "1.75rem",
     size24: "1.5rem",
     size20: "1.25rem",
@@ -61,6 +66,7 @@ const theme = {
     size12: "0.75rem",
   },
 
+  // Icon-size
   Is: {
     size28: "1.75rem",
     size24: "1.5rem",
@@ -69,6 +75,17 @@ const theme = {
     size16: "1rem",
     size14: "0.875rem",
     size12: "0.75rem",
+  },
+
+  // Border-radius
+  Br: {
+    default: "10px",
+    small: "7px",
+  },
+
+  // Box-shadow
+  Bs: {
+    default: "3px 4px 16px 2px rgba(0, 0, 0, 0.04)",
   },
 };
 
