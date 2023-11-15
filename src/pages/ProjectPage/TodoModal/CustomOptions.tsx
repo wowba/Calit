@@ -4,21 +4,22 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import _ from "lodash";
 import TagContainer from "./TagContainer";
-import closeIcon from "../../../assets/icons/closeIcon.svg";
+import closeIcon from "../../../assets/icons/Cross.svg";
 import { db } from "../../../firebaseSDK";
 import {
   ColorModal,
   ColorModalBackground,
 } from "../CalendarModal/CalendarModal";
-import paintIcon from "../../../assets/icons/paint.svg";
+import paintIcon from "../../../assets/icons/Pantone.svg";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 import todoState from "../../../recoil/atoms/todo/todoState";
 
 const TodoColorModal = styled(ColorModal)`
   position: relative;
   z-index: 1000;
+  margin: 0 0.4rem 0 0;
 `;
-// 여기는 css 수정되어야 정상 적용될 예정입니다.
+
 const TodoColorModalBackground = styled(ColorModalBackground)`
   width: 100vw;
   height: 100vh;
@@ -108,40 +109,57 @@ export default function CustomOptions({
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...innerProps}
       className="custom-option"
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "stretch",
+      }}
     >
       <TagContainer
+        style={{ fontSize: "0.8rem", margin: "0.2rem" }}
         $dynamicBg={tagBgColor}
         $dynamicColor={getTextColorByBackgroundColor(tagBgColor)}
       >
         {label}
       </TagContainer>
-      <button type="button" onClick={handleOptionColor}>
-        <img
-          src={paintIcon}
-          alt="색상"
-          style={{ width: "0.8rem", height: "0.8rem" }}
-        />
-      </button>
-      {isColorModalShow ? (
-        <TodoColorModal
-          type="color"
-          $isShow={isColorModalShow}
-          $top={0}
-          $left={0}
-          value={tagBgColor}
-          onChange={handleTodoColorModalthrottle.current}
-          onClick={handleStopPropagation}
-        />
-      ) : null}
-      <TodoColorModalBackground
-        $isShow={isColorModalShow}
-        onClick={handleModalCloseClick}
-      />
-      {canDelete ? (
-        <button type="button" onClick={handleOptionDelete}>
-          <img src={closeIcon} alt="삭제" />
+      <div>
+        {canDelete ? (
+          <button
+            type="button"
+            onClick={handleOptionDelete}
+            style={{ width: "0.7rem", height: "0.7rem" }}
+          >
+            <img src={closeIcon} alt="삭제" />
+          </button>
+        ) : null}
+        <button type="button" onClick={handleOptionColor}>
+          <img
+            src={paintIcon}
+            alt="색상"
+            style={{
+              width: "0.8rem",
+              height: "0.8rem",
+              margin: "0.2rem 0.8rem",
+              transform: "translateY(4px)",
+            }}
+          />
         </button>
-      ) : null}
+        {isColorModalShow ? (
+          <TodoColorModal
+            type="color"
+            $isShow={isColorModalShow}
+            $top={0}
+            $left={0}
+            value={tagBgColor}
+            onChange={handleTodoColorModalthrottle.current}
+            onClick={handleStopPropagation}
+          />
+        ) : null}
+        <TodoColorModalBackground
+          $isShow={isColorModalShow}
+          onClick={handleModalCloseClick}
+        />
+      </div>
     </article>
   );
 }

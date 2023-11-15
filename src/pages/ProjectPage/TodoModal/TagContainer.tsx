@@ -8,9 +8,9 @@ const TagContainer = styled.div<Props>`
   display: inline-block;
   background-color: ${(props) =>
     props.$dynamicBg ? props.$dynamicBg : "#c9c9c9"};
-  border-radius: 10px;
+  border-radius: 7px;
   white-space: nowrap;
-  padding: 2px 10px;
+  padding: 3px 10px;
   color: ${(props) => (props.$dynamicColor ? props.$dynamicColor : "#000")};
 `;
 

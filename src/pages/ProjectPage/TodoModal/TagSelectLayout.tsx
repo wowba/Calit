@@ -15,7 +15,7 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
   ) => ({
     label: optionLabel,
     value: inputValue,
-    color: "#fff229",
+    color: "#7064FF",
     canDelete: true,
   });
   const handleSelectChange = async (
@@ -68,27 +68,47 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
         multiValue: (baseStyles) => ({
           ...baseStyles,
           padding: "0",
-          margin: "0",
-          border: "1px solid black",
+          margin: "-2px -10px -2px -10px",
           borderRadius: "0.5rem",
           backgroundColor: "transparent",
+          transition: "all 0.2s ease",
+          ":hover": {
+            margin: "-2px -2px -2px -10px",
+            "div+div>svg": { fill: "#595959" },
+          },
         }),
         multiValueRemove: (baseStyles) => ({
           ...baseStyles,
-          borderRadius: "0.5rem",
+          margin: "0",
+          padding: "2px 5px 2px 2px",
+          background: "transparent",
+          height: "auto",
+          transform: "translateX(-4px)",
+          transition: "all 0.2s ease",
+
+          ":hover": { ">svg": { fill: "#595959" } },
+          ">svg": { fill: "transparent", transition: "all 0.2s ease" },
         }),
         control: (baseStyles) => ({
           ...baseStyles,
           width: "auto",
           transition: "all 0.3s",
           boxShadow: "none",
-          border: "1px solid #eaeaea",
-          ":hover": { border: "1px solid gray" },
-          ":focus": { border: "1px solid #eaeaea" },
+          backgroundColor: "#fcfcfc",
+          border: "1px solid #fcfcfc",
+          ":hover": {
+            border: "1px solid #dfdfdf",
+          },
+          ":focus": { border: "1px solid #dfdfdf" },
         }),
         valueContainer: (baseStyles) => ({
           ...baseStyles,
           paddingRight: "0",
+        }),
+        indicatorsContainer: (baseStyles) => ({
+          ...baseStyles,
+          visibility: "hidden",
+          width: "0",
         }),
       }}
     />
