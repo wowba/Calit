@@ -43,7 +43,7 @@ const TodoTopContainer = styled.div`
 const TodoTitle = styled.div`
   display: inline-block;
   font-weight: 900;
-  font-size: 1.2rem;
+  font-size: 1.12rem;
 `;
 const TodoSubtitle = styled.div`
   display: inline-block;
@@ -219,7 +219,7 @@ export default function TodoModal({ isTodoShow }: Props) {
                 type="text"
                 placeholder="제목을 입력하세요"
                 value={inputTodoName}
-                $dynamicFontSize=" 1.2rem"
+                $dynamicFontSize="1.12rem"
                 $dynamicPadding="1rem 0.5rem"
                 $dynamicWidth="auto"
                 onKeyDown={handleEnterPress}
