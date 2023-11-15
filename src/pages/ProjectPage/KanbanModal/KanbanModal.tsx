@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 import { db } from "../../../firebaseSDK";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
-import trashIcon from "../../../assets/icons/trashIcon.svg";
 import {
   ProjectModalLayout,
   ProjectModalContentBox,
@@ -20,6 +19,8 @@ import projectState from "../../../recoil/atoms/project/projectState";
 import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
 import LoadingPage from "../../../components/LoadingPage";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
+import dots from "../../../assets/icons/dots.svg";
+import KanbanMoreModal from "./KanbanMoreModal";
 
 const KanbanContainer = styled(ProjectModalContentBox)<{
   $isKanbanShow: boolean;
@@ -32,17 +33,24 @@ const KanbanInfoLayout = styled.div`
   justify-content: space-between;
 `;
 
-const KanbanInfoBox = styled.div``;
+const KanbanInfoBox = styled.div`
+  display: flex;
+  gap: 0.875rem;
+`;
+
+const KanbanTitlePointer = styled.div`
+  margin: 0.3rem 0 0 0;
+
+  width: 0.25rem;
+  height: 1.3rem;
+  background-color: ${(props) => props.theme.Color.mainColor};
+
+  border-radius: ${(props) => props.theme.Br.small};
+`;
 
 const KanbanInfoInnerBox = styled.div`
   display: flex;
   justify-content: space-between;
-`;
-
-const KanbanTrashIcon = styled.img`
-  z-index: 2;
-  cursor: pointer;
-  padding: 0 1rem;
 `;
 
 const KanbanProgressBox = styled.div`
@@ -50,14 +58,46 @@ const KanbanProgressBox = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1rem;
+
+  > p {
+    width: 3rem;
+    font-size: ${(props) => props.theme.Fs.modalTitle};
+  }
 `;
 
-const KanbanProgress = styled.progress`
-  width: 15rem;
+const KanbanProgress = styled.div`
+  width: 19rem;
+  height: 0.6rem;
+
+  border: ${(props) => props.theme.Border.thickBorder};
+  border-radius: ${(props) => props.theme.Br.small};
+`;
+
+const KanbanProgressInner = styled.div<{ $percentage: number }>`
+  transition: all 0.5s ease;
+
+  width: ${(props) => `${props.$percentage}%`};
+  height: 100%;
+  background-color: ${(props) => props.theme.Color.mainColor};
+  border-radius: ${(props) => props.theme.Br.small};
 `;
 
 const KanbanDateParagraph = styled.p`
   font-size: 0.75rem;
+  margin: 0 0 0 0.125rem;
+
+  transform: translateY(-0.125rem);
+`;
+
+const MoreBtn = styled.img`
+  width: 1rem;
+  height: 1rem;
+
+  scale: 1.2;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 type Props = {
@@ -73,6 +113,8 @@ export default function KanbanModal({ isKanbanShow }: Props) {
 
   const [progress, setProgress] = useState([0, 0]);
   const [inputKanbanName, setInputKanbanName] = useState("");
+
+  const [isKanbanMoreModalShow, setIsKanbanMoreModalShow] = useState(false);
 
   const projectId = window.location.pathname.substring(1);
   const urlQueryString = new URLSearchParams(window.location.search);
@@ -163,39 +205,64 @@ export default function KanbanModal({ isKanbanShow }: Props) {
       <KanbanContainer id="kanbanModalContentBox" $isKanbanShow={isKanbanShow}>
         <KanbanInfoLayout>
           <KanbanInfoBox>
-            <KanbanInfoInnerBox>
-              <CommonInputLayout
-                ref={kanbanNameInputRef}
-                value={inputKanbanName}
-                type="text"
-                placeholder="제목을 입력하세요"
-                $dynamicFontSize=" 1.2rem"
-                $dynamicPadding="1rem 0.5rem"
-                style={{ fontWeight: "900" }}
-                onChange={(e) => setInputKanbanName(e.target.value)}
-                onBlur={handleKanbanInputBlur}
-                onKeyUp={(e) => {
-                  if (e.key === "Enter") {
-                    kanbanNameInputRef.current!.blur();
-                  }
-                }}
-              />
-              <KanbanTrashIcon
-                src={trashIcon}
-                alt="칸반 삭제"
-                onClick={handleDelete}
-              />
-            </KanbanInfoInnerBox>
-            <KanbanDateParagraph>
-              {`${yearMonthDayFormat(
-                currentKanban.start_date.seconds,
-              )} - ${yearMonthDayFormat(currentKanban.end_date.seconds)}`}
-            </KanbanDateParagraph>
+            <KanbanTitlePointer />
+            <div>
+              <KanbanInfoInnerBox>
+                <CommonInputLayout
+                  ref={kanbanNameInputRef}
+                  value={inputKanbanName}
+                  type="text"
+                  placeholder="제목을 입력하세요"
+                  $dynamicFontSize=" 1.2rem"
+                  $dynamicPadding="1rem 0.5rem"
+                  style={{ fontWeight: "900" }}
+                  onChange={(e) => setInputKanbanName(e.target.value)}
+                  onBlur={handleKanbanInputBlur}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      kanbanNameInputRef.current!.blur();
+                    }
+                  }}
+                />
+              </KanbanInfoInnerBox>
+              <KanbanDateParagraph>
+                {`${yearMonthDayFormat(
+                  currentKanban.start_date.seconds,
+                )} - ${yearMonthDayFormat(currentKanban.end_date.seconds)}`}
+              </KanbanDateParagraph>
+            </div>
           </KanbanInfoBox>
-          <KanbanProgressBox>
-            <KanbanProgress value={progress[1]} max={progress[0]} />
-            {progress[0] ? Math.floor((progress[1] / progress[0]) * 100) : 0}%
-          </KanbanProgressBox>
+          <div
+            style={{
+              display: "flex",
+              gap: "2rem",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "0 1rem 0 0",
+            }}
+          >
+            <KanbanProgressBox>
+              {/* <KanbanProgress value={progress[1]} max={progress[0]} /> */}
+              <KanbanProgress>
+                <KanbanProgressInner
+                  $percentage={
+                    progress[0] ? (progress[1] / progress[0]) * 100 : 0
+                  }
+                />
+              </KanbanProgress>
+              <p>
+                {progress[0]
+                  ? Math.floor((progress[1] / progress[0]) * 100)
+                  : 0}
+                %
+              </p>
+            </KanbanProgressBox>
+            <MoreBtn
+              src={dots}
+              alt="dots"
+              onClick={() => setIsKanbanMoreModalShow(true)}
+            />
+          </div>
         </KanbanInfoLayout>
         <KanbanStageBox
           stageList={currentKanban.stage_list}
@@ -203,6 +270,11 @@ export default function KanbanModal({ isKanbanShow }: Props) {
           setProgress={setProgress}
         />
       </KanbanContainer>
+      <KanbanMoreModal
+        isShow={isKanbanMoreModalShow}
+        setIsShow={setIsKanbanMoreModalShow}
+        handleDeleteKanban={handleDelete}
+      />
     </ProjectModalLayout>
   );
 }
