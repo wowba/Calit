@@ -20,8 +20,8 @@ const CreateKanbanModalLayout = styled.div<{ $isShow: boolean }>`
   width: 40rem;
   height: auto;
   border-radius: 0.9rem;
-  box-shadow: 0px 0px 10px 6px rgba(0, 0, 0, 0.3);
-  background-color: white;
+  box-shadow: ${(props) => props.theme.Bs.default};
+  background-color: #fcfcfc;
   padding: 2.5rem 2.5rem 2.5rem 2.5rem;
 
   z-index: 999;

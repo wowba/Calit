@@ -8,6 +8,8 @@ interface Props {
 }
 
 const CommonTextArea = styled.textarea<Props>`
+  background-color: #fcfcfc;
+  font-size: 0.9rem;
   width: ${(props) => (props.$dynamicWidth ? props.$dynamicWidth : "100%")};
   max-height: ${(props) =>
     props.$dynamicMaxHeight ? props.$dynamicMaxHeight : "22.5rem"};
