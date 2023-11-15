@@ -19,6 +19,10 @@ const CustomOptionContainer = styled.div`
   justify-content: space-between;
   align-items: stretch;
   padding: 0 0.5rem;
+  transition: all 0.2s ease;
+  &:hover {
+    background-color: #ecebff;
+  }
 `;
 const TodoColorModal = styled(ColorModal)`
   position: relative;

@@ -89,7 +89,7 @@ export default function CommonSelectMemberLayout(props: Props) {
           backgroundColor: "#fcfcfc",
           transition: "all 0.2s ease",
           ">div:nth-child(1)": {
-            backgroundColor: "#DFDFDF",
+            backgroundColor: "#fcfcfc",
             borderRadius: "0.5rem",
             padding: "3px 8px 5px 7px",
           },
@@ -129,6 +129,12 @@ export default function CommonSelectMemberLayout(props: Props) {
           ...baseStyles,
           visibility: "hidden",
           width: "0",
+        }),
+        option: (baseStyles) => ({
+          ...baseStyles,
+          transition: "all 0.2s ease",
+          backgroundColor: "#fff",
+          ":hover": { backgroundColor: "#ecebff" },
         }),
       }}
     />
