@@ -9,7 +9,7 @@ import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
 
 // 헤더 아이콘
 import logoutIcon from "../assets/headerIcon/logout.svg";
-import tutorialIcon from "../assets/headerIcon/tutorial.svg";
+// import tutorialIcon from "../assets/headerIcon/tutorial.svg";
 import bookmarkIcon from "../assets/headerIcon/bookmark.svg";
 import memberIcon from "../assets/headerIcon/member.svg";
 // import logIcon from "../assets/headerIcon/log.svg"
@@ -17,7 +17,7 @@ import memberIcon from "../assets/headerIcon/member.svg";
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
 import BookMark from "./modal/BookMarkModal";
-import Tutorial from "./modal/TutorialModal";
+// import Tutorial from "./modal/TutorialModal";
 import UserProfile from "./modal/UserProfileModal";
 // import Log from "./modal/LogModal";
 
@@ -77,13 +77,13 @@ const modals = [
     ),
     content: <BookMark />,
   },
-  {
-    key: "tutorial",
-    icon: (
-      <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
-    ),
-    content: <Tutorial />,
-  },
+  // {
+  //   key: "tutorial",
+  //   icon: (
+  //     <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
+  //   ),
+  //   content: <Tutorial />,
+  // },
   // {
   //   key: "log",
   //   icon: <img style={{ width: "1.5rem" }} src={logIcon} alt="modalIcon" />,
@@ -97,13 +97,13 @@ const modals = [
 ];
 
 const listPageModals = [
-  {
-    key: "tutorial",
-    icon: (
-      <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
-    ),
-    content: <Tutorial />,
-  },
+  // {
+  //   key: "tutorial",
+  //   icon: (
+  //     <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
+  //   ),
+  //   content: <Tutorial />,
+  // },
   {
     key: "logout",
     icon: <img style={{ width: "1.5rem" }} src={logoutIcon} alt="logout" />,
