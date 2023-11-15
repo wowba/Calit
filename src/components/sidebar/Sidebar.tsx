@@ -53,7 +53,7 @@ const TrashBoxBtn = styled.div`
 
   width: 11.5rem;
   height: 2.3rem;
-  background-color: ${(props) => props.theme.Color.mainColor1};
+  background-color: ${(props) => props.theme.Color.mainColor};
   &:hover {
     cursor: pointer;
   }

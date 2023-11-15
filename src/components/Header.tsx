@@ -38,7 +38,7 @@ const HeaderLayout = styled.div<Props>`
   align-items: center;
   padding: ${(props) =>
     props.$whichPage === "list" ? " 0rem 124px" : "0rem 1rem"};
-  border-bottom: 1.5px solid ${(props) => props.theme.Color.borderColor};
+  border-bottom: ${(props) => props.theme.Border.thickBorder};
   transition: padding 0.8s ease;
 `;
 

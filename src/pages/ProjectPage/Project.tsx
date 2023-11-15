@@ -24,27 +24,27 @@ export default function Project() {
 
   const [isLoaded, setIsLoaded] = useRecoilState(todoLoaded);
 
-  let calendarTabColor = "#FF7A00";
-  let calendarTextColor = "white";
+  let calendarTabColor = "#7064FF";
+  let calendarTextColor = "#FCFCFC";
 
   let kanbanTabColor = "transparent";
-  let kanbanTextColor = "#FF7A00";
+  let kanbanTextColor = "#7064FF";
 
   let todoTabColor = "transparent";
-  let todoTextColor = "#FF7A00";
+  let todoTextColor = "#7064FF";
 
   if (searchParams.has("kanbanID")) {
     calendarTabColor = "transparent";
-    calendarTextColor = "#FF7A00";
+    calendarTextColor = "#7064FF";
 
-    kanbanTabColor = "#FF7A00";
-    kanbanTextColor = "white";
+    kanbanTabColor = "#7064FF";
+    kanbanTextColor = "#FCFCFC";
     if (searchParams.has("todoID")) {
-      todoTabColor = "#FF7A00";
-      todoTextColor = "white";
+      todoTabColor = "#7064FF";
+      todoTextColor = "#FCFCFC";
 
       kanbanTabColor = "transparent";
-      kanbanTextColor = "#FF7A00";
+      kanbanTextColor = "#7064FF";
     }
   }
 

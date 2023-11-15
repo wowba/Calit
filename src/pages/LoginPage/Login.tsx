@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseSDK";
 import loginState from "../../recoil/atoms/login/loginState";
-import loginBackground from "../../assets/images/loginBackground.svg";
+import loginBackground from "../../assets/images/loginBackground.jpg";
 import googleLoginIcon from "../../assets/icons/googleLoginIcon.svg";
 import userDataState from "../../recoil/atoms/login/userDataState";
 import { ReactComponent as loginLogo } from "../../assets/logo/loginLogo.svg";
@@ -21,8 +21,8 @@ const LoginLayout = styled.div`
   align-items: center;
 
   background-image: url(${loginBackground});
-  background-size: over;
-  background-repeat: no-repeat;
+  background-size: 100%;
+  /* background-repeat: repeat; */
 
   box-shadow: inset 0 6rem 6rem -5rem rgba(0, 0, 0, 0.1);
 `;
@@ -43,21 +43,22 @@ const GoogleLoginBtn = styled.button`
 
   position: fixed;
 
-  bottom: 5rem;
+  bottom: 10rem;
 
   display: flex;
   align-items: center;
   gap: 1rem;
 
-  background-color: ${(props) => props.theme.Color.yellow2};
-  padding: 0.5rem 1rem 0.5rem 1rem;
+  height: 4rem;
+
+  background-color: ${(props) => props.theme.Color.mainColor};
+  padding: 1rem 4rem 1rem 4rem;
   border-radius: 0.5rem;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.24);
 
   margin: 0 0 2rem 0;
 
   &:hover {
-    background-color: ${(props) => props.theme.Color.yellow1};
+    background-color: ${(props) => props.theme.Color.hoverColor};
   }
 `;
 
@@ -67,8 +68,9 @@ const GoogleLoginImg = styled.img`
 `;
 
 const GoogleLoginText = styled.span`
-  font-weight: 600;
+  font-weight: 400;
   font-size: 1.5rem;
+  color: ${(props) => props.theme.Color.mainWhite};
 `;
 
 export default function Login() {
@@ -140,7 +142,7 @@ export default function Login() {
       </LoginIntroParagraph>
       <GoogleLoginBtn type="button" onClick={() => handleClickLogin()}>
         <GoogleLoginImg src={googleLoginIcon} alt="googleLoginIcon" />
-        <GoogleLoginText>Google 계정으로 로그인</GoogleLoginText>
+        <GoogleLoginText>Sign in with Google</GoogleLoginText>
       </GoogleLoginBtn>
     </LoginLayout>
   );
