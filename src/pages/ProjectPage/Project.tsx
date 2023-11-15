@@ -28,14 +28,14 @@ export default function Project() {
   let calendarTextColor = "#FCFCFC";
 
   let kanbanTabColor = "transparent";
-  let kanbanTextColor = "#7064FF";
+  let kanbanTextColor = "#B0B0B0";
 
   let todoTabColor = "transparent";
-  let todoTextColor = "#7064FF";
+  let todoTextColor = "#B0B0B0";
 
   if (searchParams.has("kanbanID")) {
     calendarTabColor = "transparent";
-    calendarTextColor = "#7064FF";
+    calendarTextColor = "#B0B0B0";
 
     kanbanTabColor = "#7064FF";
     kanbanTextColor = "#FCFCFC";
@@ -44,7 +44,7 @@ export default function Project() {
       todoTextColor = "#FCFCFC";
 
       kanbanTabColor = "transparent";
-      kanbanTextColor = "#7064FF";
+      kanbanTextColor = "#B0B0B0";
     }
   }
 
@@ -128,7 +128,7 @@ export default function Project() {
         $isShow
         $color={calendarTabColor}
       >
-        <ProjectModalTabText $top={0.05} $left={2} $color={calendarTextColor}>
+        <ProjectModalTabText $top={0.6} $left={2} $color={calendarTextColor}>
           Calender
         </ProjectModalTabText>
       </ProjectModalTabBox>
@@ -138,12 +138,12 @@ export default function Project() {
         onClick={handleKanbanTabClick}
         $color={kanbanTabColor}
       >
-        <ProjectModalTabText $top={0.05} $left={2.3} $color={kanbanTextColor}>
+        <ProjectModalTabText $top={0.6} $left={2.3} $color={kanbanTextColor}>
           Kanban
         </ProjectModalTabText>
       </ProjectModalTabBox>
       <ProjectModalTabBox $left={34} $isShow={isTodoShow} $color={todoTabColor}>
-        <ProjectModalTabText $top={0.05} $left={3.1} $color={todoTextColor}>
+        <ProjectModalTabText $top={0.6} $left={3.1} $color={todoTextColor}>
           Todo
         </ProjectModalTabText>
       </ProjectModalTabBox>

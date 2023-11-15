@@ -60,7 +60,7 @@ const HeaderModalBox = styled.div`
 `;
 
 const HeaderLogo = styled(headerLogo)`
-  height: 1.8rem;
+  height: 1.5rem;
   cursor: pointer;
 `;
 

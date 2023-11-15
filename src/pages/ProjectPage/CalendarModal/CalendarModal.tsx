@@ -10,6 +10,7 @@ import {
 import styled, { css } from "styled-components";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import momentPlugin from "@fullcalendar/moment";
 import interactionPlugin, {
   EventResizeDoneArg,
 } from "@fullcalendar/interaction";
@@ -34,7 +35,7 @@ import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 
 const CalendarBox = styled.div`
   height: 100%;
-  padding: 0 1rem 1rem 1rem;
+  padding: 0 1rem 0 1rem;
 
   // FullCalendar 라이브러리 디자인
   .fc {
@@ -44,8 +45,9 @@ const CalendarBox = styled.div`
   // 달력 헤더 영역
   .fc-toolbar {
     height: 1.5rem;
-    margin-top: 1rem !important;
-    margin-bottom: 1rem !important;
+    margin-top: 2.5rem !important;
+    margin-bottom: 2.5rem !important;
+    background-color: ${(props) => props.theme.Color.mainWhite};
   }
   // 헤더 각 요소 영역
   .fc-toolbar-chunk {
@@ -53,17 +55,20 @@ const CalendarBox = styled.div`
     flex-direction: row;
     align-items: center;
     position: relative;
+    gap: 2rem;
   }
   // 년,월
   .fc-toolbar-title {
     transform: translateY(0.1rem);
     margin-right: 0.75em;
-    font-size: 1rem;
+
+    font-size: 1.6rem;
     font-weight: 700;
+    color: ${(props) => props.theme.Color.mainBlack};
   }
   // 버튼 초기화
   .fc .fc-button-primary:disabled {
-    background-color: white;
+    background-color: ${(props) => props.theme.Color.mainWhite};
     color: #121212;
     border: none;
     margin: 0;
@@ -73,7 +78,7 @@ const CalendarBox = styled.div`
     }
   }
   .fc .fc-button-primary {
-    background-color: white;
+    background-color: ${(props) => props.theme.Color.mainWhite};
     color: black;
     border: none;
     margin: 0;
@@ -95,36 +100,6 @@ const CalendarBox = styled.div`
       box-shadow: none !important;
     }
   }
-  // 오늘 button
-  .fc-today-button {
-    transition: all 0.2s;
-    opacity: 1 !important;
-    background-color: #ee6a6a !important;
-    width: 3rem;
-    height: 2rem;
-    font-size: 0.8rem;
-    color: white !important;
-    border-radius: 7px;
-    &:hover {
-      background-color: #d05f5f !important;
-    }
-    &:active {
-      background-color: #f69c9c !important;
-    }
-  }
-  // 튜토리얼 버튼
-  .fc-toolbar-chunk:last-child {
-    margin-left: 1.2rem;
-  }
-  .fc-tutorial-button {
-    width: 1.8rem;
-    height: 1.8rem;
-    border: solid 0.1rem #121212 !important;
-    border-radius: 50%;
-
-    padding: 0.125rem 0 0 0;
-    font-weight: 900;
-  }
   // prev, next button
   .fc-prev-button,
   .fc-next-button {
@@ -135,13 +110,16 @@ const CalendarBox = styled.div`
     width: 1.875rem !important;
     height: 1.875rem !important;
     .fc-icon {
-      size: 0.9375rem;
+      scale: 0.8;
     }
     &:active {
       background-color: #fbdf96 !important;
     }
   }
   // date 각 한칸
+  .fc-daygrid-day-top {
+    flex-direction: row;
+  }
   .fc-daygrid-day {
     padding: 0.5rem;
   }
@@ -164,18 +142,15 @@ const CalendarBox = styled.div`
         align-items: center;
         color: white;
         font-weight: 600;
-        background-color: #ee6a6a;
-        border-radius: 15%;
+        background-color: ${(props) => props.theme.Color.mainColor};
+        border-radius: 2rem;
+        line-height: 0.7;
+        width: 1.5rem;
       }
     }
     .fc-daygrid-day-number {
       font-size: 0.75rem;
     }
-  }
-  .fc-daygrid,
-  .fc-timegrid {
-    border: 0.0313rem solid black;
-    border-radius: 0.25rem;
   }
   .fc-theme-standard,
   .fc-scrollgrid {
@@ -186,13 +161,28 @@ const CalendarBox = styled.div`
   table {
     border: none;
   }
+  // 달력 드래그시 배경
+  .fc-highlight {
+    background: ${(props) => props.theme.Color.activeColor} !important;
+  }
+  // 주말 빨간색
+  .fc-day.fc-day-sat.fc-daygrid-day,
+  .fc-day.fc-day-sun.fc-daygrid-day {
+    color: red;
+  }
   // 요일
+  .fc-col-header-cell > .fc-scrollgrid-sync-inner {
+    display: flex;
+    padding: 0 0 0 0.5rem;
+    text-transform: uppercase;
+
+    font-size: ${(props) => props.theme.Fs.size18};
+    font-weight: 900;
+  }
   th {
     line-height: 1.5rem;
     border: none;
-    border-right: 0.0313rem solid black;
-    background: #f5f5f5;
-    border-radius: 0.25rem;
+    background: ${(props) => props.theme.Color.mainWhite};
     font-size: 0.9rem;
   }
   th:last-child {
@@ -201,12 +191,11 @@ const CalendarBox = styled.div`
   // 가로
   tr {
     border: none;
-    border-bottom: 0.0313rem solid black;
+    border-bottom: ${(props) => props.theme.Border.thinBorder};
   }
   // 세로
   td {
     border: none;
-    border-right: 0.0313rem solid black;
   }
   td:last-child {
     border-right: none;
@@ -218,6 +207,7 @@ const CalendarBox = styled.div`
     align-items: center;
     gap: 1rem;
     > div {
+      padding: 0.05rem 0.025rem 0 0.025rem;
       overflow: hidden;
       text-overflow: ellipsis;
     }
@@ -495,12 +485,13 @@ export default function CalendarModal({ setSearchParams }: Props) {
   };
 
   const fullCalendarSetting: CalendarOptions = {
-    plugins: [dayGridPlugin, interactionPlugin],
+    plugins: [dayGridPlugin, interactionPlugin, momentPlugin],
     selectable: true,
+    titleFormat: "YYYY. MM",
     headerToolbar: {
-      left: "today",
+      left: "",
       center: "prev title next",
-      right: "tutorial",
+      right: "",
     },
     customButtons: {
       tutorial: {
@@ -509,7 +500,6 @@ export default function CalendarModal({ setSearchParams }: Props) {
       },
     },
     initialView: "dayGridMonth",
-    locale: "ko",
     buttonText: {
       today: "오늘",
     },
