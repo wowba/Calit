@@ -20,9 +20,6 @@ const SidebarLayout = styled.div`
 
 const ProjectContentBox = styled.div`
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 `;
 
 const ProjectInfoBox = styled.div`
@@ -44,8 +41,8 @@ const ProjectTitleBox = styled.div`
 `;
 
 const ProjectTitleBoxLabel = styled.div`
-  width: 0.5rem;
-  height: auto;
+  width: 0.25rem;
+  height: 1.3rem;
   background-color: #7064ff;
   border-radius: 7px;
   margin-right: 0.5rem;
