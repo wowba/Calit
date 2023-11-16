@@ -131,7 +131,7 @@ export default function Project() {
         $color={calendarTabColor}
         $textColor={calendarTextColor}
       >
-        Calender
+        Calendar
       </ProjectModalTabBox>
       <ProjectModalTabBox
         $left={24.7}

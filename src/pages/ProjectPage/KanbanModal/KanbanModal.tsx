@@ -41,7 +41,7 @@ const KanbanInfoBox = styled.div`
 `;
 
 const KanbanTitlePointer = styled.div`
-  margin: 0.3rem 0 0 0;
+  margin: 0.4rem 0 0 0;
 
   width: 0.25rem;
   height: 1.3rem;

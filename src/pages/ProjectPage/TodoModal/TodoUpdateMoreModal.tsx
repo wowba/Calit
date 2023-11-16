@@ -38,12 +38,12 @@ const ModalInnerBtn = styled.button`
 interface Props {
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
-  handleModifyClick: () => Promise<void>;
   handleDeleteClick: () => Promise<void>;
+  handleModifyClick: () => Promise<void>;
 }
 
 export default function TodoUpdateMoreModal(props: Props) {
-  const { isShow, setIsShow, handleModifyClick, handleDeleteClick } = props;
+  const { isShow, setIsShow, handleDeleteClick, handleModifyClick } = props;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -65,9 +65,14 @@ export default function TodoUpdateMoreModal(props: Props) {
     };
   }, [wrapperRef]);
 
+  const handleBtnClick = () => {
+    setIsShow(false);
+    handleModifyClick();
+  };
+
   return (
     <TodoUpdateMoreModalLayout ref={wrapperRef} $isShow={isShow}>
-      <ModalInnerBtn type="button" onClick={handleModifyClick}>
+      <ModalInnerBtn type="button" onClick={handleBtnClick}>
         수정하기
       </ModalInnerBtn>
       <ModalInnerBtn type="button" onClick={handleDeleteClick}>

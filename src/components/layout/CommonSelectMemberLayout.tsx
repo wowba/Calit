@@ -123,6 +123,7 @@ export default function CommonSelectMemberLayout(props: Props) {
           boxShadow: "none",
           backgroundColor: "#fcfcfc",
           border: "1px solid #fcfcfc",
+          transform: "translateY(-5px)",
           ":hover": { border: "1px solid #fcfcfc" },
           ":focus": { border: "1px solid #fcfcfc" },
         }),
