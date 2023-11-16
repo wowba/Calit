@@ -20,6 +20,7 @@ import ErrorPage from "../../../components/ErrorPage";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import icon_plus from "../../../assets/icons/plusIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import asyncDelay from "../../../utils/asyncDelay";
 
 type Props = {
   isTodoShow: boolean;
@@ -178,6 +179,8 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   // 투두 삭제
   const handleDelete = async () => {
+    navigate(`/${projectId}?kanbanID=${kanbanId}`);
+    await asyncDelay(600);
     const updatedStageList = kanbanDataState
       .get(kanbanId)
       .stage_list.map((stage: { id: string; todoIds: string[] }) => {
@@ -193,7 +196,6 @@ export default function TodoModal({ isTodoShow }: Props) {
     await updateDoc(todoRef, {
       is_deleted: true,
     });
-    navigate(`/${projectId}?kanbanID=${kanbanId}`);
   };
 
   // 마감일 업데이트
