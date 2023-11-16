@@ -30,7 +30,7 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
   border-radius: 5px;
   width: 100%;
   margin: 3px 0px;
-  padding: 2px 10px;
+  padding: 0px 10px;
   transition: all 0.3s ease-in-out;
   background-color: ${(props) => props.$backgroundColor};
   cursor: pointer;
