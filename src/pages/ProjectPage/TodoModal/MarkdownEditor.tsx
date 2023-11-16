@@ -9,9 +9,9 @@ import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
 const AddUpdateTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin: 0 0 0.5rem;
+  margin: 0.5rem 0 0;
 `;
 const UpdateContainer = styled.div`
   height: calc(100% - 3.2rem);
@@ -95,6 +95,7 @@ export default function MarkdownEditor({
               onClick={handleSubmit}
               $dynamicWidth="3.5rem"
               $dynamicHeight="2rem"
+              $isWritten={value}
               style={{ fontSize: "0.9rem" }}
             >
               등록
