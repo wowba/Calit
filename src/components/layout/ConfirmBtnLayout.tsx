@@ -8,6 +8,7 @@ interface Props {
   $fontColor?: string;
   $hoverFontColor?: string;
   $hoverBgColor?: string;
+  $isWritten?: string;
 }
 
 const ConfirmBtn = styled.button<Props>`
@@ -18,6 +19,9 @@ const ConfirmBtn = styled.button<Props>`
     props.$dynamicColor ? props.$dynamicColor : props.theme.Color.mainColor};
   color: ${(props) => (props.$fontColor ? props.$fontColor : "white")};
   border-radius: 7px;
+  visibility: ${(props) => (props.$isWritten === "" ? "hidden" : "visible")};
+  opacity: ${(props) => (props.$isWritten === "" ? 0 : 1)};
+  transition: all 0.2s;
   &:hover {
     transition: all 0.5s;
     background-color: ${(props) =>

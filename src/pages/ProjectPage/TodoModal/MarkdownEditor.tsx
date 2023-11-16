@@ -7,11 +7,16 @@ import userState from "../../../recoil/atoms/login/userDataState";
 import UpdateContentBox from "./UpdateContent";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
+const NewMDEditor = styled.div<{ $isUpdateClick: boolean }>`
+  transition: all 0.2s ease;
+  height: ${(props) => (props.$isUpdateClick ? "auto" : 0)};
+  opacity: ${(props) => (props.$isUpdateClick ? 1 : 0)};
+`;
 const AddUpdateTitle = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin: 0 0 0.5rem;
+  margin: 0.5rem 0 0;
 `;
 const UpdateContainer = styled.div`
   height: calc(100% - 3.2rem);
@@ -40,7 +45,6 @@ interface UpdateContentInterface {
   writer: string;
   detail: string;
   created_date: Date;
-  writer_img: string;
 }
 
 interface Props {
@@ -57,16 +61,14 @@ export default function MarkdownEditor({
   setIsUpdateClick,
 }: Props) {
   const [value, setValue] = useState("");
-  const { name, profile_img_URL: profileImgUrl } =
-    useRecoilValue(userState).userData;
+  const { email } = useRecoilValue(userState).userData;
 
   // update_list db 업데이트
   const handleSubmit = async () => {
     const newUpdateContent: UpdateContentInterface = {
-      writer: name,
+      writer: email,
       detail: value,
       created_date: new Date(),
-      writer_img: profileImgUrl,
     };
     const todoSnap: any = await getDoc(todoRef);
     const updateContents = todoSnap.data().update_list;
@@ -81,27 +83,26 @@ export default function MarkdownEditor({
 
   return (
     <UpdateContainer>
-      {isUpdateClick && (
-        <>
-          <MDEditor
-            // @ts-ignore
-            onChange={setValue}
-            value={value}
-            preview="edit"
-          />
-          <AddUpdateTitle>
-            <ConfirmBtn
-              type="submit"
-              onClick={handleSubmit}
-              $dynamicWidth="3.5rem"
-              $dynamicHeight="2rem"
-              style={{ fontSize: "0.9rem" }}
-            >
-              등록
-            </ConfirmBtn>
-          </AddUpdateTitle>
-        </>
-      )}
+      <NewMDEditor $isUpdateClick={isUpdateClick}>
+        <MDEditor
+          // @ts-ignore
+          onChange={setValue}
+          value={value}
+          preview="edit"
+        />
+        <AddUpdateTitle>
+          <ConfirmBtn
+            type="submit"
+            onClick={handleSubmit}
+            $dynamicWidth="3.5rem"
+            $dynamicHeight="2rem"
+            $isWritten={value}
+            style={{ fontSize: "0.9rem" }}
+          >
+            등록
+          </ConfirmBtn>
+        </AddUpdateTitle>
+      </NewMDEditor>
 
       {todoDataState.update_list.length ? (
         <UpdateList>
