@@ -18,15 +18,22 @@ const SidebarLayout = styled.div`
   padding: 4rem 0.5rem 1.25rem 0.5rem;
 `;
 
+const ProjectContentBox = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
 const ProjectInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  box-shadow: inset 0px 7rem 3rem -5rem rgba(255, 255, 255, 1);
+  box-shadow: inset 0px 7rem 3rem -5rem #fcfcfc;
 `;
 
 const ProjectTitleParagraph = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: 900;
   margin-left: 0.25rem;
 `;
@@ -40,7 +47,7 @@ const ProjectTitleBoxLabel = styled.div`
   width: 0.5rem;
   height: auto;
   background-color: #7064ff;
-  border-radius: 9px;
+  border-radius: 7px;
   margin-right: 0.5rem;
 `;
 const ProjectProfileImg = styled.img`
@@ -55,7 +62,7 @@ export default function Sidebar() {
   const { projectData } = useRecoilValue(projectState);
   return (
     <SidebarLayout>
-      <div style={{ height: "100%" }}>
+      <ProjectContentBox>
         <ProjectInfoBox>
           <ProjectProfileImg
             src={
@@ -65,13 +72,13 @@ export default function Sidebar() {
             }
             alt="Project Profile Img"
           />
+          <ProjectTitleBox>
+            <ProjectTitleBoxLabel />
+            <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
+          </ProjectTitleBox>
         </ProjectInfoBox>
-        <ProjectTitleBox>
-          <ProjectTitleBoxLabel />
-          <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
-        </ProjectTitleBox>
         <RecentKanban />
-      </div>
+      </ProjectContentBox>
     </SidebarLayout>
   );
 }
