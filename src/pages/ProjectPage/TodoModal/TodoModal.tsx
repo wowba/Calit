@@ -20,6 +20,9 @@ import ErrorPage from "../../../components/ErrorPage";
 import dotsIcon from "../../../assets/icons/dots.svg";
 import icon_plus from "../../../assets/icons/plusIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import asyncDelay from "../../../utils/asyncDelay";
+import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
+import LoadingPage from "../../../components/LoadingPage";
 import TodoMoreModal from "./TodoMoreModal";
 
 type Props = {
@@ -89,6 +92,19 @@ const Contour = styled.div`
 `;
 
 export default function TodoModal({ isTodoShow }: Props) {
+  const isLoaded = useRecoilValue(todoLoaded);
+  const [loadedState, setLoadedState] = useState(true);
+  useEffect(() => {
+    const setLoaded = async () => {
+      if (!isLoaded) {
+        setLoadedState(false);
+        await asyncDelay(1000);
+        setLoadedState(true);
+      }
+    };
+    setLoaded();
+  }, [isLoaded]);
+
   const todoNameInputRef = useRef<HTMLInputElement>(null);
 
   const projectId = window.location.pathname.substring(1);
@@ -181,6 +197,8 @@ export default function TodoModal({ isTodoShow }: Props) {
 
   // 투두 삭제
   const handleDelete = async () => {
+    navigate(`/${projectId}?kanbanID=${kanbanId}`);
+    await asyncDelay(600);
     const updatedStageList = kanbanDataState
       .get(kanbanId)
       .stage_list.map((stage: { id: string; todoIds: string[] }) => {
@@ -197,7 +215,6 @@ export default function TodoModal({ isTodoShow }: Props) {
       is_deleted: true,
     });
     setIsMoreModalOpened(false);
-    navigate(`/${projectId}?kanbanID=${kanbanId}`);
   };
 
   // 마감일 업데이트
@@ -209,6 +226,16 @@ export default function TodoModal({ isTodoShow }: Props) {
       });
     }
   };
+
+  if (!loadedState || !isLoaded) {
+    return (
+      <ProjectModalLayout $isShow={isTodoShow}>
+        <ProjectModalContentBox>
+          <LoadingPage />
+        </ProjectModalContentBox>
+      </ProjectModalLayout>
+    );
+  }
 
   // 에러 페이지
   if (!currentTodo) {

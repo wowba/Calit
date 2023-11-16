@@ -43,6 +43,10 @@ const TutorialExitButton = styled.button`
   background: #7064ff;
   color: white;
   font-size: 1rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
 `;
 
 const ModalContainer = styled.div`
@@ -94,20 +98,44 @@ const TUTORIAL_LIST_TEXT = [
 
 const TUTORIAL_PROJECT_TEXT = [
   {
-    key: "프로젝트 멤버 모달",
-    content: `프로젝트에 참여중인 사용자들의 정보를 확인할 수 있습니다.
+    key: "프로젝트 멤버",
+    content: `상단 우측의 멤버 아이콘을 통해 프로젝트에 참여중인 사용자들의 정보를 확인할 수 있습니다.
       초대하기 버튼을 선택해 프로젝트에 새로운 사용자를 초대할 수 있습니다.
       프로젝트를 생성한 사용자는 내보내기 버튼을 통해 사용자를 프로젝트에서 내보낼 수 있습니다.`,
   },
   {
-    key: "북마크 모달",
-    content: `URL을 입력해 북마크를 등록할 수 있습니다.
+    key: "북마크",
+    content: `상단 우측의 북마크 아이콘을 통해 URL을 입력해 북마크를 등록할 수 있습니다.
       북마크는 프로젝트 단위로 공유되기 때문에, 프로젝트에 참여중인 모든 사용자가 확인하고 추가하거나 제거할 수 있습니다.`,
   },
   {
-    key: "프로필 모달",
-    content:
-      "프로필 이미지, 사용자 이름, 사용자 소개 글의 편집 및 로그아웃이 가능합니다.",
+    key: "프로필",
+    content: `상단 우측의 프로필 아이콘을 통해 사용자 정보를 확인할 수 있습니다.
+      프로필 이미지, 사용자 이름, 사용자 소개 글의 편집 및 로그아웃이 가능합니다.
+      링크를 통해 프로젝트에 참여한 경우 로그아웃 우측의 메뉴를 통해 프로젝트에서 나갈 수 있습니다.`,
+  },
+  {
+    key: "캘린더",
+    content: `캘린더에서 임의의 날짜를 클릭하거나, 원하는 일정만큼 드래그해 칸반을 생성할 수 있습니다.
+    생성된 칸반을 드래그해 일정을 변경할 수 있으며 생성된 칸반을 선택하면 칸반 보드로 이동합니다.
+      칸반을 생성하기 위해서는 칸반의 이름과 담당자를 지정해야 합니다.`,
+  },
+  {
+    key: "사이드바",
+    content: `캘린더 좌측의 사이드바에서는 프로젝트 이미지, 제목, 최근 방문한 칸반 보드를 확인할 수 있습니다.
+      각 칸반 보드를 선택해 해당 칸반 보드로 이동하거나, 최근 방문 리스트에서 칸반 보드를 제거할 수 있습니다.`,
+  },
+  {
+    key: "칸반 보드",
+    content: `칸반 보드에서는 스테이지와 진행할 작업인 투두를 확인하거나 생성 또는 삭제할 수 있습니다.
+    스테이지와 투두는 칸반 보드 내에서 자유롭게 드래그해 이동시킬 수 있습니다.
+    `,
+  },
+  {
+    key: "투두",
+    content: `투두에서는 진행할 작업에 대한 제목, 일정, 담당자, 설명에 대한 설정이 가능합니다.
+    우측의 업데이트 영역을 통해 마크다운 양식의 글을 작성해 기록할 수 있습니다.
+    `,
   },
 ];
 
@@ -135,8 +163,6 @@ export default function Tutorial({
     tutorialCalendarState,
   ).isCalendarTutorial;
   const [isTutorialDataShow, setIsTutorialDataShow] = useState(false); // 튜토리얼 데이터 state
-  const targetData =
-    currentHeaderState === "list" ? mainTutorialData : calendarTutorialData;
   const targetName = currentHeaderState === "list" ? "Calit" : "프로젝트";
 
   const [posts, setPosts] = useState<object[]>([]);
@@ -151,10 +177,12 @@ export default function Tutorial({
   useEffect(() => {
     // 튜토리얼에서 보여질 데이터 세팅
     setPosts(tutorialTarget);
-  }, []);
+  }, [currentHeaderState]);
 
   // 튜토리얼 안내 문구 세팅
   const fetchTutorialData = () => {
+    const targetData =
+      currentHeaderState === "list" ? mainTutorialData : calendarTutorialData;
     if (!targetData) {
       Swal.fire({
         icon: "info",
@@ -165,7 +193,9 @@ export default function Tutorial({
         allowEscapeKey: false,
         allowEnterKey: false,
         confirmButtonText: "튜토리얼 보기",
+        confirmButtonColor: "#7064FF",
         cancelButtonText: "다시보지 않기",
+        cancelButtonColor: "#B0B0B0",
       }).then((result) => {
         // 튜토리얼 보기 선택
         if (result.isConfirmed) {
@@ -202,9 +232,11 @@ export default function Tutorial({
   const handleRestoreTutorial = () => {
     Swal.fire({
       icon: "question",
-      title: `${targetName} 튜토리얼을 다시 보시겠습니까?`,
+      title: `튜토리얼을 다시 보시겠습니까?`,
       confirmButtonText: "다시 보기",
+      confirmButtonColor: "#7064FF",
       cancelButtonText: "취소",
+      cancelButtonColor: "#B0B0B0",
       showCancelButton: true,
       allowOutsideClick: false,
       allowEscapeKey: false,
@@ -227,7 +259,9 @@ export default function Tutorial({
           title: "튜토리얼 다시 보기가 적용되었습니다!",
           text: `이제 튜토리얼을 다시 확인하실 수 있습니다.`,
           confirmButtonText: "튜토리얼 보기",
+          confirmButtonColor: "#7064FF",
           cancelButtonText: "취소",
+          cancelButtonColor: "#B0B0B0",
           showCancelButton: true,
           allowOutsideClick: false,
           allowEscapeKey: false,
@@ -235,7 +269,8 @@ export default function Tutorial({
         }).then((restoreResult) => {
           // 다시보기 버튼
           if (restoreResult.isConfirmed) {
-            setIsShowTutorial(true);
+            setPage(1);
+            setIsTutorialDataShow(true);
           }
         });
       }

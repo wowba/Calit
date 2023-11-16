@@ -63,9 +63,9 @@ export default function CreateProjectBtn() {
       icon: "warning",
 
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      confirmButtonColor: "#7064FF",
       confirmButtonText: "생성",
-      cancelButtonColor: "#ee6a6a",
+      cancelButtonColor: "#B0B0B0",
       cancelButtonText: "취소",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -73,6 +73,7 @@ export default function CreateProjectBtn() {
           title: "프로젝트가 생성되었습니다.",
           icon: "success",
           confirmButtonText: "확인",
+          confirmButtonColor: "#7064FF",
         });
         // 새 프로젝트 생성
         const projectData: ProjectData = {

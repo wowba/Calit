@@ -137,9 +137,9 @@ export default function ProjectCardMoreModal(props: Props) {
       icon: "warning",
 
       showCancelButton: true,
-      confirmButtonColor: "#ee6a6a",
+      confirmButtonColor: "#7064FF",
       confirmButtonText: "삭제",
-      cancelButtonColor: "lightgray",
+      cancelButtonColor: "#B0B0B0",
       cancelButtonText: "취소",
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -147,6 +147,7 @@ export default function ProjectCardMoreModal(props: Props) {
           title: "프로젝트가 삭제되었습니다.",
           icon: "success",
           confirmButtonText: "확인",
+          confirmButtonColor: "#7064FF",
         });
 
         // 최근 칸반 목록 초기화
