@@ -109,6 +109,28 @@ const TUTORIAL_PROJECT_TEXT = [
     content:
       "프로필 이미지, 사용자 이름, 사용자 소개 글의 편집 및 로그아웃이 가능합니다.",
   },
+  {
+    key: "캘린더",
+    content: `캘린더에서 임의의 날짜를 클릭하거나 원하는 일정만큼 드래그해 칸반을 생성할 수 있습니다.
+      칸반을 생성하기 위해서는 칸반의 이름과 담당자를 지정해야 합니다.`,
+  },
+  {
+    key: "사이드바",
+    content: `캘린더 좌측의 사이드바에서는 프로젝트 이미지, 제목, 최근 방문한 칸반 보드를 확인할 수 있습니다.
+      각 칸반 보드를 선택해 해당 칸반 보드로 이동하거나, 최근 방문 리스트에서 칸반 보드를 제거할 수 있습니다.`,
+  },
+  {
+    key: "칸반 보드",
+    content: `칸반 보드에서는 스테이지와 진행할 작업인 투두를 확인하거나 생성 또는 삭제할 수 있습니다.
+    스테이지와 투두는 칸반 보드 내에서 자유롭게 드래그해 이동시킬 수 있습니다.
+    `,
+  },
+  {
+    key: "투두",
+    content: `투두에서는 진행할 작업에 대한 제목, 일정, 담당자, 설명에 대한 설정이 가능합니다.
+    우측의 업데이트 영역을 통해 마크다운 양식의 글을 작성해 기록할 수 있습니다.
+    `,
+  },
 ];
 
 interface Props {
@@ -135,8 +157,6 @@ export default function Tutorial({
     tutorialCalendarState,
   ).isCalendarTutorial;
   const [isTutorialDataShow, setIsTutorialDataShow] = useState(false); // 튜토리얼 데이터 state
-  const targetData =
-    currentHeaderState === "list" ? mainTutorialData : calendarTutorialData;
   const targetName = currentHeaderState === "list" ? "Calit" : "프로젝트";
 
   const [posts, setPosts] = useState<object[]>([]);
@@ -151,10 +171,12 @@ export default function Tutorial({
   useEffect(() => {
     // 튜토리얼에서 보여질 데이터 세팅
     setPosts(tutorialTarget);
-  }, []);
+  }, [currentHeaderState]);
 
   // 튜토리얼 안내 문구 세팅
   const fetchTutorialData = () => {
+    const targetData =
+      currentHeaderState === "list" ? mainTutorialData : calendarTutorialData;
     if (!targetData) {
       Swal.fire({
         icon: "info",
@@ -202,7 +224,7 @@ export default function Tutorial({
   const handleRestoreTutorial = () => {
     Swal.fire({
       icon: "question",
-      title: `${targetName} 튜토리얼을 다시 보시겠습니까?`,
+      title: `튜토리얼을 다시 보시겠습니까?`,
       confirmButtonText: "다시 보기",
       cancelButtonText: "취소",
       showCancelButton: true,
