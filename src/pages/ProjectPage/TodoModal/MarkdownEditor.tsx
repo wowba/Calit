@@ -10,7 +10,6 @@ import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 const NewMDEditor = styled.div<{ $isUpdateClick: boolean }>`
   transition: all 0.2s ease;
   height: ${(props) => (props.$isUpdateClick ? "auto" : 0)};
-  /* visibility: ${(props) => (props.$isUpdateClick ? "visible" : "hidden")}; */
   opacity: ${(props) => (props.$isUpdateClick ? 1 : 0)};
 `;
 const AddUpdateTitle = styled.div`
@@ -46,7 +45,6 @@ interface UpdateContentInterface {
   writer: string;
   detail: string;
   created_date: Date;
-  writer_img: string;
 }
 
 interface Props {
@@ -63,16 +61,14 @@ export default function MarkdownEditor({
   setIsUpdateClick,
 }: Props) {
   const [value, setValue] = useState("");
-  const { name, profile_img_URL: profileImgUrl } =
-    useRecoilValue(userState).userData;
+  const { email } = useRecoilValue(userState).userData;
 
   // update_list db 업데이트
   const handleSubmit = async () => {
     const newUpdateContent: UpdateContentInterface = {
-      writer: name,
+      writer: email,
       detail: value,
       created_date: new Date(),
-      writer_img: profileImgUrl,
     };
     const todoSnap: any = await getDoc(todoRef);
     const updateContents = todoSnap.data().update_list;

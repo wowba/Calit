@@ -40,7 +40,6 @@ interface TodoData {
 }
 interface TodoUpdateData {
   writer: string;
-  writer_img: string;
   detail: string;
   created_date: FieldValue;
 }

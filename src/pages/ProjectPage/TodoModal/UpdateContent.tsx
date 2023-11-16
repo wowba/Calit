@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
 import { getDoc, updateDoc } from "firebase/firestore";
+import { useRecoilValue } from "recoil";
 import settingIcon from "../../../assets/icons/settingIconBlack.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import pencilIcon from "../../../assets/icons/pencilIcon.svg";
 import reloadIcon from "../../../assets/icons/reloadIcon.svg";
 import CommonSettingModal from "../../../components/layout/CommonSettingModal";
+import userListState from "../../../recoil/atoms/userList/userListState";
 
 const UpdateListHeader = styled.div`
   display: flex;
@@ -43,6 +45,9 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const [markdownContent, setMarkdownContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isSettingOpened, setIsSettingOpened] = useState(false);
+
+  const userListData = useRecoilValue(userListState);
+  const creatorData = userListData.get(data.writer);
 
   const handleMarkdownChange = (edit: any) => {
     setMarkdownContent(edit);
@@ -98,7 +103,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
       <UpdateListHeader>
         <ManagedUser>
           <img
-            src={data.writer_img}
+            src={creatorData.profile_img_URL}
             alt="프로필사진"
             style={{
               width: "1.5rem",
@@ -108,7 +113,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
               margin: "0 0.5rem 0 0",
             }}
           />
-          {data.writer}
+          {creatorData.name}
         </ManagedUser>
         <SettingContainer>
           <span style={{ fontSize: "0.8rem", color: "gray" }}>
