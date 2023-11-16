@@ -41,6 +41,15 @@ export default function CommonSelectMemberLayout(props: Props) {
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
 
+  const selectedUserList = userList.map((userInfo: any) => {
+    const user = userListData.get(userInfo.value);
+    return {
+      image: user.profile_img_URL,
+      value: user.email,
+      label: user.name,
+    };
+  });
+
   // user_list와 userListData를 통해 user 데이터 set
   useEffect(() => {
     const fetchData = async (list: any) => {
@@ -74,7 +83,7 @@ export default function CommonSelectMemberLayout(props: Props) {
           <span>{option.label}</span>
         </ManagedUser>
       )}
-      value={userList}
+      value={selectedUserList}
       onChange={(state: any) => {
         setUserList(state);
       }}
