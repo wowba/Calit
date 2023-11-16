@@ -7,6 +7,12 @@ import userState from "../../../recoil/atoms/login/userDataState";
 import UpdateContentBox from "./UpdateContent";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
+const NewMDEditor = styled.div<{ $isUpdateClick: boolean }>`
+  transition: all 0.2s ease;
+  height: ${(props) => (props.$isUpdateClick ? "auto" : 0)};
+  /* visibility: ${(props) => (props.$isUpdateClick ? "visible" : "hidden")}; */
+  opacity: ${(props) => (props.$isUpdateClick ? 1 : 0)};
+`;
 const AddUpdateTitle = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -81,28 +87,26 @@ export default function MarkdownEditor({
 
   return (
     <UpdateContainer>
-      {isUpdateClick && (
-        <>
-          <MDEditor
-            // @ts-ignore
-            onChange={setValue}
-            value={value}
-            preview="edit"
-          />
-          <AddUpdateTitle>
-            <ConfirmBtn
-              type="submit"
-              onClick={handleSubmit}
-              $dynamicWidth="3.5rem"
-              $dynamicHeight="2rem"
-              $isWritten={value}
-              style={{ fontSize: "0.9rem" }}
-            >
-              등록
-            </ConfirmBtn>
-          </AddUpdateTitle>
-        </>
-      )}
+      <NewMDEditor $isUpdateClick={isUpdateClick}>
+        <MDEditor
+          // @ts-ignore
+          onChange={setValue}
+          value={value}
+          preview="edit"
+        />
+        <AddUpdateTitle>
+          <ConfirmBtn
+            type="submit"
+            onClick={handleSubmit}
+            $dynamicWidth="3.5rem"
+            $dynamicHeight="2rem"
+            $isWritten={value}
+            style={{ fontSize: "0.9rem" }}
+          >
+            등록
+          </ConfirmBtn>
+        </AddUpdateTitle>
+      </NewMDEditor>
 
       {todoDataState.update_list.length ? (
         <UpdateList>

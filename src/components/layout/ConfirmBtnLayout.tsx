@@ -21,7 +21,7 @@ const ConfirmBtn = styled.button<Props>`
   border-radius: 7px;
   visibility: ${(props) => (props.$isWritten === "" ? "hidden" : "visible")};
   opacity: ${(props) => (props.$isWritten === "" ? 0 : 1)};
-  transition: all 0.5s;
+  transition: all 0.2s;
   &:hover {
     transition: all 0.5s;
     background-color: ${(props) =>
