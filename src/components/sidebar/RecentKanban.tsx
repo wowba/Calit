@@ -9,7 +9,7 @@ import deleteIcon from "../../assets/icons/Cross.svg";
 import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
 
 const RecentKanbanContainer = styled.div`
-  height: 100%;
+  height: 20rem;
 `;
 const RecentKanbanTitle = styled.div`
   font-weight: 900;
