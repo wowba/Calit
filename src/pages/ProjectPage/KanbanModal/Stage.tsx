@@ -13,6 +13,7 @@ import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import { db } from "../../../firebaseSDK";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import plus from "../../../assets/icons/plus.svg";
+import Check from "../../../assets/icons/Check.svg";
 
 const Container = styled.div<{ $isDragging: boolean }>`
   transition: background-color 0.5s ease;
@@ -251,11 +252,15 @@ function Stage({
                 }}
               />
             </StageTitleBox>
-            <StageTrashIcon
-              src={trashIcon}
-              alt="스테이지 삭제"
-              onClick={handleStageDeleteBtnClick}
-            />
+            {stage.id === "default-3" ? (
+              <img src={Check} alt="check" />
+            ) : (
+              <StageTrashIcon
+                src={trashIcon}
+                alt="스테이지 삭제"
+                onClick={handleStageDeleteBtnClick}
+              />
+            )}
           </StageInfoBox>
 
           <Droppable droppableId={stage.id} type="todo">
