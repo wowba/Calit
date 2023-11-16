@@ -170,6 +170,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
       is_deleted: true,
     });
 
+    setIsKanbanMoreModalShow(false);
     navigate(`/${projectId}`);
   };
 

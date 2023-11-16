@@ -73,6 +73,13 @@ const DeletedKanbanBox = styled.div<{ $color: string }>`
   border-radius: ${(props) => props.theme.Br.small};
   background-color: ${(props) => props.$color};
   color: ${(props) => getTextColorByBackgroundColor(props.$color)};
+
+  &:hover {
+    > button {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
 `;
 
 const DeletedKanbanName = styled.p`
@@ -80,6 +87,13 @@ const DeletedKanbanName = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const RestoreBtn = styled.button`
+  transition: all 0.5s ease;
+
+  visibility: hidden;
+  opacity: 0;
 `;
 
 interface Props {
@@ -108,9 +122,9 @@ export default function TrashModal(props: Props) {
         setIsShow(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mouseup", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("mouseup", handleClickOutside);
     };
   }, [wrapperRef]);
 
@@ -138,12 +152,12 @@ export default function TrashModal(props: Props) {
           (kanbanInfo: { id: string; name: string; color: string }) => (
             <DeletedKanbanBox key={kanbanInfo.id} $color={kanbanInfo.color}>
               <DeletedKanbanName>{kanbanInfo.name}</DeletedKanbanName>
-              <button
+              <RestoreBtn
                 type="button"
                 onClick={() => handleRestoreCLick(kanbanInfo.id)}
               >
                 <img style={{ margin: "0 0 0 1rem" }} src={update} alt="복구" />
-              </button>
+              </RestoreBtn>
             </DeletedKanbanBox>
           ),
         )}
