@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
-import history from "../../utils/history";
 import CalendarModal from "./CalendarModal/CalendarModal";
 import KanbanModal from "./KanbanModal/KanbanModal";
 import TodoModal from "./TodoModal/TodoModal";
@@ -24,8 +22,6 @@ export default function Project() {
   const [isTodoShow, setIsTodoShow] = useState(false);
 
   const [isLoaded, setIsLoaded] = useRecoilState(todoLoaded);
-
-  const [lastKanbanId, setLastKanbanId] = useState("");
 
   let calendarTabColor = "#7064FF";
   let calendarTextColor = "#FCFCFC";
@@ -66,12 +62,9 @@ export default function Project() {
     if (!searchParams.has("kanbanID")) {
       return;
     }
-    if (lastKanbanId === searchParams.get("kanbanID")) {
-      return;
-    }
+
     setIsLoaded(false);
 
-    setLastKanbanId(searchParams.get("kanbanID")!);
     setTodoDataState(new Map());
     const projectID = window.location.pathname.substring(1);
     const kanbanID = searchParams.get("kanbanID");
