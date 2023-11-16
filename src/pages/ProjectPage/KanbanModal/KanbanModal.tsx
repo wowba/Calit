@@ -19,6 +19,7 @@ import projectState from "../../../recoil/atoms/project/projectState";
 import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
 import LoadingPage from "../../../components/LoadingPage";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
+import UserSelectLayout from "./UserSelectLayout";
 import dots from "../../../assets/icons/dots.svg";
 import KanbanMoreModal from "./KanbanMoreModal";
 
@@ -133,6 +134,9 @@ export default function KanbanModal({ isKanbanShow }: Props) {
 
   const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
 
+  // 여기
+  const [userList, setUserList] = useState<any[]>([]);
+
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
       return;
@@ -241,6 +245,13 @@ export default function KanbanModal({ isKanbanShow }: Props) {
               margin: "0 1rem 0 0",
             }}
           >
+            <UserSelectLayout
+              // 현재 props는 오류 안나게만 넣어둔 상태. 수정 필요.
+              userList={userList}
+              setUserList={setUserList}
+              // eslint-disable-next-line no-console
+              onBlur={() => false}
+            />
             <KanbanProgressBox>
               {/* <KanbanProgress value={progress[1]} max={progress[0]} /> */}
               <KanbanProgress>

@@ -11,6 +11,7 @@ const TagContainer = styled.div<Props>`
   border-radius: 7px;
   white-space: nowrap;
   padding: 4px 10px;
+  font-weight: 700;
   color: ${(props) => (props.$dynamicColor ? props.$dynamicColor : "#000")};
 `;
 
