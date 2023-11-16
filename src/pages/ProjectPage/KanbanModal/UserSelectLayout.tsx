@@ -84,16 +84,15 @@ export default function UserSelectLayout(props: Props) {
         multiValue: (baseStyles) => ({
           ...baseStyles,
           padding: "0",
-          //   margin: "-2px -6px -2px -6px",
+          margin: "-2px -6px -2px -6px",
           backgroundColor: "#fcfcfc",
           transition: "all 0.2s ease",
           ">div:first-of-type": {
             backgroundColor: "#fcfcfc",
             borderRadius: "0.5rem",
-            // padding: "3px 8px 5px 7px",
           },
           ":hover": {
-            // margin: "-2px 3px -2px -6px",
+            margin: "-2px 3px -2px -6px",
             "div+div>svg": { fill: "#595959" },
           },
         }),
@@ -108,7 +107,7 @@ export default function UserSelectLayout(props: Props) {
         }),
         control: (baseStyles) => ({
           ...baseStyles,
-          minWidth: "5rem",
+          minWidth: "10rem",
           transition: "all 0.3s",
           boxShadow: "none",
           backgroundColor: "#fcfcfc",
