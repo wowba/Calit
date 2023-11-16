@@ -15,11 +15,7 @@ export default function InvitationBtn() {
   const [inputValue, setInputValue] = useState("");
 
   const handleClick = () => {
-    if (
-      isClicked &&
-      (inputValue.includes("calit-2f888.web.app/") ||
-        inputValue.includes("localhost:3000"))
-    ) {
+    if (isClicked && inputValue.includes("calit-2f888.web.app/")) {
       const cutInputValue = inputValue.substring(
         inputValue.lastIndexOf("/") + 1,
       );
