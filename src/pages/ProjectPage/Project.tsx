@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useRecoilState, useSetRecoilState } from "recoil";
+
 import history from "../../utils/history";
 import CalendarModal from "./CalendarModal/CalendarModal";
 import KanbanModal from "./KanbanModal/KanbanModal";
@@ -25,9 +25,7 @@ export default function Project() {
 
   const [isLoaded, setIsLoaded] = useRecoilState(todoLoaded);
 
-  const [historyLocation, setHistoryLocation] = useState(
-    searchParams.get("kanbanID"),
-  );
+  const [lastKanbanId, setLastKanbanId] = useState("");
 
   let calendarTabColor = "#7064FF";
   let calendarTextColor = "#FCFCFC";
@@ -68,6 +66,12 @@ export default function Project() {
     if (!searchParams.has("kanbanID")) {
       return;
     }
+    if (lastKanbanId === searchParams.get("kanbanID")) {
+      return;
+    }
+    setIsLoaded(false);
+
+    setLastKanbanId(searchParams.get("kanbanID")!);
     setTodoDataState(new Map());
     const projectID = window.location.pathname.substring(1);
     const kanbanID = searchParams.get("kanbanID");
@@ -105,7 +109,6 @@ export default function Project() {
       if (searchParams.has("todoID")) {
         setIsTodoShow(true);
       }
-      console.log("true로 바꿔줘");
       setIsLoaded(true);
     });
 
@@ -116,8 +119,6 @@ export default function Project() {
     };
   }, [searchParams.get("kanbanID")]);
 
-  console.log(isLoaded);
-
   useEffect(() => {
     if (isKanbanShow && searchParams.has("todoID")) {
       setIsTodoShow(true);
@@ -126,34 +127,6 @@ export default function Project() {
       setIsTodoShow(false);
     };
   }, [searchParams.get("todoID"), isKanbanShow]);
-
-  // console.log(history);
-  // console.log(searchParams);
-  useEffect(() => {
-    const listenBackEvent = () => {
-      setIsLoaded(false);
-    };
-    console.log(history);
-    const unlistenHistoryEvent = history.listen(({ action, location }) => {
-      console.log("과거", historyLocation);
-      console.log("현재", searchParams.get("kanbanID"));
-
-      // if (action === "POP" && location.search.includes("todoID")) {
-      if (action === "POP") {
-        console.log("들어왔습니다");
-        console.log(searchParams);
-        if (!searchParams.has("kanbanID")) {
-          setIsLoaded(true);
-        }
-        if (historyLocation !== searchParams.get("kanbanID")) {
-          setHistoryLocation(searchParams.get("kanbanID"));
-          listenBackEvent();
-        }
-      }
-    });
-
-    return unlistenHistoryEvent;
-  }, [searchParams.get("todoID")]);
 
   return (
     <ProjectLayout>
