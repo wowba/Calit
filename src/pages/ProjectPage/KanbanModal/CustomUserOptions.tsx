@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-// import TagContainer from "./TagContainer";
-import { db } from "../../../firebaseSDK";
 
 const CustomOptionContainer = styled.div`
   display: flex;
