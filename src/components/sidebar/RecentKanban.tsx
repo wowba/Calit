@@ -68,6 +68,7 @@ export default function RecentKanban() {
   const handleClick = (kanbanID: string) => {
     // 현재 위치한 페이지가 바로가기 목적지이면 동작 X
     if (curKanbanId === kanbanID) {
+      setSearchParams({ kanbanID });
       return;
     }
     setIsLoaded(false);
