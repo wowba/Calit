@@ -33,8 +33,7 @@ const ProjectModalTabBox = styled.div<{
   $isShow?: boolean;
   $textColor: string;
 }>`
-  transition: 0.5s ease;
-  transition-property: background-color;
+  transition: all 0.5s ease;
   z-index: 998;
 
   width: 7.5rem;
@@ -53,14 +52,19 @@ const ProjectModalTabBox = styled.div<{
   font-size: ${(props) => props.theme.Fs.default};
   font-weight: 600;
   scale: 1.1;
-  &:hover {
-    cursor: pointer;
-    background-color: ${(props) =>
-      props.$isShow
-        ? props.theme.Color.mainColor
-        : props.theme.Color.inactiveGray};
 
-    color: ${(props) => props.theme.Color.mainWhite};
+  &:hover {
+    ${(props) =>
+      props.$isShow
+        ? css`
+            cursor: pointer;
+            background-color: ${(innerProps) =>
+              innerProps.theme.Color.mainColor};
+            color: ${(innerProps) => innerProps.theme.Color.mainWhite};
+          `
+        : css`
+            cursor: not-allowed;
+          `}
   }
 `;
 
