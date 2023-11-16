@@ -48,6 +48,7 @@ export default function ProjectList() {
               name: docSnap.data().name,
               imgUrl: docSnap.data().project_img_URL,
               projectIntro: docSnap.data().project_intro,
+              creater: docSnap.data().creater,
             };
           }
         }
@@ -77,6 +78,7 @@ export default function ProjectList() {
               projectName={project.name}
               projectIntro={project.projectIntro}
               fetchProjectData={fetchProjectData}
+              creater={project.creater}
             />
           ))}
         </ProjectListContainer>
