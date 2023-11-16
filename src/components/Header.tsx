@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
 
 // 헤더 아이콘
 import logoutIcon from "../assets/headerIcon/logout.svg";
-import tutorialIcon from "../assets/headerIcon/tutorial.svg";
+import { ReactComponent as tutorialIcon } from "../assets/headerIcon/tutorial.svg";
 import bookmarkIcon from "../assets/headerIcon/bookmark.svg";
 import memberIcon from "../assets/headerIcon/member.svg";
 // import logIcon from "../assets/headerIcon/log.svg"
@@ -27,10 +27,13 @@ import headerState from "../recoil/atoms/header/headerState";
 import userListState from "../recoil/atoms/userList/userListState";
 import loginState from "../recoil/atoms/login/loginState";
 import { auth } from "../firebaseSDK";
+import tutorialState from "../recoil/atoms/tutorial/tutorialState";
+import tutorialCalendarState from "../recoil/atoms/tutorial/tutorialCalendarState";
 
 interface Props {
   $whichPage?: string;
 }
+
 const HeaderLayout = styled.div<Props>`
   height: 3rem;
   display: flex;
@@ -64,6 +67,31 @@ const HeaderLogo = styled(headerLogo)`
   cursor: pointer;
 `;
 
+const TutorialBox = styled.div`
+  position: fixed;
+  top: calc(100% - 3.3rem);
+  z-index: 3;
+  width: 1.875rem;
+  height: 1.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.theme.Color.mainColor};
+  border-radius: ${(props) => props.theme.Br.small};
+  > svg {
+    scale: 0.9;
+    fill: ${(props) => props.theme.Color.mainWhite};
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
+`;
+
+const TutorialImg = styled(tutorialIcon)`
+  cursor: pointer;
+`;
+
 const modals = [
   {
     key: "member",
@@ -76,13 +104,6 @@ const modals = [
       <img style={{ height: "1.5rem" }} src={bookmarkIcon} alt="modalIcon" />
     ),
     content: <BookMark />,
-  },
-  {
-    key: "tutorial",
-    icon: (
-      <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
-    ),
-    content: <Tutorial />,
   },
   // {
   //   key: "log",
@@ -98,13 +119,6 @@ const modals = [
 
 const listPageModals = [
   {
-    key: "tutorial",
-    icon: (
-      <img style={{ width: "1.5rem" }} src={tutorialIcon} alt="modalIcon" />
-    ),
-    content: <Tutorial />,
-  },
-  {
     key: "logout",
     icon: <img style={{ width: "1.5rem" }} src={logoutIcon} alt="logout" />,
     content: null,
@@ -115,13 +129,18 @@ export default function Header() {
   const currentHeaderState = useRecoilValue(headerState);
 
   const [selectedModal, setSelectedModal] = useState(-1);
+  const [isShowTutorial, setIsShowTutorial] = useState(false);
+  const [isTutorialRestoreClick, setIsTutorialRestoreClick] = useState(false);
   const navigate = useNavigate();
 
   const setLoginState = useSetRecoilState(loginState);
   const [userDataState, setUserDataState] = useRecoilState(userData);
   const { email: loginEmail }: any = userDataState.userData;
   const userListData = useRecoilValue(userListState);
-
+  const tutorialMainData = useRecoilValue(tutorialState).isMainTutorial;
+  const tutorialCalendarData = useRecoilValue(
+    tutorialCalendarState,
+  ).isCalendarTutorial;
   const handleClick = (idx: number) => {
     setSelectedModal(idx);
   };
@@ -138,9 +157,29 @@ export default function Header() {
     signOut(auth);
   };
 
+  useEffect(() => {
+    // headerState에 따라 리스트 페이지 / 캘린더 페이지 튜토리얼 구분해 props 전달
+    if (currentHeaderState === "list") {
+      if (!tutorialMainData) {
+        setIsShowTutorial(true);
+      }
+    }
+
+    if (currentHeaderState === "project") {
+      if (!tutorialCalendarData) {
+        setIsShowTutorial(true);
+      }
+    }
+  }, [currentHeaderState]);
+
   return (
     <HeaderLayout $whichPage={currentHeaderState}>
       <HeaderLogo onClick={() => navigate("/")} />
+      <TutorialBox>
+        <TutorialImg
+          onClick={() => setIsTutorialRestoreClick((prev) => !prev)}
+        />
+      </TutorialBox>
       <HeaderIconBox>
         {(currentHeaderState === "list" ? listPageModals : modals).map(
           (modal, index) => (
@@ -175,6 +214,12 @@ export default function Header() {
           ),
         )}
       </HeaderIconBox>
+      <Tutorial
+        isShowTutorial={isShowTutorial}
+        setIsShowTutorial={setIsShowTutorial}
+        isTutorialRestoreClick={isTutorialRestoreClick}
+        setIsTutorialRestoreClick={setIsTutorialRestoreClick}
+      />
     </HeaderLayout>
   );
 }

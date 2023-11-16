@@ -21,18 +21,16 @@ const CreateBtn = styled.button`
   display: inline-block;
   min-width: 230px;
   height: 226px;
-  border: 1px solid transparent;
-  border-radius: 13px;
+  border: ${(props) => props.theme.Border.thinBorder};
+  border-radius: ${(props) => props.theme.Br.default};
   background-color: #ededed;
-  margin: 20px;
-  transition:
-    box-shadow 0.7s,
-    border 0.7s;
+  margin: 32px 20px 20px 20px;
+  transition: all 0.5s ease;
   &:hover {
-    box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
-    -webkit-box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
-    -moz-box-shadow: 0px 16px 48px 0px rgba(0, 0, 0, 0.176);
-    border: 1px solid #c9c9c9;
+    background-color: ${(props) => props.theme.Color.activeColor};
+    box-shadow: ${(props) => props.theme.Bs.default};
+    -webkit-box-shadow: ${(props) => props.theme.Bs.default};
+    -moz-box-shadow: ${(props) => props.theme.Bs.default};
   }
 `;
 

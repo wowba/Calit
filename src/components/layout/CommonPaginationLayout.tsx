@@ -7,32 +7,24 @@ const TutorialPaginationLayout = styled.div`
   justify-content: center;
   align-items: center;
   gap: 4px;
-  margin: 16px;
+  margin: 1rem 0;
 `;
 
 const TutorialPaginationButton = styled.button`
   border: none;
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: 7px;
+  padding: 5px 10px;
   margin: 0;
-  background: black;
-  color: white;
   font-size: 1rem;
-
-  &:hover {
-    background: tomato;
-    cursor: pointer;
-    transform: translateY(-2px);
-  }
+  cursor: pointer;
 
   &[disabled] {
-    background: grey;
     cursor: revert;
     transform: revert;
   }
 
   &[aria-current] {
-    background: deeppink;
+    background: #7064ff;
     font-weight: bold;
     cursor: revert;
     transform: revert;
