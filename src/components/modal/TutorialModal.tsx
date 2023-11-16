@@ -241,6 +241,7 @@ export default function Tutorial({
         });
       }
 
+      // 다시보기 버튼 state 초기화
       setIsTutorialRestoreClick(false);
     });
   };
