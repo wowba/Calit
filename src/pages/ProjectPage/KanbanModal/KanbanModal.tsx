@@ -22,7 +22,7 @@ import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 import UserSelectLayout from "./UserSelectLayout";
 import dots from "../../../assets/icons/dots.svg";
 import KanbanMoreModal from "./KanbanMoreModal";
-// import userListState from "../../../recoil/atoms/userList/userListState";
+import asyncDelay from "../../../utils/asyncDelay";
 
 const KanbanContainer = styled(ProjectModalContentBox)<{
   $isKanbanShow: boolean;
@@ -148,6 +148,8 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   }, [kanbanId, isKanbanShow, currentKanban]);
 
   const handleDelete = async () => {
+    navigate(`/${projectId}`);
+    await asyncDelay(600);
     const projectRef = doc(db, "project", projectId);
     const deletedKanbanInfo = {
       id: kanbanId,
@@ -171,7 +173,6 @@ export default function KanbanModal({ isKanbanShow }: Props) {
     });
 
     setIsKanbanMoreModalShow(false);
-    navigate(`/${projectId}`);
   };
 
   const handleKanbanInputBlur = async () => {
