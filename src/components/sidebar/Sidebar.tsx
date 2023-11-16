@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 
 import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
-import tutorialIcon from "../../assets/headerIcon/tutorial.svg";
 import projectState from "../../recoil/atoms/project/projectState";
 import RecentKanban from "./RecentKanban";
 
@@ -55,13 +54,6 @@ export default function Sidebar() {
           <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
         </ProjectInfoBox>
         <RecentKanban />
-        <TutorialBox>
-          <TutorialImg
-            src={tutorialIcon}
-            alt="TutorialIcon"
-            onClick={handleRestoreTutorial}
-          />
-        </TutorialBox>
       </div>
     </SidebarLayout>
   );

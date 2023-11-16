@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import Swal from "sweetalert2";
 import { styled } from "styled-components";
+import tutorialIcon from "../../assets/headerIcon/tutorial.svg";
+import headerState from "../../recoil/atoms/header/headerState";
+import tutorialCalendarState from "../../recoil/atoms/tutorial/tutorialCalendarState";
+import tutorialState from "../../recoil/atoms/tutorial/tutorialState";
 import CommonPaginationLayout from "../layout/CommonPaginationLayout";
 
 const TutorialTextContent = styled.div`
   display: flex;
+  height: 100%;
   flex-direction: column;
 `;
 
@@ -14,23 +21,12 @@ const TutorialTextTitle = styled.p`
 `;
 
 const TutorialTextParagraph = styled.p`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   white-space: pre-line;
-  text-align: left;
-  max-height: 10rem;
   word-break: keep-all;
-
-  // &::-webkit-scrollbar {
-  //   width: 8px;
-  //   overflow-y: scroll;
-  //   border-radius: 6px;
-  // }
-  // &::-webkit-scrollbar-thumb {
-  //   background: rgba(0, 0, 0, 0.3);
-  //   border-radius: 6px;
-  // }
-  // &::-webkit-scrollbar-corner {
-  //   background-color: transparent;
-  // }
 `;
 
 const TutorialButtonBox = styled.div`
@@ -63,7 +59,7 @@ const ModalContainer = styled.div`
 const ModalText = styled.div`
   background: white;
   width: 400px;
-  min-height: 20rem;
+  height: 20rem;
   padding: 20px;
   border-radius: 10px;
   text-align: center;
@@ -73,7 +69,6 @@ const ModalText = styled.div`
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const TUTORIAL_LIST_TEXT = [
@@ -120,26 +115,144 @@ const TUTORIAL_PROJECT_TEXT = [
 interface Props {
   isShowTutorial: boolean;
   setIsShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
+  isTutorialRestoreClick: boolean;
+  setIsTutorialRestoreClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function Tutorial({ isShowTutorial, setIsShowTutorial }: Props) {
+export default function Tutorial({
+  isShowTutorial,
+  setIsShowTutorial,
+  isTutorialRestoreClick,
+  setIsTutorialRestoreClick,
+}: Props) {
   const projectId = window.location.pathname.substring(1);
   const tutorialTarget = !projectId
     ? TUTORIAL_LIST_TEXT
     : TUTORIAL_PROJECT_TEXT;
-
-  const handleCloseBtn = () => {
-    setIsShowTutorial(false);
-  };
+  const currentHeaderState = useRecoilValue(headerState);
+  const setMainTutorialState = useSetRecoilState(tutorialState);
+  const setCalendarTutorialState = useSetRecoilState(tutorialCalendarState);
+  const mainTutorialData = useRecoilValue(tutorialState).isMainTutorial;
+  const calendarTutorialData = useRecoilValue(
+    tutorialCalendarState,
+  ).isCalendarTutorial;
+  const [isTutorialDataShow, setIsTutorialDataShow] = useState(false); // 튜토리얼 데이터 state
+  const targetData =
+    currentHeaderState === "list" ? mainTutorialData : calendarTutorialData;
+  const targetName = currentHeaderState === "list" ? "Calit" : "프로젝트";
 
   const [posts, setPosts] = useState<object[]>([]);
   const [page, setPage] = useState(1);
   const offset = page - 1;
 
+  const handleCloseBtn = () => {
+    setIsTutorialDataShow(false);
+    setIsShowTutorial(false);
+  };
+
   useEffect(() => {
+    // 튜토리얼에서 보여질 데이터 세팅
     setPosts(tutorialTarget);
   }, []);
 
-  return isShowTutorial ? (
+  // 튜토리얼 안내 문구 세팅
+  const fetchTutorialData = () => {
+    if (!targetData) {
+      Swal.fire({
+        icon: "info",
+        title: `${targetName}에 오신 것을 환영합니다!`,
+        html: `하단의 버튼을 통해 튜토리얼을 진행할 수 있습니다! <br><br> 다시보지 않기를 선택하더라도, 좌측 하단의 <img src=${tutorialIcon} style="display: inline; margin-right: 0.25rem"/>아이콘을 통해 <br>언제든지 튜토리얼을 다시 보실 수 있습니다.`,
+        showCancelButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        confirmButtonText: "튜토리얼 보기",
+        cancelButtonText: "다시보지 않기",
+      }).then((result) => {
+        // 튜토리얼 보기 선택
+        if (result.isConfirmed) {
+          setPage(1); // 첫 페이지로 초기화
+          setIsTutorialDataShow(true);
+        }
+        // 다시보지 않기 선택
+        if (result.isDismissed) {
+          // headerState에 따라 리스트 페이지 / 캘린더 페이지 구분해 로컬스토리지에 저장
+          if (currentHeaderState === "list") {
+            setMainTutorialState({
+              isMainTutorial: true,
+            });
+          } else {
+            setCalendarTutorialState({
+              isCalendarTutorial: true,
+            });
+          }
+          setIsTutorialDataShow(false);
+        }
+        setIsShowTutorial(false);
+      });
+    }
+  };
+
+  // 헤더에서 넘겨받은 state에 따라 튜토리얼 안내 문구 세팅
+  useEffect(() => {
+    if (isShowTutorial) {
+      fetchTutorialData();
+    }
+  }, [isShowTutorial]);
+
+  // 튜토리얼 다시 보기
+  const handleRestoreTutorial = () => {
+    Swal.fire({
+      icon: "question",
+      title: `${targetName} 튜토리얼을 다시 보시겠습니까?`,
+      confirmButtonText: "다시 보기",
+      cancelButtonText: "취소",
+      showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+    }).then((result) => {
+      // 다시보기 버튼 선택
+      if (result.isConfirmed) {
+        if (currentHeaderState === "list") {
+          setMainTutorialState({
+            isMainTutorial: false,
+          });
+        } else {
+          setCalendarTutorialState({
+            isCalendarTutorial: false,
+          });
+        }
+
+        Swal.fire({
+          icon: "success",
+          title: "튜토리얼 다시 보기가 적용되었습니다!",
+          text: `이제 튜토리얼을 다시 확인하실 수 있습니다.`,
+          confirmButtonText: "튜토리얼 보기",
+          cancelButtonText: "취소",
+          showCancelButton: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+        }).then((restoreResult) => {
+          // 다시보기 버튼
+          if (restoreResult.isConfirmed) {
+            setIsShowTutorial(true);
+          }
+        });
+      }
+
+      setIsTutorialRestoreClick(false);
+    });
+  };
+
+  // 헤더에서 튜토리얼 다시 보기 버튼 선택시 동작
+  useEffect(() => {
+    if (isTutorialRestoreClick) {
+      handleRestoreTutorial();
+    }
+  }, [isTutorialRestoreClick]);
+
+  return isTutorialDataShow ? (
     <ModalContainer>
       <ModalText>
         {posts.slice(offset, page).map((singleElement: any) => (

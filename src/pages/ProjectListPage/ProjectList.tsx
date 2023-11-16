@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import Swal from "sweetalert2";
 import { db } from "../../firebaseSDK";
-import tutorialState from "../../recoil/atoms/tutorial/tutorialState";
 import userState from "../../recoil/atoms/login/userDataState";
 import InvitationBtn from "./InvitationBtn";
 import ProjectCard from "./ProjectCard";
 import CreateProjectBtn from "./CreateProjectBtn";
-import Tutorial from "../../components/modal/TutorialModal";
 
 const ProjectListTitle = styled.div`
   font-size: 2rem;
@@ -37,37 +34,6 @@ export default function ProjectList() {
     project_img_URL: projectImgUrl,
     project_intro: projectIntro,
   }: any = useRecoilValue(userState).userData;
-  const tutorialData = useRecoilValue(tutorialState).isMainTutorial;
-  const setTutorialState = useSetRecoilState(tutorialState);
-  const [isShowTutorial, setIsShowTutorial] = useState(false);
-
-  // 프로젝트 리스트 페이지 튜토리얼
-  const fetchTutorialData = () => {
-    if (!tutorialData) {
-      Swal.fire({
-        icon: "info",
-        title: "Calit에 오신 것을 환영합니다!",
-        text: "사용법이 궁금하시다면, 하단의 튜토리얼 보기 버튼을 눌러주세요!",
-        showCancelButton: true,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        confirmButtonText: "튜토리얼 보기",
-        cancelButtonText: "다시보지 않기",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setIsShowTutorial(true);
-        }
-
-        // 다시보지 않기 선택
-        if (result.isDismissed) {
-          setTutorialState({
-            isMainTutorial: true,
-          });
-        }
-      });
-    }
-  };
 
   const fetchProjectData = async () => {
     const projects: any = await Promise.all(
@@ -91,11 +57,6 @@ export default function ProjectList() {
 
     setProjectData(projects.filter((project: any) => project !== null));
   };
-
-  // 프로젝트 리스트 페이지 튜토리얼
-  useEffect(() => {
-    fetchTutorialData();
-  }, []);
 
   useEffect(() => {
     fetchProjectData();
@@ -121,10 +82,6 @@ export default function ProjectList() {
         </ProjectListContainer>
       </div>
       <Footer />
-      <Tutorial
-        isShowTutorial={isShowTutorial}
-        setIsShowTutorial={setIsShowTutorial}
-      />
     </>
   );
 }

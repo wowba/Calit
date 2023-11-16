@@ -2,27 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import Swal from "sweetalert2";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import CalendarModal from "./CalendarModal/CalendarModal";
 import KanbanModal from "./KanbanModal/KanbanModal";
 import TodoModal from "./TodoModal/TodoModal";
 import { db } from "../../firebaseSDK";
 import todoState from "../../recoil/atoms/todo/todoState";
-import tutorialCalendarState from "../../recoil/atoms/tutorial/tutorialCalendarState";
 import {
   ProjectLayout,
   ProjectModalTabBox,
 } from "../../components/layout/ProjectModalLayout";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
-import Tutorial from "../../components/modal/TutorialModal";
 
 export default function Project() {
   const [searchParams, setSearchParams] = useSearchParams();
   const setTodoDataState = useSetRecoilState(todoState);
-  const tutorialData = useRecoilValue(tutorialCalendarState).isCalendarTutorial;
-  const setTutorialState = useSetRecoilState(tutorialCalendarState);
-  const [isShowTutorial, setIsShowTutorial] = useState(false);
 
   const [isKanbanShow, setIsKanbanShow] = useState(false);
   const [isTodoShow, setIsTodoShow] = useState(false);
@@ -63,42 +57,6 @@ export default function Project() {
         kanbanID: searchParams.get("kanbanID")!,
       });
   };
-
-  // 모달 텍스트 가운데 중앙 정렬
-  // 리스트페이지에서도 아이콘 넣기
-
-  // 캘린더 튜토리얼
-  const fetchTutorialData = () => {
-    if (!tutorialData) {
-      Swal.fire({
-        icon: "info",
-        title: "프로젝트에 오신 것을 환영합니다!",
-        text: "상단 헤더 모달들이 궁금하시다면, 하단의 튜토리얼 보기 버튼을 눌러주세요!",
-        showCancelButton: true,
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        allowEnterKey: false,
-        confirmButtonText: "튜토리얼 보기",
-        cancelButtonText: "다시보지 않기",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setIsShowTutorial(true);
-        }
-
-        // 다시보지 않기 선택
-        if (result.isDismissed) {
-          setTutorialState({
-            isCalendarTutorial: true,
-          });
-        }
-      });
-    }
-  };
-
-  // 캘린더 튜토리얼
-  useEffect(() => {
-    fetchTutorialData();
-  }, []);
 
   useEffect(() => {
     if (!searchParams.has("kanbanID")) {
@@ -196,10 +154,6 @@ export default function Project() {
       <KanbanModal isKanbanShow={isKanbanShow} />
       {/* 투두 */}
       <TodoModal isTodoShow={isTodoShow} />
-      <Tutorial
-        isShowTutorial={isShowTutorial}
-        setIsShowTutorial={setIsShowTutorial}
-      />
     </ProjectLayout>
   );
 }
