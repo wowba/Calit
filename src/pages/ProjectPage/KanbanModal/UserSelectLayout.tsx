@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Select from "react-select";
+import { DocumentData, DocumentReference, updateDoc } from "firebase/firestore";
+
 import projectState from "../../../recoil/atoms/project/projectState";
 import userListState from "../../../recoil/atoms/userList/userListState";
 import CustomUserOptions from "./CustomUserOptions";
@@ -24,25 +26,34 @@ const ProfileImg = styled.img`
 `;
 
 interface Props {
-  userList: Array<string>;
+  userList: Array<any>;
   setUserList: React.Dispatch<React.SetStateAction<any[]>>;
-  onBlur: any;
   customUserData?: Array<any>;
   isCustomUserData?: boolean;
+  kanbanRef: DocumentReference<DocumentData, DocumentData>;
 }
 
 export default function UserSelectLayout(props: Props) {
   const userListData = useRecoilValue(userListState);
 
-  const { userList, setUserList, onBlur, customUserData, isCustomUserData } =
+  const { userList, setUserList, customUserData, isCustomUserData, kanbanRef } =
     props;
   const { user_list: projectUserList } =
     useRecoilValue(projectState).projectData;
   const [userData, setUserData] = useState<any[]>([]);
 
+  const selectedUserList = userList.map((userInfo: any) => {
+    const user = userListData.get(userInfo.value);
+    return {
+      image: user.profile_img_URL,
+      value: user.email,
+      label: user.name,
+    };
+  });
+
   // user_list와 userListData를 통해 user 데이터 set
   useEffect(() => {
-    const fetchData = async (list: any) => {
+    const fetchData = (list: any) => {
       const data = list.map((id: string) => {
         const user = userListData.get(id);
         if (!user.is_kicked) {
@@ -63,6 +74,12 @@ export default function UserSelectLayout(props: Props) {
     }
   }, [userListData]);
 
+  const handleUserListOnBlur = async () => {
+    await updateDoc(kanbanRef, {
+      user_list: userList,
+    });
+  };
+
   return (
     <Select
       options={userData}
@@ -72,13 +89,11 @@ export default function UserSelectLayout(props: Props) {
           <ProfileImg src={option.image} alt="User Profile" />
         </ManagedUser>
       )}
-      value={userList}
+      value={selectedUserList}
       onChange={(state: any) => {
         setUserList(state);
       }}
-      onBlur={() => {
-        onBlur();
-      }}
+      onBlur={handleUserListOnBlur}
       components={{ Option: CustomUserOptions }}
       styles={{
         multiValue: (baseStyles) => ({

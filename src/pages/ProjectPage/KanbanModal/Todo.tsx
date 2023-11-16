@@ -9,6 +9,7 @@ import { useRecoilValue } from "recoil";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import { db } from "../../../firebaseSDK";
+import userListState from "../../../recoil/atoms/userList/userListState";
 
 interface ContainerProps {
   $isDragging: boolean;
@@ -110,6 +111,8 @@ interface TodoProps {
 }
 
 function Todo({ todo, index }: TodoProps) {
+  const userListData = useRecoilValue(userListState);
+
   const [, setSearchParams] = useSearchParams();
   const projectId = window.location.pathname.substring(1);
   const urlQueryString = new URLSearchParams(window.location.search);
@@ -179,13 +182,16 @@ function Todo({ todo, index }: TodoProps) {
           </TodoNameBox>
 
           <TodoUserListBox>
-            {todo.user_list.map((user) => (
-              <TodoUserImage
-                key={user.label}
-                src={user.image}
-                alt={user.label}
-              />
-            ))}
+            {todo.user_list.map((user) => {
+              const userData = userListData.get(user.value);
+              return (
+                <TodoUserImage
+                  key={userData.id}
+                  src={userData.profile_img_URL}
+                  alt={userData.label}
+                />
+              );
+            })}
           </TodoUserListBox>
           <TodoTrashIcon
             src={trashIcon}

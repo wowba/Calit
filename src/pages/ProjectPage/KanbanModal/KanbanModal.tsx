@@ -22,6 +22,7 @@ import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
 import UserSelectLayout from "./UserSelectLayout";
 import dots from "../../../assets/icons/dots.svg";
 import KanbanMoreModal from "./KanbanMoreModal";
+// import userListState from "../../../recoil/atoms/userList/userListState";
 
 const KanbanContainer = styled(ProjectModalContentBox)<{
   $isKanbanShow: boolean;
@@ -110,10 +111,13 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   const kanbanNameInputRef = useRef<HTMLInputElement>(null);
 
   const kanbanDataState = useRecoilValue(kanbanState);
+  // const userListData = useRecoilValue(userListState);
+
   const [lastKanbanId, setLastkanbanId] = useState("");
 
   const [progress, setProgress] = useState([0, 0]);
   const [inputKanbanName, setInputKanbanName] = useState("");
+  const [userList, setUserList] = useState<any[]>([]);
 
   const [isKanbanMoreModalShow, setIsKanbanMoreModalShow] = useState(false);
 
@@ -134,15 +138,13 @@ export default function KanbanModal({ isKanbanShow }: Props) {
 
   const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
 
-  // 여기
-  const [userList, setUserList] = useState<any[]>([]);
-
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
       return;
     }
     setLastkanbanId(kanbanId);
     setInputKanbanName(currentKanban.name);
+    setUserList(currentKanban.user_list);
   }, [kanbanId, isKanbanShow, currentKanban]);
 
   const handleDelete = async () => {
@@ -246,14 +248,11 @@ export default function KanbanModal({ isKanbanShow }: Props) {
             }}
           >
             <UserSelectLayout
-              // 현재 props는 오류 안나게만 넣어둔 상태. 수정 필요.
               userList={userList}
               setUserList={setUserList}
-              // eslint-disable-next-line no-console
-              onBlur={() => false}
+              kanbanRef={kanbanRef}
             />
             <KanbanProgressBox>
-              {/* <KanbanProgress value={progress[1]} max={progress[0]} /> */}
               <KanbanProgress>
                 <KanbanProgressInner
                   $percentage={
