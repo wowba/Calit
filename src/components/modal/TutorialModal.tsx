@@ -258,7 +258,8 @@ export default function Tutorial({
         }).then((restoreResult) => {
           // 다시보기 버튼
           if (restoreResult.isConfirmed) {
-            setIsShowTutorial(true);
+            setPage(1);
+            setIsTutorialDataShow(true);
           }
         });
       }
