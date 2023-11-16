@@ -70,7 +70,7 @@ export default function Sidebar() {
             alt="Project Profile Img"
           />
           <ProjectTitleBox>
-            <ProjectTitleBoxLabel />
+            {projectData.name ? <ProjectTitleBoxLabel /> : null}
             <ProjectTitleParagraph>{projectData.name}</ProjectTitleParagraph>
           </ProjectTitleBox>
         </ProjectInfoBox>
