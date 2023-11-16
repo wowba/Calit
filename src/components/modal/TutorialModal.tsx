@@ -1,36 +1,73 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import Swal from "sweetalert2";
 import { styled } from "styled-components";
-import { ModalArea, ModalTitle } from "../layout/ModalCommonLayout";
+import headerState from "../../recoil/atoms/header/headerState";
+import tutorialCalendarState from "../../recoil/atoms/tutorial/tutorialCalendarState";
+import tutorialState from "../../recoil/atoms/tutorial/tutorialState";
 import CommonPaginationLayout from "../layout/CommonPaginationLayout";
 
-const TutorialTextLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 20rem;
-`;
 const TutorialTextContent = styled.div`
-  white-space: pre-line;
-  max-height: 15rem;
-  overflow: scroll;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    overflow-y: scroll;
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-corner {
-    background-color: transparent;
-  }
+  display: flex;
+  height: 100%;
+  flex-direction: column;
 `;
-const TutorialTextParagraph = styled.p`
+
+const TutorialTextTitle = styled.p`
   font-size: 1.1rem;
   font-weight: 900;
   margin-bottom: 10px;
+`;
+
+const TutorialTextParagraph = styled.p`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: pre-line;
+  word-break: keep-all;
+`;
+
+const TutorialButtonBox = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const TutorialExitButton = styled.button`
+  bottom: 1rem;
+  height: fit-content;
+  border-radius: 7px;
+  padding: 5px 10px;
+  margin: 0;
+  background: #7064ff;
+  color: white;
+  font-size: 1rem;
+`;
+
+const ModalContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`;
+
+const ModalText = styled.div`
+  background: white;
+  width: 400px;
+  height: 20rem;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
 `;
 
 const TUTORIAL_LIST_TEXT = [
@@ -74,42 +111,169 @@ const TUTORIAL_PROJECT_TEXT = [
   },
 ];
 
-const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-  // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
-  event.stopPropagation();
-};
-
-export default function Tutorial() {
+interface Props {
+  isShowTutorial: boolean;
+  setIsShowTutorial: React.Dispatch<React.SetStateAction<boolean>>;
+  isTutorialRestoreClick: boolean;
+  setIsTutorialRestoreClick: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function Tutorial({
+  isShowTutorial,
+  setIsShowTutorial,
+  isTutorialRestoreClick,
+  setIsTutorialRestoreClick,
+}: Props) {
   const projectId = window.location.pathname.substring(1);
-  const tutorialTitle = !projectId ? "List" : "Project";
   const tutorialTarget = !projectId
     ? TUTORIAL_LIST_TEXT
     : TUTORIAL_PROJECT_TEXT;
+  const currentHeaderState = useRecoilValue(headerState);
+  const setMainTutorialState = useSetRecoilState(tutorialState);
+  const setCalendarTutorialState = useSetRecoilState(tutorialCalendarState);
+  const mainTutorialData = useRecoilValue(tutorialState).isMainTutorial;
+  const calendarTutorialData = useRecoilValue(
+    tutorialCalendarState,
+  ).isCalendarTutorial;
+  const [isTutorialDataShow, setIsTutorialDataShow] = useState(false); // 튜토리얼 데이터 state
+  const targetData =
+    currentHeaderState === "list" ? mainTutorialData : calendarTutorialData;
+  const targetName = currentHeaderState === "list" ? "Calit" : "프로젝트";
 
   const [posts, setPosts] = useState<object[]>([]);
   const [page, setPage] = useState(1);
   const offset = page - 1;
 
+  const handleCloseBtn = () => {
+    setIsTutorialDataShow(false);
+    setIsShowTutorial(false);
+  };
+
   useEffect(() => {
+    // 튜토리얼에서 보여질 데이터 세팅
     setPosts(tutorialTarget);
   }, []);
 
-  return (
-    <ModalArea $dynamicWidth="" $dynamicHeight="auto" onClick={handleClick}>
-      <ModalTitle>{`${tutorialTitle} Tutorial`}</ModalTitle>
-      <TutorialTextLayout>
+  // 튜토리얼 안내 문구 세팅
+  const fetchTutorialData = () => {
+    if (!targetData) {
+      Swal.fire({
+        icon: "info",
+        title: `${targetName}에 오신 것을 환영합니다!`,
+        html: `하단의 버튼을 통해 튜토리얼을 진행할 수 있습니다! <br><br> 다시보지 않기를 선택하더라도, 좌측 하단의 튜토리얼 아이콘을 통해 언제든지 튜토리얼을 다시 보실 수 있습니다.`,
+        showCancelButton: true,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        confirmButtonText: "튜토리얼 보기",
+        cancelButtonText: "다시보지 않기",
+      }).then((result) => {
+        // 튜토리얼 보기 선택
+        if (result.isConfirmed) {
+          setPage(1); // 첫 페이지로 초기화
+          setIsTutorialDataShow(true);
+        }
+        // 다시보지 않기 선택
+        if (result.isDismissed) {
+          // headerState에 따라 리스트 페이지 / 캘린더 페이지 구분해 로컬스토리지에 저장
+          if (currentHeaderState === "list") {
+            setMainTutorialState({
+              isMainTutorial: true,
+            });
+          } else {
+            setCalendarTutorialState({
+              isCalendarTutorial: true,
+            });
+          }
+          setIsTutorialDataShow(false);
+        }
+        setIsShowTutorial(false);
+      });
+    }
+  };
+
+  // 헤더에서 넘겨받은 state에 따라 튜토리얼 안내 문구 세팅
+  useEffect(() => {
+    if (isShowTutorial) {
+      fetchTutorialData();
+    }
+  }, [isShowTutorial]);
+
+  // 튜토리얼 다시 보기
+  const handleRestoreTutorial = () => {
+    Swal.fire({
+      icon: "question",
+      title: `${targetName} 튜토리얼을 다시 보시겠습니까?`,
+      confirmButtonText: "다시 보기",
+      cancelButtonText: "취소",
+      showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      allowEnterKey: false,
+    }).then((result) => {
+      // 다시보기 버튼 선택
+      if (result.isConfirmed) {
+        if (currentHeaderState === "list") {
+          setMainTutorialState({
+            isMainTutorial: false,
+          });
+        } else {
+          setCalendarTutorialState({
+            isCalendarTutorial: false,
+          });
+        }
+
+        Swal.fire({
+          icon: "success",
+          title: "튜토리얼 다시 보기가 적용되었습니다!",
+          text: `이제 튜토리얼을 다시 확인하실 수 있습니다.`,
+          confirmButtonText: "튜토리얼 보기",
+          cancelButtonText: "취소",
+          showCancelButton: true,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+        }).then((restoreResult) => {
+          // 다시보기 버튼
+          if (restoreResult.isConfirmed) {
+            setIsShowTutorial(true);
+          }
+        });
+      }
+
+      // 다시보기 버튼 state 초기화
+      setIsTutorialRestoreClick(false);
+    });
+  };
+
+  // 헤더에서 튜토리얼 다시 보기 버튼 선택시 동작
+  useEffect(() => {
+    if (isTutorialRestoreClick) {
+      handleRestoreTutorial();
+    }
+  }, [isTutorialRestoreClick]);
+
+  return isTutorialDataShow ? (
+    <ModalContainer>
+      <ModalText>
         {posts.slice(offset, page).map((singleElement: any) => (
           <TutorialTextContent key={singleElement.key}>
-            <TutorialTextParagraph>{singleElement.key}</TutorialTextParagraph>
-            {singleElement.content}
+            <TutorialTextTitle>{singleElement.key}</TutorialTextTitle>
+            <TutorialTextParagraph>
+              {singleElement.content}
+            </TutorialTextParagraph>
           </TutorialTextContent>
         ))}
-        <CommonPaginationLayout
-          total={posts.length}
-          page={page}
-          setPage={setPage}
-        />
-      </TutorialTextLayout>
-    </ModalArea>
-  );
+        <TutorialButtonBox>
+          <CommonPaginationLayout
+            total={posts.length}
+            page={page}
+            setPage={setPage}
+          />
+          <TutorialExitButton onClick={handleCloseBtn}>
+            나가기
+          </TutorialExitButton>
+        </TutorialButtonBox>
+      </ModalText>
+    </ModalContainer>
+  ) : null;
 }
