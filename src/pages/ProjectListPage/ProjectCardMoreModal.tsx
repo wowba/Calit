@@ -47,6 +47,10 @@ const ModalInnerBtn = styled.button`
   padding: 0.4rem 0.6rem;
 
   border-bottom: ${(props) => props.theme.Border.thinBorder};
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: ${(props) => props.theme.Color.activeColor};
+  }
 `;
 
 const ChangePicInput = styled.input`

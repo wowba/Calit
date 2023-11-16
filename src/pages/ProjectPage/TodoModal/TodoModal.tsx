@@ -17,9 +17,10 @@ import todoState from "../../../recoil/atoms/todo/todoState";
 import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMemberLayout";
 import TagSelectLayout from "./TagSelectLayout";
 import ErrorPage from "../../../components/ErrorPage";
-import trashIcon from "../../../assets/icons/trashIcon.svg";
+import dotsIcon from "../../../assets/icons/dots.svg";
 import icon_plus from "../../../assets/icons/plusIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
+import TodoMoreModal from "./TodoMoreModal";
 
 type Props = {
   isTodoShow: boolean;
@@ -29,7 +30,7 @@ type Props = {
 const TodoContainer = styled(ProjectModalContentBox)<{
   $isTodoShow: boolean;
 }>`
-  padding: 2rem;
+  padding: 2rem 2rem 0.5rem 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 100%;
@@ -121,6 +122,8 @@ export default function TodoModal({ isTodoShow }: Props) {
   const [userList, setUserList] = useState<any[]>([]);
   const [isUpdateClick, setIsUpdateClick] = useState(false);
 
+  const [isMoreModalOpened, setIsMoreModalOpened] = useState(false);
+
   useEffect(() => {
     if (!isTodoShow || todoId === "null" || !currentTodo) {
       return;
@@ -193,6 +196,7 @@ export default function TodoModal({ isTodoShow }: Props) {
     await updateDoc(todoRef, {
       is_deleted: true,
     });
+    setIsMoreModalOpened(false);
     navigate(`/${projectId}?kanbanID=${kanbanId}`);
   };
 
@@ -221,7 +225,12 @@ export default function TodoModal({ isTodoShow }: Props) {
     <ProjectModalLayout $isShow={isTodoShow}>
       <TodoContainer $isTodoShow={isTodoShow}>
         <div style={{ padding: "0 2rem 0 0" }}>
-          <TodoTopContainer>
+          <TodoTopContainer
+            style={{
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+            }}
+          >
             <TodoTitle>
               <CommonInputLayout
                 ref={todoNameInputRef}
@@ -241,13 +250,20 @@ export default function TodoModal({ isTodoShow }: Props) {
                 }}
               />
             </TodoTitle>
-            <button
-              type="button"
-              onClick={handleDelete}
-              style={{ margin: "0 1rem 0 0" }}
-            >
-              <img src={trashIcon} alt="투두 삭제" />
-            </button>
+            <div style={{ position: "relative" }}>
+              <button
+                type="button"
+                onClick={() => setIsMoreModalOpened(!isMoreModalOpened)}
+                style={{ margin: "0 1rem 0 0" }}
+              >
+                <img src={dotsIcon} alt="더보기" />
+              </button>
+              <TodoMoreModal
+                isShow={isMoreModalOpened}
+                setIsShow={setIsMoreModalOpened}
+                handleDeleteClick={handleDelete}
+              />
+            </div>
           </TodoTopContainer>
 
           <div>

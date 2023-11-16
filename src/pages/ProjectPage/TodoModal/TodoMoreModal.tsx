@@ -1,27 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 
-const KanbanMoreModalLayout = styled.div<{ $isShow: boolean }>`
+const TodoMoreModalLayout = styled.div<{ $isShow: boolean }>`
   position: absolute;
+  top: 1.5rem;
+  right: 0;
 
-  top: 5rem;
-  right: 1rem;
-
-  width: auto;
+  width: 10rem;
   background-color: ${(props) => props.theme.Color.mainWhite};
 
   border: ${(props) => props.theme.Border.thickBorder};
   border-radius: ${(props) => props.theme.Br.default};
   box-shadow: ${(props) => props.theme.Bs.default};
 
-  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
-
   z-index: 999;
-
-  transition: background-color 0.3s ease;
-  &:hover {
-    background-color: ${(props) => props.theme.Color.activeColor};
-  }
 
   ${(props) =>
     !props.$isShow &&
@@ -30,14 +22,28 @@ const KanbanMoreModalLayout = styled.div<{ $isShow: boolean }>`
     `}
 `;
 
+const ModalInnerBtn = styled.button`
+  width: 100%;
+
+  text-align: start;
+  padding: 0.4rem 0.6rem;
+
+  border-bottom: ${(props) => props.theme.Border.thinBorder};
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: ${(props) => props.theme.Color.activeColor};
+  }
+`;
+
 interface Props {
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
-  handleDeleteKanban: () => Promise<void>;
+  handleDeleteClick: () => Promise<void>;
 }
 
-export default function KanbanMoreModal(props: Props) {
-  const { isShow, setIsShow, handleDeleteKanban } = props;
+export default function TodoMoreModal(props: Props) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { isShow, setIsShow, handleDeleteClick } = props;
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -60,10 +66,10 @@ export default function KanbanMoreModal(props: Props) {
   }, [wrapperRef]);
 
   return (
-    <KanbanMoreModalLayout ref={wrapperRef} $isShow={isShow}>
-      <button type="button" onClick={handleDeleteKanban}>
-        칸반 삭제하기
-      </button>
-    </KanbanMoreModalLayout>
+    <TodoMoreModalLayout ref={wrapperRef} $isShow={isShow}>
+      <ModalInnerBtn type="button" onClick={handleDeleteClick}>
+        투두 삭제하기
+      </ModalInnerBtn>
+    </TodoMoreModalLayout>
   );
 }

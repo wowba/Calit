@@ -1,27 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
 import { getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
-import settingIcon from "../../../assets/icons/settingIconBlack.svg";
+import dotsIcon from "../../../assets/icons/dots.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
 import pencilIcon from "../../../assets/icons/pencilIcon.svg";
 import reloadIcon from "../../../assets/icons/reloadIcon.svg";
 import CommonSettingModal from "../../../components/layout/CommonSettingModal";
 import userListState from "../../../recoil/atoms/userList/userListState";
+import TodoUpdateMoreModal from "./TodoUpdateMoreModal";
 
 const UpdateListHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
   align-items: center;
 `;
 const ManagedUser = styled.div`
   display: flex;
   font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.5rem 0;
 `;
 const SettingContainer = styled.div`
   display: flex;
@@ -32,7 +33,7 @@ const UpdateContent = styled.div`
   margin: 0.5rem 0;
   border-radius: 10px;
   background-color: ${(props) => props.theme.mainWhite};
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 `;
 
 const ChangeUpdateModal = styled(CommonSettingModal)`
@@ -58,7 +59,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
     setIsSettingOpened(!isSettingOpened);
   };
   // 업데이트 컴포넌트 수정
-  const handleButtonClick = async () => {
+  const handleModifyClick = async () => {
     if (isEditing) {
       const todoSnap: any = await getDoc(todoRef);
       const getUpdateContents = todoSnap.data().update_list;
@@ -124,9 +125,19 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
             onClick={() => setIsSettingOpened(!isSettingOpened)}
             style={{ margin: "0 0 0 0.5rem" }}
           >
-            <img src={settingIcon} alt="설정" />
+            <img
+              src={dotsIcon}
+              alt="설정"
+              style={{ margin: "0 0.3rem 0 0.5rem" }}
+            />
           </button>
-          {isSettingOpened && (
+          <TodoUpdateMoreModal
+            isShow={isSettingOpened}
+            setIsShow={setIsSettingOpened}
+            handleModifyClick={handleModifyClick}
+            handleDeleteClick={handleDeleteClick}
+          />
+          {/* {isSettingOpened && (
             <ChangeUpdateModal $upArrow>
               {isEditing ? (
                 <>
@@ -151,7 +162,7 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
                 <img src={trashIcon} alt="삭제" />
               </button>
             </ChangeUpdateModal>
-          )}
+          )} */}
         </SettingContainer>
       </UpdateListHeader>
       {isEditing ? (
