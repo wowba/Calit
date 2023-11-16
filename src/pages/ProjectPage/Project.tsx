@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useRecoilState, useSetRecoilState } from "recoil";
+
 import CalendarModal from "./CalendarModal/CalendarModal";
 import KanbanModal from "./KanbanModal/KanbanModal";
 import TodoModal from "./TodoModal/TodoModal";
@@ -62,6 +62,9 @@ export default function Project() {
     if (!searchParams.has("kanbanID")) {
       return;
     }
+
+    setIsLoaded(false);
+
     setTodoDataState(new Map());
     const projectID = window.location.pathname.substring(1);
     const kanbanID = searchParams.get("kanbanID");
