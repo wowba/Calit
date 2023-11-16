@@ -94,14 +94,14 @@ export default function TodoModal({ isTodoShow }: Props) {
   const isLoaded = useRecoilValue(todoLoaded);
   const [loadedState, setLoadedState] = useState(true);
   useEffect(() => {
-    const test = async () => {
+    const setLoaded = async () => {
       if (!isLoaded) {
         setLoadedState(false);
         await asyncDelay(1000);
         setLoadedState(true);
       }
     };
-    test();
+    setLoaded();
   }, [isLoaded]);
 
   const todoNameInputRef = useRef<HTMLInputElement>(null);
