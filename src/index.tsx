@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
   * {
     @font-face {
     font-family: 'Roboto';
-    src: url('https://fonts.cdnfonts.com/css/roboto');
+    src: url('https://fonts.cdnfonts.com/css/roboto') format('ttf');
     font-weight: 400;
     }
   }
