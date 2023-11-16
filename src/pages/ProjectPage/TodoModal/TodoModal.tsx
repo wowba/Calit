@@ -18,7 +18,7 @@ import CommonSelectMemberLayout from "../../../components/layout/CommonSelectMem
 import TagSelectLayout from "./TagSelectLayout";
 import ErrorPage from "../../../components/ErrorPage";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
-import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
+import icon_plus from "../../../assets/icons/plusIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 
 type Props = {
@@ -36,14 +36,15 @@ const TodoContainer = styled(ProjectModalContentBox)<{
 `;
 const TodoTopContainer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin: 0 0 1.5rem;
+  gap: 0.5rem;
+  /* justify-content: space-between; */
+  align-items: center;
+  margin: 0 0 0.6rem;
 `;
 const TodoTitle = styled.div`
   display: inline-block;
   font-weight: 900;
-  font-size: 1.12rem;
+  font-size: ${(props) => props.theme.Fs.modalTitle};
 `;
 const TodoSubtitle = styled.div`
   display: inline-block;
@@ -70,12 +71,20 @@ const InfoContainer = styled(Container)`
   margin: 0.5rem 0 0 0;
 `;
 
+const AddUpdateBtn = styled.button<{ $isUpdateClick: boolean }>`
+  width: 1rem;
+  height: 1rem;
+  margin: 0 1rem 0 0;
+  transition: transform 0.2s ease;
+  transform: ${(props) =>
+    props.$isUpdateClick ? "rotate(45deg)" : "rotate(0)"};
+`;
 const Contour = styled.div`
   background-color: #eaeaea;
   width: 100%;
-  height: 0.2rem;
-  transform: translateY(-1rem);
-  border-radius: 1px;
+  height: 0.1rem;
+  transform: translateY(-0.3rem);
+  border-radius: 3px;
 `;
 
 export default function TodoModal({ isTodoShow }: Props) {
@@ -288,15 +297,15 @@ export default function TodoModal({ isTodoShow }: Props) {
         <div>
           <TodoTopContainer>
             <TodoTitle>업데이트</TodoTitle>
-            <button
+            <AddUpdateBtn
               type="button"
               onClick={() => {
                 setIsUpdateClick((prev) => !prev);
               }}
-              style={{ width: "1rem", height: "1rem", margin: "0 1rem 0 0" }}
+              $isUpdateClick={isUpdateClick}
             >
-              <img src={icon_plus_circle} alt="투두 업데이트 추가" />
-            </button>
+              <img src={icon_plus} alt="투두 업데이트 추가" />
+            </AddUpdateBtn>
           </TodoTopContainer>
           <Contour />
           <MarkdownEditor

@@ -29,7 +29,7 @@ const SettingContainer = styled.div`
 const UpdateContent = styled.div`
   margin: 0.5rem 0;
   border-radius: 10px;
-  background-color: white;
+  background-color: ${(props) => props.theme.mainWhite};
   padding: 1rem 0;
 `;
 

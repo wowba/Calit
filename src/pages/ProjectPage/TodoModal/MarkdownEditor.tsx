@@ -11,7 +11,7 @@ const AddUpdateTitle = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.5rem;
 `;
 const UpdateContainer = styled.div`
   height: calc(100% - 3.2rem);

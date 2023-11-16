@@ -97,9 +97,9 @@ export default function TagSelectLayout({ todoRef, todoDataState }: any) {
           backgroundColor: "#fcfcfc",
           border: "1px solid #fcfcfc",
           ":hover": {
-            border: "1px solid #dfdfdf",
+            border: "1px solid #fcfcfc",
           },
-          ":focus": { border: "1px solid #dfdfdf" },
+          ":focus": { border: "1px solid #fcfcfc" },
         }),
         valueContainer: (baseStyles) => ({
           ...baseStyles,
