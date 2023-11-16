@@ -5,9 +5,9 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import Select from "react-select";
-
-import projectState from "../../recoil/atoms/project/projectState";
-import userListState from "../../recoil/atoms/userList/userListState";
+import projectState from "../../../recoil/atoms/project/projectState";
+import userListState from "../../../recoil/atoms/userList/userListState";
+import CustomUserOptions from "./CustomUserOptions";
 
 const ManagedUser = styled.div`
   border-radius: 8px;
@@ -21,7 +21,6 @@ const ProfileImg = styled.img`
   height: 1.5rem;
   display: inline-block;
   vertical-align: middle;
-  margin: 0 0.5rem 0 0;
 `;
 
 interface Props {
@@ -32,7 +31,7 @@ interface Props {
   isCustomUserData?: boolean;
 }
 
-export default function CommonSelectMemberLayout(props: Props) {
+export default function UserSelectLayout(props: Props) {
   const userListData = useRecoilValue(userListState);
 
   const { userList, setUserList, onBlur, customUserData, isCustomUserData } =
@@ -71,7 +70,6 @@ export default function CommonSelectMemberLayout(props: Props) {
       formatOptionLabel={(option: any) => (
         <ManagedUser>
           <ProfileImg src={option.image} alt="User Profile" />
-          <span>{option.label}</span>
         </ManagedUser>
       )}
       value={userList}
@@ -81,20 +79,21 @@ export default function CommonSelectMemberLayout(props: Props) {
       onBlur={() => {
         onBlur();
       }}
+      components={{ Option: CustomUserOptions }}
       styles={{
         multiValue: (baseStyles) => ({
           ...baseStyles,
           padding: "0",
-          margin: "-2px -6px -2px -6px",
+          //   margin: "-2px -6px -2px -6px",
           backgroundColor: "#fcfcfc",
           transition: "all 0.2s ease",
           ">div:first-of-type": {
             backgroundColor: "#fcfcfc",
             borderRadius: "0.5rem",
-            padding: "3px 8px 5px 7px",
+            // padding: "3px 8px 5px 7px",
           },
           ":hover": {
-            margin: "-2px 3px -2px -6px",
+            // margin: "-2px 3px -2px -6px",
             "div+div>svg": { fill: "#595959" },
           },
         }),
@@ -109,11 +108,12 @@ export default function CommonSelectMemberLayout(props: Props) {
         }),
         control: (baseStyles) => ({
           ...baseStyles,
-          width: "auto",
+          minWidth: "5rem",
           transition: "all 0.3s",
           boxShadow: "none",
           backgroundColor: "#fcfcfc",
           border: "1px solid #fcfcfc",
+          cursor: "pointer",
           ":hover": { border: "1px solid #fcfcfc" },
           ":focus": { border: "1px solid #fcfcfc" },
         }),
@@ -141,7 +141,7 @@ export default function CommonSelectMemberLayout(props: Props) {
   );
 }
 
-CommonSelectMemberLayout.defaultProps = {
+UserSelectLayout.defaultProps = {
   customUserData: [],
   isCustomUserData: false,
 };

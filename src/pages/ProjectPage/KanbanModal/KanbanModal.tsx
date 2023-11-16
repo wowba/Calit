@@ -20,6 +20,7 @@ import projectState from "../../../recoil/atoms/project/projectState";
 import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
 import LoadingPage from "../../../components/LoadingPage";
 import recentKanbanState from "../../../recoil/atoms/sidebar/recentKanbanState";
+import UserSelectLayout from "./UserSelectLayout";
 
 const KanbanContainer = styled(ProjectModalContentBox)<{
   $isKanbanShow: boolean;
@@ -90,6 +91,9 @@ export default function KanbanModal({ isKanbanShow }: Props) {
   const isLoaded = useRecoilValue(todoLoaded);
 
   const [recentKanbanId, setRecentKanbanId] = useRecoilState(recentKanbanState);
+
+  // 여기
+  const [userList, setUserList] = useState<any[]>([]);
 
   useEffect(() => {
     if (!isKanbanShow || kanbanId === "null" || !currentKanban) {
@@ -193,6 +197,13 @@ export default function KanbanModal({ isKanbanShow }: Props) {
             </KanbanDateParagraph>
           </KanbanInfoBox>
           <KanbanProgressBox>
+            <UserSelectLayout
+              // 현재 props는 오류 안나게만 넣어둔 상태. 수정 필요.
+              userList={userList}
+              setUserList={setUserList}
+              // eslint-disable-next-line no-console
+              onBlur={() => false}
+            />
             <KanbanProgress value={progress[1]} max={progress[0]} />
             {progress[0] ? Math.floor((progress[1] / progress[0]) * 100) : 0}%
           </KanbanProgressBox>
