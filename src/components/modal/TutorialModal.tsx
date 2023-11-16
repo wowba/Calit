@@ -43,6 +43,10 @@ const TutorialExitButton = styled.button`
   background: #7064ff;
   color: white;
   font-size: 1rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
 `;
 
 const ModalContainer = styled.div`
@@ -165,7 +169,9 @@ export default function Tutorial({
         allowEscapeKey: false,
         allowEnterKey: false,
         confirmButtonText: "튜토리얼 보기",
+        confirmButtonColor: "#7064FF",
         cancelButtonText: "다시보지 않기",
+        cancelButtonColor: "#B0B0B0",
       }).then((result) => {
         // 튜토리얼 보기 선택
         if (result.isConfirmed) {
@@ -204,7 +210,9 @@ export default function Tutorial({
       icon: "question",
       title: `${targetName} 튜토리얼을 다시 보시겠습니까?`,
       confirmButtonText: "다시 보기",
+      confirmButtonColor: "#7064FF",
       cancelButtonText: "취소",
+      cancelButtonColor: "#B0B0B0",
       showCancelButton: true,
       allowOutsideClick: false,
       allowEscapeKey: false,
@@ -227,7 +235,9 @@ export default function Tutorial({
           title: "튜토리얼 다시 보기가 적용되었습니다!",
           text: `이제 튜토리얼을 다시 확인하실 수 있습니다.`,
           confirmButtonText: "튜토리얼 보기",
+          confirmButtonColor: "#7064FF",
           cancelButtonText: "취소",
+          cancelButtonColor: "#B0B0B0",
           showCancelButton: true,
           allowOutsideClick: false,
           allowEscapeKey: false,
