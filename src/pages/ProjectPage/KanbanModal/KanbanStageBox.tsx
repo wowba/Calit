@@ -12,7 +12,7 @@ import { createTodo } from "../../../api/CreateCollection";
 import todoDataState from "../../../recoil/atoms/todo/todoState";
 import { db } from "../../../firebaseSDK";
 import Stage from "./Stage";
-import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
+import plus from "../../../assets/icons/plus.svg";
 
 const StageLayout = styled.div`
   display: flex;
@@ -39,26 +39,23 @@ const Container = styled.div`
 `;
 
 const AddStageBtn = styled.button`
-  transition: all 0.2s;
+  transition: all 0.5s ease;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
-  min-width: 3rem;
-  height: calc(100% - 3.68rem);
-  margin-top: auto;
+  min-width: 1.875rem;
+  height: 1.875rem;
 
-  background-color: #ededed;
-  border: 1px solid #d5d5d5;
-  border-radius: 0.5rem;
-`;
+  margin: 0.3rem 0 0 0;
 
-const StagePlusIcon = styled.img`
-  height: 2rem;
-  width: 2rem;
-  cursor: pointer;
+  background-color: ${(props) => props.theme.Color.mainColor};
+  border-radius: ${(props) => props.theme.Br.small};
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
 `;
 
 interface Props {
@@ -317,7 +314,7 @@ export default function KanbanStageBox({
           type="stage"
           getContainerForClone={() => document.body}
         >
-          {(provided) => (
+          {(provided, snapshot) => (
             <Container {...provided.droppableProps} ref={provided.innerRef}>
               {data.stageOrder.map((columnId, index) => {
                 const stage = data.stages[columnId];
@@ -342,7 +339,7 @@ export default function KanbanStageBox({
         </Droppable>
       </DragDropContext>
       <AddStageBtn type="button" onClick={handleAddStageClick}>
-        <StagePlusIcon src={icon_plus_circle} alt="스테이지 추가" />
+        <img src={plus} alt="add todo" style={{ scale: "0.8" }} />
       </AddStageBtn>
     </StageLayout>
   );
