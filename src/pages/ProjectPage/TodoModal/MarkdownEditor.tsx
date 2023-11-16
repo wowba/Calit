@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
 import { getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -9,19 +9,20 @@ import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
 const NewMDEditor = styled.div<{ $isUpdateClick: boolean }>`
   transition: all 0.2s ease;
-  height: ${(props) => (props.$isUpdateClick ? "auto" : 0)};
+  display: ${(props) => (props.$isUpdateClick ? "block" : "none")};
   opacity: ${(props) => (props.$isUpdateClick ? 1 : 0)};
 `;
+
 const AddUpdateTitle = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin: 0.5rem 0 0;
 `;
 const UpdateContainer = styled.div`
   height: calc(100% - 3.2rem);
   overflow: scroll;
-  padding: 1.2rem 0.5rem 0 0.5rem;
+  padding: 0 0.5rem;
   border-radius: 10px;
   border: 0.5px solid white;
   &::-webkit-scrollbar {
@@ -63,6 +64,10 @@ export default function MarkdownEditor({
   const [value, setValue] = useState("");
   const { email } = useRecoilValue(userState).userData;
 
+  useEffect(() => {
+    setValue("");
+  }, [isUpdateClick]);
+
   // update_list db 업데이트
   const handleSubmit = async () => {
     const newUpdateContent: UpdateContentInterface = {
@@ -84,13 +89,10 @@ export default function MarkdownEditor({
   return (
     <UpdateContainer>
       <NewMDEditor $isUpdateClick={isUpdateClick}>
-        <MDEditor
-          // @ts-ignore
-          onChange={setValue}
-          value={value}
-          preview="edit"
-        />
         <AddUpdateTitle>
+          <div style={{ margin: "0.5rem 0", fontWeight: "600" }}>
+            💫 업데이트 추가
+          </div>
           <ConfirmBtn
             type="submit"
             onClick={handleSubmit}
@@ -99,9 +101,16 @@ export default function MarkdownEditor({
             $isWritten={value}
             style={{ fontSize: "0.9rem" }}
           >
-            등록
+            <span>등록</span>
           </ConfirmBtn>
         </AddUpdateTitle>
+        <MDEditor
+          // @ts-ignore
+          onChange={setValue}
+          value={value}
+          preview="edit"
+          // style={{ margin: "1.5rem 0 0 0" }}
+        />
       </NewMDEditor>
 
       {todoDataState.update_list.length ? (
