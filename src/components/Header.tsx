@@ -82,6 +82,10 @@ const TutorialBox = styled.div`
     scale: 0.9;
     fill: ${(props) => props.theme.Color.mainWhite};
   }
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
 `;
 
 const TutorialImg = styled(tutorialIcon)`
