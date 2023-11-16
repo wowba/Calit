@@ -9,7 +9,7 @@ import { ReactComponent as headerLogo } from "../assets/logo/headerLogo.svg";
 
 // 헤더 아이콘
 import logoutIcon from "../assets/headerIcon/logout.svg";
-import tutorialIcon from "../assets/headerIcon/tutorial.svg";
+import { ReactComponent as tutorialIcon } from "../assets/headerIcon/tutorial.svg";
 import bookmarkIcon from "../assets/headerIcon/bookmark.svg";
 import memberIcon from "../assets/headerIcon/member.svg";
 // import logIcon from "../assets/headerIcon/log.svg"
@@ -71,10 +71,20 @@ const TutorialBox = styled.div`
   position: fixed;
   top: calc(100% - 3.3rem);
   z-index: 3;
+  width: 1.875rem;
+  height: 1.875rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.theme.Color.mainColor};
+  border-radius: ${(props) => props.theme.Br.small};
+  > svg {
+    scale: 0.9;
+    fill: ${(props) => props.theme.Color.mainWhite};
+  }
 `;
 
-const TutorialImg = styled.img`
-  height: 1.5rem;
+const TutorialImg = styled(tutorialIcon)`
   cursor: pointer;
 `;
 
@@ -163,8 +173,6 @@ export default function Header() {
       <HeaderLogo onClick={() => navigate("/")} />
       <TutorialBox>
         <TutorialImg
-          src={tutorialIcon}
-          alt="TutorialIcon"
           onClick={() => setIsTutorialRestoreClick((prev) => !prev)}
         />
       </TutorialBox>

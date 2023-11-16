@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import Swal from "sweetalert2";
 import { styled } from "styled-components";
-import tutorialIcon from "../../assets/headerIcon/tutorial.svg";
 import headerState from "../../recoil/atoms/header/headerState";
 import tutorialCalendarState from "../../recoil/atoms/tutorial/tutorialCalendarState";
 import tutorialState from "../../recoil/atoms/tutorial/tutorialState";
@@ -160,7 +159,7 @@ export default function Tutorial({
       Swal.fire({
         icon: "info",
         title: `${targetName}에 오신 것을 환영합니다!`,
-        html: `하단의 버튼을 통해 튜토리얼을 진행할 수 있습니다! <br><br> 다시보지 않기를 선택하더라도, 좌측 하단의 <img src=${tutorialIcon} style="display: inline; margin-right: 0.25rem"/>아이콘을 통해 <br>언제든지 튜토리얼을 다시 보실 수 있습니다.`,
+        html: `하단의 버튼을 통해 튜토리얼을 진행할 수 있습니다! <br><br> 다시보지 않기를 선택하더라도, 좌측 하단의 튜토리얼 아이콘을 통해 언제든지 튜토리얼을 다시 보실 수 있습니다.`,
         showCancelButton: true,
         allowOutsideClick: false,
         allowEscapeKey: false,
