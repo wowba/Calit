@@ -30,7 +30,7 @@ const ProjectInfoBox = styled.div`
 `;
 
 const ProjectTitleParagraph = styled.p`
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 900;
   margin-left: 0.25rem;
 `;

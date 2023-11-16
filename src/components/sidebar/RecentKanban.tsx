@@ -45,8 +45,16 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
+  button {
+    opacity: 0;
+    visibility: hidden;
+  }
   &:hover {
     /* transform: scale(110%); */
+    & button {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 `;
 
