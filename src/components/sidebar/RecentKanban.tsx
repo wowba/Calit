@@ -9,7 +9,7 @@ import deleteIcon from "../../assets/icons/Cross.svg";
 import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
 
 const RecentKanbanContainer = styled.div`
-  height: 17rem;
+  height: 100%;
 `;
 const RecentKanbanTitle = styled.div`
   font-weight: 900;
@@ -30,7 +30,7 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
   border-radius: 5px;
   width: 100%;
   margin: 3px 0px;
-  padding: 8px 10px;
+  padding: 0px 10px;
   transition: all 0.3s ease-in-out;
   background-color: ${(props) => props.$backgroundColor};
   cursor: pointer;
@@ -45,8 +45,16 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
+  button {
+    opacity: 0;
+    visibility: hidden;
+  }
   &:hover {
     /* transform: scale(110%); */
+    & button {
+      opacity: 1;
+      visibility: visible;
+    }
   }
 `;
 
