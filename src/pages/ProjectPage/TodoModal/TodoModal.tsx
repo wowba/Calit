@@ -298,7 +298,7 @@ export default function TodoModal({ isTodoShow }: Props) {
               />
             </div>
           </TodoTopContainer>
-          <div>
+          <div style={{ margin: "2.5rem 0 0" }}>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
               <CommonSelectMemberLayout
