@@ -1,18 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
-import styled, { css } from "styled-components";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useLocation } from "react-router-dom";
-import Swal from "sweetalert2";
-import { doc, updateDoc } from "firebase/firestore";
+import React from "react";
+import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+
 import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
 import tutorialIcon from "../../assets/headerIcon/tutorial.svg";
 import projectState from "../../recoil/atoms/project/projectState";
 import RecentKanban from "./RecentKanban";
-import trashIcon from "../../assets/icons/trashIcon.svg";
-import { db } from "../../firebaseSDK";
-import tutorialState from "../../recoil/atoms/tutorial/tutorialState";
-import tutorialCalendarState from "../../recoil/atoms/tutorial/tutorialCalendarState";
 
 const SidebarLayout = styled.div`
   display: flex;
@@ -23,7 +16,7 @@ const SidebarLayout = styled.div`
   width: 15rem;
   height: 100%;
 
-  padding: 5rem 1.25rem 1.25rem 1.25rem;
+  padding: 4rem 1.25rem 1.25rem 1.25rem;
 `;
 
 const ProjectInfoBox = styled.div`
@@ -45,166 +38,8 @@ const ProjectProfileImg = styled.img`
   border-radius: 0.5rem;
 `;
 
-const TrashBoxBtn = styled.div`
-  transition: all 0.2s;
-
-  position: fixed;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  top: calc(100% - 3.3rem);
-
-  width: 11.5rem;
-  height: 2.3rem;
-  background-color: ${(props) => props.theme.Color.mainColor};
-  &:hover {
-    cursor: pointer;
-  }
-
-  border-radius: 0.3rem;
-
-  z-index: 3;
-`;
-const TrashBoxImg = styled.img`
-  width: 1.2rem;
-`;
-
-const TutorialBox = styled.div`
-  position: fixed;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  top: calc(100% - 3.3rem);
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  border-radius: 0.3rem;
-
-  z-index: 3;
-`;
-
-const TutorialImg = styled.img`
-  height: 1.5rem;
-`;
-
-const DeletedListLayout = styled.div<{ $isShow: boolean }>`
-  position: fixed;
-  overflow: scroll;
-  width: 11.5rem;
-  height: ${(props) => (props.$isShow ? "24rem" : "0")};
-  padding: 1rem 1rem 0 1rem;
-  transition:
-    height 1s ease,
-    color 0.7s ease-in;
-  background-color: #f5f5f5;
-  border-radius: 0.3rem;
-  bottom: 2.4rem;
-  color: ${(props) => (props.$isShow ? "black" : "transparent")};
-  font-size: 0.95rem;
-  ${(props) =>
-    !props.$isShow &&
-    css`
-      bottom: 2.2rem;
-    `};
-  &::-webkit-scrollbar {
-    width: 8px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-`;
-const SubtitleText = styled.div`
-  font-weight: 900;
-  margin: 0 0 1rem;
-`;
-
-const DeletedKanbanBox = styled.div<{ $isShow: boolean }>`
-  display: flex;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
-`;
-
-const DeletedKanbanName = styled.p`
-  width: 7rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
 export default function Sidebar() {
   const { projectData } = useRecoilValue(projectState);
-
-  const { pathname } = useLocation();
-
-  const { deleted_kanban_info_list: deletedKanbanInfoList } =
-    useRecoilValue(projectState).projectData;
-  const setMainTutorialState = useSetRecoilState(tutorialState);
-  const setCalendarTutorialState = useSetRecoilState(tutorialCalendarState);
-
-  const [isListShow, setIsListShow] = useState(false);
-
-  const handleTrashBoxBtnClick = () => {
-    setIsListShow((prev) => !prev);
-  };
-  const handleRestoreCLick = async (id: string) => {
-    const updatedDeletedKanbanIdList = deletedKanbanInfoList.filter(
-      (kanbanInfo: { id: string; name: string }) => kanbanInfo.id !== id,
-    );
-    const projectRef = doc(db, "project", pathname);
-    await updateDoc(projectRef, {
-      deleted_kanban_info_list: updatedDeletedKanbanIdList,
-    });
-    const kanbanRef = doc(db, "project", pathname, "kanban", id);
-    await updateDoc(kanbanRef, {
-      is_deleted: false,
-    });
-  };
-
-  // 튜토리얼 다시 보기
-  const handleRestoreTutorial = () => {
-    Swal.fire({
-      icon: "question",
-      title: "튜토리얼을 다시 보시겠습니까?",
-      confirmButtonText: "다시 보기",
-      cancelButtonText: "취소",
-      showCancelButton: true,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      allowEnterKey: false,
-    }).then((result) => {
-      // 확인 버튼 선택
-      if (result.isConfirmed) {
-        setMainTutorialState({
-          isMainTutorial: false,
-        });
-
-        setCalendarTutorialState({
-          isCalendarTutorial: false,
-        });
-
-        Swal.fire({
-          icon: "success",
-          title: "튜토리얼 다시 보기가 적용되었습니다!",
-          text: "이제 캘린더 튜토리얼을 다시 확인하실 수 있습니다.",
-          confirmButtonText: "확인",
-        });
-      }
-    });
-  };
-
   return (
     <SidebarLayout>
       <div style={{ height: "100%" }}>
@@ -228,31 +63,6 @@ export default function Sidebar() {
           />
         </TutorialBox>
       </div>
-      {/* <TrashBoxBtn onClick={handleTrashBoxBtnClick}>
-        <TrashBoxImg src={trashIcon} alt="TrashIcon" />
-      </TrashBoxBtn>
-      <DeletedListLayout $isShow={isListShow}>
-        <SubtitleText>🛠️ 쓰레기통</SubtitleText>
-        {deletedKanbanInfoList.length === 0 ? "삭제된 칸반이 없습니다." : ""}
-
-        {deletedKanbanInfoList.map(
-          (kanbanInfo: { id: string; name: string }) => (
-            <DeletedKanbanBox key={kanbanInfo.id} $isShow={isListShow}>
-              <DeletedKanbanName>{kanbanInfo.name}</DeletedKanbanName>
-              <button
-                type="button"
-                onClick={() => handleRestoreCLick(kanbanInfo.id)}
-              >
-                <img
-                  style={{ margin: "0 0 0 1rem" }}
-                  src={trashIcon}
-                  alt="복구"
-                />
-              </button>
-            </DeletedKanbanBox>
-          ),
-        )}
-      </DeletedListLayout> */}
     </SidebarLayout>
   );
 }

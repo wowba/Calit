@@ -85,7 +85,7 @@ const theme = {
 
   // Box-shadow
   Bs: {
-    default: "3px 4px 16px 2px rgba(0, 0, 0, 0.04)",
+    default: "3px 4px 16px 2px rgba(0, 0, 0, 0.06)",
   },
 };
 

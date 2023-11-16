@@ -2,19 +2,21 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/react-in-jsx-scope */
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import Swal from "sweetalert2";
 
 import { useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import icon_plus_circle from "../../../assets/icons/icon_plus_circle.svg";
 import Todo from "./Todo";
 import CommonInputLayout from "../../../components/layout/CommonInputLayout";
 import { db } from "../../../firebaseSDK";
 import trashIcon from "../../../assets/icons/trashIcon.svg";
+import plus from "../../../assets/icons/plus.svg";
 
-const Container = styled.div`
+const Container = styled.div<{ $isDragging: boolean }>`
+  transition: background-color 0.5s ease;
+
   display: flex;
   flex-direction: column;
 
@@ -22,8 +24,17 @@ const Container = styled.div`
   width: 18rem;
   margin: 0 1rem 0 0;
 
+  ${(props) =>
+    props.$isDragging &&
+    css`
+      > div:last-child {
+        background-color: ${(props) => props.theme.Color.activeColor};
+      }
+    `}
+
   :hover {
     & > img {
+      opacity: 1;
       visibility: visible;
     }
   }
@@ -36,8 +47,8 @@ const StageInfoBox = styled.div`
 
   border-bottom: 0.2rem solid #eaeaea;
 
-  padding: 0.25rem 0 0.25rem 0;
-  margin: 0 0 1rem 0;
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  margin: 0 0 0.5rem 0;
 `;
 
 const StageTitleBox = styled.div`
@@ -46,31 +57,60 @@ const StageTitleBox = styled.div`
   gap: 0.125rem;
 `;
 
-const TodoPlusIcon = styled.img`
-  height: 1rem;
-  width: 1rem;
-  cursor: pointer;
-
-  margin: 0 0 0 0.25rem;
-`;
-
 const StageTrashIcon = styled.img`
+  transition: all 0.5s ease;
+
   z-index: 2;
   cursor: pointer;
+
+  opacity: 0;
   visibility: hidden;
 `;
 
+const AddTodoBtn = styled.button`
+  transition: all 0.5s ease;
+
+  opacity: 0;
+  visibility: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 1.875rem;
+  height: 1.875rem;
+
+  background-color: ${(props) => props.theme.Color.mainColor};
+  border-radius: ${(props) => props.theme.Br.small};
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.hoverColor};
+  }
+`;
+
 const TodoList = styled.div<TodoListProps>`
+  transition: all 0.5s ease;
+
   overflow-y: scroll;
 
   flex-grow: 1;
 
-  background-color: ${(props) =>
-    props.$isDraggingOver ? "skyblue" : "#EDEDED"};
-  border: 1px solid #d5d5d5;
-  border-radius: 0.5rem;
+  /* border: 1px solid #d5d5d5; */
+  border-radius: ${(props) => props.theme.Br.default};
 
-  padding: 0.5rem calc(0.5rem - 3px) 0.5rem 0.5rem;
+  padding: 0.5rem calc(0.5rem - 10px) 0.5rem 0.5rem;
+
+  background-color: ${(props) =>
+    props.$isDraggingOver
+      ? props.theme.Color.activeColor
+      : props.theme.Color.mainWhite};
+
+  &:hover {
+    > button {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -183,11 +223,12 @@ function Stage({
 
   return (
     <Draggable draggableId={stage.id} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Container
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          $isDragging={snapshot.isDragging}
         >
           <StageInfoBox>
             <StageTitleBox>
@@ -209,11 +250,6 @@ function Stage({
                   }
                 }}
               />
-              <TodoPlusIcon
-                src={icon_plus_circle}
-                alt="투두 추가"
-                onClick={() => handleAddTodoClick(stage.id)}
-              />
             </StageTitleBox>
             <StageTrashIcon
               src={trashIcon}
@@ -229,12 +265,13 @@ function Stage({
                 ref={provided.innerRef}
                 $isDraggingOver={snapshot.isDraggingOver}
               >
-                <>
-                  {todos.map((todo, idx) => (
-                    <Todo key={todo.id} todo={todo} index={idx} />
-                  ))}
-                  {provided.placeholder}
-                </>
+                {todos.map((todo, idx) => (
+                  <Todo key={todo.id} todo={todo} index={idx} />
+                ))}
+                {provided.placeholder}
+                <AddTodoBtn onClick={() => handleAddTodoClick(stage.id)}>
+                  <img src={plus} alt="add todo" style={{ scale: "0.8" }} />
+                </AddTodoBtn>
               </TodoList>
             )}
           </Droppable>

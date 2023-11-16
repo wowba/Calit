@@ -16,6 +16,7 @@ interface Props {
 
 const StyledReactDatePicker = styled(ReactDatePicker)<Props>`
   transition: all 0.3s ease-in-out;
+  background-color: #fcfcfc;
   width: ${(props) => props.$width};
   height: ${(props) => props.$height};
   padding: ${(props) => props.$padding};
