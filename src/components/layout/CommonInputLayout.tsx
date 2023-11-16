@@ -25,7 +25,7 @@ const CommonInputLayout = styled.input<Props>`
   border: 1px solid transparent;
   border-radius: 0.3rem;
   outline: none;
-  background-color: #fcfcfc;
+  background-color: transparent;
 
   &:focus {
     border-color: #adadad;

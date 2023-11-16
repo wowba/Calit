@@ -21,16 +21,22 @@ const TodoLayout = styled.div<ContainerProps>`
   border-radius: 0.5rem;
   padding: 0.5rem 0.5rem 0.3rem 0.5rem;
   margin-bottom: 8px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.5s ease;
   background-color: ${(props) => (props.$isDragging ? "#F5F5F5" : "white")};
   box-shadow: ${(props) =>
-    props.$isDragging ? "4px 4px 1px 1px rgba(0, 0, 0, 0.2)" : "none"};
+    props.$isDragging ? props.theme.Bs.default : "none"};
+
+  &:hover {
+    background-color: ${(props) => props.theme.Color.activeColor};
+  }
 `;
 
 const TodoTagListBox = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
+
+  transform: translateX(-0.1rem);
 `;
 
 const TodoTagList = styled.div`
@@ -78,12 +84,16 @@ const TodoUserImage = styled.img`
 `;
 
 const TodoTrashIcon = styled.img`
+  transition: all 0.5s ease;
+
   position: absolute;
   top: 0.5rem;
-  left: 15rem;
+  left: 15.4rem;
 
   z-index: 2;
   cursor: pointer;
+
+  opacity: 0;
   visibility: hidden;
 `;
 

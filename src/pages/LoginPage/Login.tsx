@@ -7,7 +7,7 @@ import styled from "styled-components";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseSDK";
 import loginState from "../../recoil/atoms/login/loginState";
-import loginBackground from "../../assets/images/loginBackground.svg";
+import loginBackground from "../../assets/images/loginBackground.jpg";
 import googleLoginIcon from "../../assets/icons/googleLoginIcon.svg";
 import userDataState from "../../recoil/atoms/login/userDataState";
 import { ReactComponent as loginLogo } from "../../assets/logo/loginLogo.svg";
@@ -22,10 +22,7 @@ const LoginLayout = styled.div`
   align-items: center;
 
   background-image: url(${loginBackground});
-  scale: 1.1;
   background-size: 100%;
-  background-repeat: repeat;
-  background-position: 50% 10%;
 
   box-shadow:
     inset 0 6rem 6rem -5rem rgba(0, 0, 0, 0.1),
@@ -34,24 +31,17 @@ const LoginLayout = styled.div`
 
 const LoginLogo = styled(loginLogo)`
   width: 28rem;
-
-  transform: translateY(-5rem);
 `;
 
 const LoginIntroParagraph = styled.p`
   font-weight: 700;
   font-size: 1.25rem;
 
-  margin: 1rem 0 8rem 0;
-  transform: translateY(-5rem);
+  margin: 1rem 0 -5rem 0;
 `;
 
 const GoogleLoginBtn = styled.button`
   transition: all 0.5s ease;
-
-  position: fixed;
-
-  bottom: 13.5rem;
 
   display: flex;
   align-items: center;
@@ -63,7 +53,7 @@ const GoogleLoginBtn = styled.button`
   padding: 1rem 3.5rem 1rem 3.5rem;
   border-radius: 0.5rem;
 
-  margin: 0 0 2rem 0;
+  margin: 13rem 0 0 0;
 
   &:hover {
     background-color: ${(props) => props.theme.Color.hoverColor};
