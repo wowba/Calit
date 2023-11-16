@@ -5,7 +5,7 @@ import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 import { db } from "../../firebaseSDK";
 import CommonInputLayout from "../../components/layout/CommonInputLayout";
-import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
+import defaultProjectImg from "../../assets/images/defaultProjectImg2.jpg";
 import dots from "../../assets/icons/dots.svg";
 import ProjectCardMoreModal from "./ProjectCardMoreModal";
 
@@ -37,6 +37,7 @@ const ProjectCardUnit = styled.div`
 const ProjectCardBgImg = styled.img<Props>`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 
 export default function ProjectCard({

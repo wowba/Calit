@@ -150,22 +150,6 @@ export default function UserSelectLayout(props: Props) {
           backgroundColor: "#fff",
           ":hover": { backgroundColor: "#ecebff" },
         }),
-        // menu: (baseStyles) => ({
-        //   ...baseStyles,
-        //   " &::-webkit-scrollbar": {
-        //     width: "8px",
-        //     overflowX: "scroll",
-        //     overflowY: "hidden",
-        //     borderRadius: "6px",
-        //   },
-        //   " &::-webkit-scrollbar-thumb": {
-        //     background: "rgba(0, 0, 0, 0.3)",
-        //     borderRadius: "6px",
-        //   },
-        //   "&::-webkit-scrollbar-corner": {
-        //     background: "transparent",
-        //   },
-        // }),
       }}
     />
   );

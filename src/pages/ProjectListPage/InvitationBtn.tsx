@@ -53,11 +53,10 @@ export default function InvitationBtn() {
           padding: "0.2rem 0.5rem",
           margin: "0 0 0 0.5rem",
           backgroundColor: "#F9F9F9",
-          // border: isClicked ? "1px solid #c9c9c9" : "1px solid #F9F9F9",
           border: "none",
           borderRadius: "5px",
           outline: "none",
-          transition: "width 0.5s ease-in-out, border 0.4s ease-in-out",
+          transition: "width 0.2s ease-in-out, border 0.4s ease-in-out",
         }}
       />
     </InvitationBtnLayout>

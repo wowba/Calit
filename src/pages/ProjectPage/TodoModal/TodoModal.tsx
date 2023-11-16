@@ -96,7 +96,6 @@ const Contour = styled.div`
   background-color: #eaeaea;
   width: 100%;
   height: 0.1rem;
-  transform: translateY(-0.3rem);
   border-radius: 3px;
 `;
 
@@ -271,7 +270,7 @@ export default function TodoModal({ isTodoShow }: Props) {
                   placeholder="제목을 입력하세요"
                   value={inputTodoName}
                   $dynamicFontSize="1.12rem"
-                  $dynamicPadding="1rem 0.5rem"
+                  $dynamicPadding="0.9rem 0.5rem"
                   $dynamicWidth="auto"
                   onKeyDown={handleEnterPress}
                   onChange={(e) => setInputTodoName(e.target.value)}
@@ -299,7 +298,6 @@ export default function TodoModal({ isTodoShow }: Props) {
               />
             </div>
           </TodoTopContainer>
-
           <div>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
@@ -345,7 +343,7 @@ export default function TodoModal({ isTodoShow }: Props) {
           </div>
         </div>
         <div>
-          <TodoTopContainer>
+          <TodoTopContainer style={{ alignItems: "baseline" }}>
             <TodoTitle>업데이트</TodoTitle>
             <AddUpdateBtn
               type="button"

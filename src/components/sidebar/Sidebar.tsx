@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 
-import defaultProjectImg from "../../assets/images/deafultProjectImg.jpg";
+import defaultProjectImg from "../../assets/images/defaultProjectImg2.jpg";
 import projectState from "../../recoil/atoms/project/projectState";
 import RecentKanban from "./RecentKanban";
 
@@ -26,7 +26,7 @@ const ProjectInfoBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  box-shadow: inset 0px 7rem 3rem -5rem #fcfcfc;
+  box-shadow: inset 0 7.5rem 3rem -4rem #f9f9f9;
 `;
 
 const ProjectTitleParagraph = styled.p`
@@ -49,7 +49,7 @@ const ProjectTitleBoxLabel = styled.div`
 `;
 const ProjectProfileImg = styled.img`
   width: 100%;
-  height: 7rem;
+  height: 9rem;
   object-fit: cover;
   border-radius: 0.5rem;
   z-index: -1;
