@@ -21,6 +21,8 @@ import trashIcon from "../../../assets/icons/trashIcon.svg";
 import icon_plus from "../../../assets/icons/plusIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import asyncDelay from "../../../utils/asyncDelay";
+import todoLoaded from "../../../recoil/atoms/sidebar/todoLoaded";
+import LoadingPage from "../../../components/LoadingPage";
 
 type Props = {
   isTodoShow: boolean;
@@ -89,6 +91,19 @@ const Contour = styled.div`
 `;
 
 export default function TodoModal({ isTodoShow }: Props) {
+  const isLoaded = useRecoilValue(todoLoaded);
+  const [loadedState, setLoadedState] = useState(true);
+  useEffect(() => {
+    const test = async () => {
+      if (!isLoaded) {
+        setLoadedState(false);
+        await asyncDelay(1000);
+        setLoadedState(true);
+      }
+    };
+    test();
+  }, [isLoaded]);
+
   const todoNameInputRef = useRef<HTMLInputElement>(null);
 
   const projectId = window.location.pathname.substring(1);
@@ -207,6 +222,16 @@ export default function TodoModal({ isTodoShow }: Props) {
       });
     }
   };
+
+  if (!loadedState || !isLoaded) {
+    return (
+      <ProjectModalLayout $isShow={isTodoShow}>
+        <ProjectModalContentBox>
+          <LoadingPage />
+        </ProjectModalContentBox>
+      </ProjectModalLayout>
+    );
+  }
 
   // 에러 페이지
   if (!currentTodo) {
