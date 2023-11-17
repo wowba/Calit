@@ -10,6 +10,7 @@ import { DocumentData, DocumentReference, updateDoc } from "firebase/firestore";
 import projectState from "../../../recoil/atoms/project/projectState";
 import userListState from "../../../recoil/atoms/userList/userListState";
 import CustomUserOptions from "./CustomUserOptions";
+import defaultProfileIcon from "../../../assets/images/defaultProjectImg2.jpg";
 
 const ManagedUser = styled.div`
   border-radius: 8px;
@@ -45,7 +46,8 @@ export default function UserSelectLayout(props: Props) {
   const selectedUserList = userList.map((userInfo: any) => {
     const user = userListData.get(userInfo.value);
     return {
-      image: user.profile_img_URL,
+      image:
+        user.profile_img_URL !== "" ? user.profile_img_URL : defaultProfileIcon,
       value: user.email,
       label: user.name,
     };
@@ -58,7 +60,10 @@ export default function UserSelectLayout(props: Props) {
         const user = userListData.get(id);
         if (!user.is_kicked) {
           return {
-            image: user.profile_img_URL,
+            image:
+              user.profile_img_URL !== ""
+                ? user.profile_img_URL
+                : defaultProfileIcon,
             value: user.email,
             label: user.name,
           };
