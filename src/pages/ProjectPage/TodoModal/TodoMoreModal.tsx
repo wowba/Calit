@@ -3,8 +3,8 @@ import styled, { css } from "styled-components";
 
 const TodoMoreModalLayout = styled.div<{ $isShow: boolean }>`
   position: absolute;
-  top: 1.5rem;
-  right: 0;
+  top: 2rem;
+  right: 0.5rem;
 
   width: 10rem;
   background-color: ${(props) => props.theme.Color.mainWhite};

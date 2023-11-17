@@ -27,6 +27,7 @@ const TutorialTextParagraph = styled.p`
   white-space: pre-line;
   word-break: keep-all;
   padding-left: 0.5rem;
+  font-size: ${(props) => props.theme.Fs.default};
 `;
 
 const TutorialButtonBox = styled.div`
@@ -43,8 +44,7 @@ const TutorialExitButton = styled.button`
   margin: 0;
   background: #7064ff;
   color: white;
-  font-size: 1rem;
-
+  font-size: ${(props) => props.theme.Fs.default};
   &:hover {
     background-color: ${(props) => props.theme.Color.hoverColor};
   }

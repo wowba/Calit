@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import styled from "styled-components";
@@ -6,7 +5,6 @@ import { getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import dotsIcon from "../../../assets/icons/dots.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
-import CommonSettingModal from "../../../components/layout/CommonSettingModal";
 import userListState from "../../../recoil/atoms/userList/userListState";
 import TodoUpdateMoreModal from "./TodoUpdateMoreModal";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
@@ -171,7 +169,11 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
             <img
               src={dotsIcon}
               alt="설정"
-              style={{ margin: "0 0.3rem 0 0.5rem" }}
+              style={{
+                margin: "0 0.3rem 0 0.5rem",
+                width: "1rem",
+                height: "1rem",
+              }}
             />
           </button>
           <TodoUpdateMoreModal

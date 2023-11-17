@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
   * {
     @font-face {
     font-family: 'Roboto';
-    src: url('https://fonts.cdnfonts.com/css/roboto') format('ttf');
+    src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap') format('ttf');
     font-weight: 400;
     }
   }
@@ -55,7 +55,7 @@ const theme = {
     sidebarTitle: "1.2rem",
     modalTitle: "1.12rem",
     tagTitle: "1.12rem",
-    default: "1rem",
+    default: "0.875rem",
 
     size28: "1.75rem",
     size24: "1.5rem",

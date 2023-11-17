@@ -95,8 +95,6 @@ const MoreBtn = styled.img`
   width: 1rem;
   height: 1rem;
 
-  scale: 1.2;
-
   &:hover {
     cursor: pointer;
   }

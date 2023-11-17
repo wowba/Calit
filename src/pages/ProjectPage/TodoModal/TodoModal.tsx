@@ -289,7 +289,11 @@ export default function TodoModal({ isTodoShow }: Props) {
                 onClick={() => setIsMoreModalOpened(!isMoreModalOpened)}
                 style={{ margin: "0 1rem 0 0" }}
               >
-                <img src={dotsIcon} alt="더보기" />
+                <img
+                  src={dotsIcon}
+                  alt="더보기"
+                  style={{ height: "1rem", width: "1rem" }}
+                />
               </button>
               <TodoMoreModal
                 isShow={isMoreModalOpened}

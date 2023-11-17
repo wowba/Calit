@@ -75,6 +75,7 @@ interface Props {
 }
 
 export default function CreateKanbanModal(props: Props) {
+  const kanbanTitleRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const { isShow, setIsShow, startDate, endDate, setStartDate, setEndDate } =
     props;
@@ -203,13 +204,18 @@ export default function CreateKanbanModal(props: Props) {
       <CreateKanbanModalInfoBox>
         <p>이름</p>
         <CommonInputLayout
+          ref={kanbanTitleRef}
           type="text"
           placeholder="이름을 작성하세요"
           onChange={handleInputChange}
           value={kanbanName}
           $dynamicPadding="0.25rem 0.25rem 0.25rem 0.25rem"
           $dynamicWidth="20rem"
-          $isHover
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              kanbanTitleRef.current!.blur();
+            }
+          }}
         />
       </CreateKanbanModalInfoBox>
       <CreateKanbanModalInfoBox>
@@ -230,7 +236,7 @@ export default function CreateKanbanModal(props: Props) {
           $width="10rem"
           $height="1.5rem"
           $padding="0.25rem 0.25rem 0.25rem 0.25rem"
-          $isHover
+          $isHover={false}
           $fontsize="1.125rem"
         />
       </CreateKanbanModalInfoBox>
@@ -242,7 +248,7 @@ export default function CreateKanbanModal(props: Props) {
           $width="10rem"
           $height="1.5rem"
           $padding="0.25rem 0.25rem 0.25rem 0.25rem"
-          $isHover
+          $isHover={false}
           $fontsize="1.125rem"
         />
       </CreateKanbanModalInfoBox>

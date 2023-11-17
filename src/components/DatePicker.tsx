@@ -23,19 +23,19 @@ const StyledReactDatePicker = styled(ReactDatePicker)<Props>`
 
   font-size: ${(props) => props.$fontsize};
 
-  border: 1px solid transparent;
+  border: none;
   border-radius: 0.3rem;
   outline: none;
 
   &:focus {
-    border-color: #adadad;
+    /* border-color: #adadad; */
   }
 
   ${(props) =>
     props.$isHover &&
     css`
       &:hover {
-        border-color: #adadad;
+        /* border-color: #adadad; */
       }
     `}
 `;
