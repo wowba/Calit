@@ -26,6 +26,7 @@ const TutorialPaginationButton = styled.button`
   &[aria-current] {
     background: #7064ff;
     font-weight: bold;
+    color: white;
     cursor: revert;
     transform: revert;
   }
