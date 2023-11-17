@@ -21,6 +21,7 @@ import loginState from "../../recoil/atoms/login/loginState";
 import userData from "../../recoil/atoms/login/userDataState";
 import userListState from "../../recoil/atoms/userList/userListState";
 import projectState from "../../recoil/atoms/project/projectState";
+import defaultProfileIcon from "../../assets/images/defaultProjectImg2.jpg";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -41,6 +42,8 @@ const UserProfileImg = styled.img`
   height: 9rem;
 
   object-fit: cover;
+
+  border: ${(props) => props.theme.Border.thinBorder};
 `;
 
 const UserInfoBox = styled.div`
@@ -189,7 +192,7 @@ export default function UserProfile() {
     >
       <UserProfileImgBox>
         <UserProfileImg
-          src={profileImgUrl}
+          src={profileImgUrl !== "" ? profileImgUrl : defaultProfileIcon}
           alt=""
           onClick={() => imgInputRef.current?.click()}
         />
@@ -205,6 +208,7 @@ export default function UserProfile() {
           ref={inputNameRef}
           value={inputName}
           $dynamicWidth="auto"
+          $dynamicFontSize="1rem"
           style={{ fontWeight: 700 }}
           onChange={handleNameChange}
           onBlur={handleNameBlur}
@@ -219,7 +223,7 @@ export default function UserProfile() {
           placeholder="자기소개를 입력해 주세요!"
           onChange={handleIntroChange}
           onBlur={handleIntroBlur}
-          style={{ fontSize: "0.9rem" }}
+          style={{ fontSize: "0.875rem" }}
         />
       </UserInfoBox>
 
@@ -228,8 +232,8 @@ export default function UserProfile() {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              fontSize: "0.95rem",
+              alignItems: "flex-start",
+              fontSize: "0.875rem",
             }}
           >
             <span>로그아웃</span> <img src={rightArrow} alt="" />

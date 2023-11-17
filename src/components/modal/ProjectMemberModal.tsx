@@ -62,7 +62,9 @@ const UserImage = styled.img`
 
 const UserName = styled.div`
   text-align: center;
-  font-weight: 700;
+  font-weight: 400;
+
+  font-size: ${(props) => props.theme.Fs.default};
 `;
 
 const BtnBox = styled.span`
@@ -79,6 +81,8 @@ const InviteBtn = styled.button<Props>`
     transition: transform 0.3s ease;
     ${({ $modalIndex }) => $modalIndex === 1 && "transform: rotate(90deg);"}
   }
+
+  font-size: ${(props) => props.theme.Fs.default};
 `;
 const GetOutBtn = styled.button<Props>`
   display: flex;
@@ -87,12 +91,8 @@ const GetOutBtn = styled.button<Props>`
     transition: transform 0.3s ease;
     ${({ $modalIndex }) => $modalIndex === 2 && "transform: rotate(90deg);"}
   }
+  font-size: ${(props) => props.theme.Fs.default};
 `;
-// const SelectInput = styled.select`
-//   background: #fafafa;
-//   border: 0.2px solid #ededed;
-//   -webkit-border-radius: 4px;
-// `;
 
 const BtnActionContainer = styled.div`
   padding: 1.5rem 0 1rem;
@@ -111,6 +111,9 @@ const WaitingList = styled.div`
   flex-wrap: wrap;
   flex-direction: column-reverse;
   margin: 0 0 0.9rem;
+
+  font-size: ${(props) => props.theme.Fs.default};
+  color: ${(props) => props.theme.Color.mainGray};
 `;
 const WaitingContainer = styled.div`
   display: flex;
@@ -330,7 +333,13 @@ export default function ProjectMemberModal() {
                 확인
               </ConfirmBtn>
             </InviteContainer>
-            <div style={{ fontWeight: 700, margin: "1.5rem 0 0.3rem" }}>
+            <div
+              style={{
+                fontWeight: 700,
+                margin: "1.5rem 0 0.3rem",
+                fontSize: "0.875rem",
+              }}
+            >
               초대 대기열
             </div>
             <WaitingList>
@@ -347,7 +356,7 @@ export default function ProjectMemberModal() {
             <button
               type="button"
               onClick={() => handleCopyClipBoard(projectId)}
-              style={{ fontWeight: 400 }}
+              style={{ fontWeight: 400, fontSize: "0.875rem" }}
             >
               🔗 Copy Link
             </button>

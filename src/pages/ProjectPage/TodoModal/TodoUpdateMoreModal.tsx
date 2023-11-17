@@ -41,6 +41,8 @@ const ModalInnerBtn = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.Color.activeColor};
   }
+
+  font-size: ${(props) => props.theme.Fs.default};
 `;
 
 interface Props {

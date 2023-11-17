@@ -115,7 +115,7 @@ export default function CreateProjectBtn() {
           email: userCredential.email,
           name: userCredential.displayName,
           intro: "",
-          profile_img_URL: userCredential.photoURL,
+          profile_img_URL: "",
           is_kicked: false,
         });
       }

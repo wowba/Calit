@@ -62,7 +62,12 @@ export default function KanbanMoreModal(props: Props) {
   return (
     <KanbanMoreModalLayout ref={wrapperRef} $isShow={isShow}>
       <button
-        style={{ display: "inline-block", width: "10rem", textAlign: "start" }}
+        style={{
+          display: "inline-block",
+          width: "10rem",
+          textAlign: "start",
+          fontSize: "0.875rem",
+        }}
         type="button"
         onClick={handleDeleteKanban}
       >

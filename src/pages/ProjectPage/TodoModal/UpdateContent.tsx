@@ -18,7 +18,7 @@ const UpdateListHeader = styled.div`
 `;
 const ManagedUser = styled.div`
   display: flex;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.Fs.default};
   font-weight: 600;
 `;
 const SettingContainer = styled.div`

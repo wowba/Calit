@@ -63,12 +63,7 @@ export default function ProjectCheckRoute() {
         // user의 project_list에 project 추가
         const userRef = doc(db, "user", loginEmail);
         const userSnap: any = await getDoc(userRef);
-        const {
-          project_list: projectList,
-          email,
-          name,
-          profile_img_URL: profileImgUrl,
-        } = userSnap.data();
+        const { project_list: projectList, email, name } = userSnap.data();
         projectList.push(pathname.replace("/", ""));
         await updateDoc(userRef, {
           project_list: projectList,
@@ -91,7 +86,7 @@ export default function ProjectCheckRoute() {
           email,
           name,
           intro: "",
-          profile_img_URL: profileImgUrl,
+          profile_img_URL: "",
           is_kicked: false,
         });
         setIsInviteChecked(true);

@@ -28,7 +28,8 @@ const ModalInnerBtn = styled.button`
   text-align: start;
   padding: 0.4rem 0.6rem;
 
-  border-bottom: ${(props) => props.theme.Border.thinBorder};
+  font-size: ${(props) => props.theme.Fs.default};
+
   transition: background-color 0.3s ease;
   &:hover {
     background-color: ${(props) => props.theme.Color.activeColor};

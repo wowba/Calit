@@ -36,7 +36,7 @@ const TrashBoxModalLayout = styled.div<{ $isShow: boolean }>`
 
 const TrashBoxTitle = styled.p`
   font-size: ${(props) => props.theme.Fs.default};
-  font-weight: 500;
+  font-weight: 700;
 `;
 
 const DeletedListBox = styled.div`
@@ -49,6 +49,8 @@ const DeletedListBox = styled.div`
   overflow: scroll;
 
   height: 92%;
+
+  font-size: ${(props) => props.theme.Fs.default};
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -70,7 +72,7 @@ const DeletedKanbanBox = styled.div<{ $color: string }>`
   justify-content: space-between;
   padding: 0.125rem 0.5rem;
 
-  border-radius: ${(props) => props.theme.Br.small};
+  border-radius: 3px;
   background-color: ${(props) => props.$color};
   color: ${(props) => getTextColorByBackgroundColor(props.$color)};
 
