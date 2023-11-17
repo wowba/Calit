@@ -36,6 +36,26 @@ const UpdateContent = styled.div`
   padding: 0.5rem 0;
 `;
 
+const CustomMDEditor = styled.div`
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  .w-md-editor-preview {
+    padding: 10px;
+    p {
+      font-size: 14px !important;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+      line-height: 21px;
+    }
+  }
+  .w-md-editor-text {
+    line-height: unset;
+  }
+  .w-md-editor .title {
+    line-height: unset !important;
+    font-size: unset !important;
+    font-weight: unset !important;
+  }
+`;
+
 export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const [markdownContent, setMarkdownContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -168,15 +188,19 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           onChange={handleMarkdownChange}
           preview={isEditing ? "edit" : "preview"}
           hideToolbar={false}
+          style={{ height: "5rem" }}
         />
       ) : (
-        <MDEditor
-          value={markdownContent}
-          onChange={handleMarkdownChange}
-          preview={isEditing ? "edit" : "preview"}
-          // eslint-disable-next-line react/jsx-boolean-value
-          hideToolbar={true}
-        />
+        <CustomMDEditor>
+          <MDEditor
+            style={{ fontFamily: "Roboto" }}
+            value={markdownContent}
+            onChange={handleMarkdownChange}
+            preview={isEditing ? "edit" : "preview"}
+            // eslint-disable-next-line react/jsx-boolean-value
+            hideToolbar={true}
+          />
+        </CustomMDEditor>
       )}
     </UpdateContent>
   );
