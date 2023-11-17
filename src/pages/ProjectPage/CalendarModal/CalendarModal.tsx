@@ -139,14 +139,14 @@ const CalendarBox = styled.div`
   .fc-day-today {
     .fc-daygrid-day-top {
       a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: inline-block;
+        text-align: center;
+        line-height: 0.9;
         color: white;
         font-weight: 600;
         background-color: ${(props) => props.theme.Color.mainColor};
         border-radius: 2rem;
-        line-height: 0.7;
+        height: 1rem;
         width: 1.5rem;
       }
     }

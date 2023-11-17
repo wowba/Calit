@@ -27,7 +27,7 @@ const RecentKanbanList = styled.div`
 const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
   display: flex;
   justify-content: space-between;
-  border-radius: 5px;
+  border-radius: 3px;
   width: 100%;
   margin: 3px 0px;
   padding: 0px 10px;
@@ -50,12 +50,16 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
     visibility: hidden;
   }
   &:hover {
-    /* transform: scale(110%); */
     & button {
       opacity: 1;
       visibility: visible;
     }
   }
+`;
+
+const KanbanTitle = styled.span`
+  font-size: 0.875rem;
+  padding: 0.05rem 0.04rem 0 0.04rem;
 `;
 
 export default function RecentKanban() {
@@ -113,7 +117,7 @@ export default function RecentKanban() {
                 key={kanbanID}
                 onClick={() => handleClick(kanbanID)}
               >
-                <span
+                <KanbanTitle
                   style={
                     kanbanData.get(kanbanID).color
                       ? {
@@ -127,7 +131,7 @@ export default function RecentKanban() {
                   {kanbanData.has(kanbanID)
                     ? kanbanData.get(kanbanID).name
                     : "제거된 칸반입니다"}
-                </span>
+                </KanbanTitle>
                 <button
                   type="button"
                   onClick={(event) => handleDelete(event, kanbanID)}

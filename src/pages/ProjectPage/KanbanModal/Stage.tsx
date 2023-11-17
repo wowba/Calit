@@ -126,6 +126,37 @@ const TodoList = styled.div<TodoListProps>`
     background-color: transparent;
   }
 `;
+
+const CompleteCheckBox = styled.div`
+  position: relative;
+
+  &:hover {
+    > div {
+      opacity: 1;
+    }
+  }
+`;
+
+const CompleteCheckHover = styled.div`
+  transition: all 0.5s ease;
+
+  position: absolute;
+
+  text-align: center;
+  font-size: 0.625rem;
+
+  width: 8.875rem;
+  height: 1rem;
+
+  top: -0.15rem;
+  left: -9.5rem;
+
+  opacity: 0;
+
+  background-color: ${(props) => props.theme.Color.activeColor};
+  border-radius: ${(props) => props.theme.Br.small};
+`;
+
 interface TodoListProps {
   $isDraggingOver: boolean;
 }
@@ -253,7 +284,12 @@ function Stage({
               />
             </StageTitleBox>
             {stage.id === "default-3" ? (
-              <img src={Check} alt="check" />
+              <CompleteCheckBox>
+                <img src={Check} alt="check" />
+                <CompleteCheckHover>
+                  투두가 완료 상태로 계산됩니다.
+                </CompleteCheckHover>
+              </CompleteCheckBox>
             ) : (
               <StageTrashIcon
                 src={trashIcon}
