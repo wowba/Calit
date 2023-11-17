@@ -207,19 +207,56 @@ const CalendarBox = styled.div`
     margin: 0.01rem 0 0.01rem 0.5rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    > div {
+    justify-content: space-between;
+    > div:first-child {
       padding: 0.05rem 0.04rem 0 0.04rem;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    &:hover {
-      img {
-        display: block;
-      }
+
+    > img {
+      transition: all 0.5s ease;
+
+      visibility: hidden;
+      opacity: 0;
+
+      width: 1rem;
+      height: 1rem;
     }
-    img {
-      display: none;
+    /* > div:last-child {
+      transform: translateY(0.025rem);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border-radius: ${(props) => props.theme.Br.small};
+
+      transition: all 0.5s ease;
+      visibility: hidden;
+      opacity: 0;
+
+      width: 1rem;
+      height: 1rem;
+
+      > img {
+        width: 0.8rem;
+        height: 0.8rem;
+      }
+    } */
+    &:hover {
+      > img {
+        margin: 0 0.5rem 0 0;
+        visibility: visible;
+        opacity: 1;
+      }
+      /* > div:last-child {
+        margin: 0 0.5rem 0 0;
+        visibility: visible;
+        opacity: 1;
+
+        background-color: ${(props) => props.theme.Color.mainWhite};
+      } */
     }
   }
 `;
@@ -446,9 +483,10 @@ export default function CalendarModal({ setSearchParams }: Props) {
     const EventTitle = document.createElement("div");
     EventTitle.innerText = eventInfo.title;
 
+    // const ModifyIconBox = document.createElement("div");
+
     const ModifyIcon = document.createElement("img");
     ModifyIcon.setAttribute("src", paint);
-    ModifyIcon.setAttribute("style", "width: 1rem; height: 1rem;");
     ModifyIcon.addEventListener("click", (e: MouseEvent) => {
       e.stopPropagation();
       setColorModalInfo({
@@ -460,6 +498,8 @@ export default function CalendarModal({ setSearchParams }: Props) {
       });
       setIsColorModalShow(true);
     });
+
+    // ModifyIconBox.appendChild(ModifyIcon);
 
     const arrayOfDomNodes = [EventTitle, ModifyIcon];
     return { domNodes: arrayOfDomNodes };
