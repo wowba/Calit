@@ -54,7 +54,7 @@ const CalendarBox = styled.div`
   // 헤더 각 요소 영역
   .fc-toolbar-chunk {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
     align-items: center;
     position: relative;
     gap: 2rem;
@@ -67,6 +67,8 @@ const CalendarBox = styled.div`
     font-size: ${(props) => props.theme.Fs.modalTitle};
     font-weight: 700;
     color: ${(props) => props.theme.Color.mainBlack};
+
+    margin-bottom: 0.25rem;
   }
   // 버튼 초기화
   .fc .fc-button-primary:disabled {
@@ -141,7 +143,7 @@ const CalendarBox = styled.div`
       a {
         display: inline-block;
         text-align: center;
-        line-height: 0.9;
+        line-height: 0.6;
         color: white;
         font-weight: 600;
         background-color: ${(props) => props.theme.Color.mainColor};
@@ -209,7 +211,7 @@ const CalendarBox = styled.div`
     align-items: center;
     justify-content: space-between;
     > div:first-child {
-      padding: 0.05rem 0.04rem 0 0.04rem;
+      padding: 0.05rem 0.04rem 0.1rem 0.04rem;
       overflow: hidden;
       text-overflow: ellipsis;
     }

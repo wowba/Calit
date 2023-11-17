@@ -19,7 +19,7 @@ const ProjectCardMoreModalLayout = styled.div<{
 
   top: -7.5rem;
   top: ${(props) => (props.$isCreater ? "-7.5rem" : "-2.5rem")};
-  right: 1.125rem;
+  right: 1.25rem;
 
   width: 10rem;
   background-color: ${(props) => props.theme.Color.mainWhite};
@@ -38,6 +38,15 @@ const ProjectCardMoreModalLayout = styled.div<{
     css`
       display: none;
     `}
+
+  > button:first-child {
+    border-radius: 10px 10px 0 0;
+  }
+
+  > button:last-child {
+    border-radius: 0 0 10px 10px;
+    border: none;
+  }
 `;
 
 const ModalInnerBtn = styled.button`
@@ -45,6 +54,8 @@ const ModalInnerBtn = styled.button`
 
   text-align: start;
   padding: 0.4rem 0.6rem;
+
+  font-size: ${(props) => props.theme.Fs.default};
 
   border-bottom: ${(props) => props.theme.Border.thinBorder};
   transition: background-color 0.3s ease;

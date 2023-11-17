@@ -271,7 +271,7 @@ function Stage({
                 type="text"
                 placeholder="이름을 입력하세요"
                 $dynamicWidth="14rem"
-                $dynamicFontSize=" 1.1rem"
+                $dynamicFontSize=" 1rem"
                 $dynamicPadding="1rem 0.5rem"
                 style={{ fontWeight: "900" }}
                 onChange={(e) => setStageName(e.target.value)}

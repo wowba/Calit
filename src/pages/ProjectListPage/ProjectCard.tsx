@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
@@ -47,6 +47,7 @@ export default function ProjectCard({
   fetchProjectData,
   creater,
 }: any) {
+  const projectTitleRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const [inputNameValue, setInputNameValue] = useState(projectName);
 
@@ -75,6 +76,7 @@ export default function ProjectCard({
         }}
       >
         <CommonInputLayout
+          ref={projectTitleRef}
           $dynamicWidth="calc(100% - 2rem)"
           $dynamicHeight="2rem"
           $dynamicPadding="2px 4px"
@@ -86,6 +88,11 @@ export default function ProjectCard({
           onChange={(e) => setInputNameValue(e.target.value)}
           onBlur={handleTitleBlur}
           value={inputNameValue}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              projectTitleRef.current!.blur();
+            }
+          }}
         />
         <button
           type="button"

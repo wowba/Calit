@@ -186,7 +186,7 @@ export default function Bookmark() {
           $isHover
         />
         <ConfirmBtn
-          $dynamicWidth="4rem"
+          $dynamicWidth="3rem"
           $dynamicHeight="2rem"
           $dynamicMargin="2px"
           onClick={handleBtnClick}

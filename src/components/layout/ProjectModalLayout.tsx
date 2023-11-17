@@ -14,9 +14,9 @@ const ProjectModalLayout = styled.div<{ $isShow: boolean }>`
 
   // 헤더 및 사이드바 CSS 변경시 width, height 수정 요망
   width: calc(100% - 16rem);
-  height: calc(100% - 8rem);
+  height: calc(100% - 7.5rem);
 
-  top: calc(7rem);
+  top: calc(6.5rem);
   ${(props) =>
     !props.$isShow &&
     css`
@@ -37,14 +37,13 @@ const ProjectModalTabBox = styled.div<{
   z-index: 998;
 
   width: 7rem;
-  /* height: 2rem; */
 
   border-radius: 2rem;
   background-color: ${(props) => `${props.$color}`};
 
   position: fixed;
   left: ${(props) => `${props.$left}rem`};
-  top: 4rem;
+  top: 3.9rem;
 
   color: ${(props) => props.$textColor};
   padding: 0.2rem 0;

@@ -68,7 +68,7 @@ const KanbanProgressBox = styled.div`
 `;
 
 const KanbanProgress = styled.div`
-  width: 19rem;
+  width: 16rem;
   height: 0.6rem;
 
   border: ${(props) => props.theme.Border.thickBorder};
@@ -94,8 +94,6 @@ const KanbanDateParagraph = styled.p`
 const MoreBtn = styled.img`
   width: 1rem;
   height: 1rem;
-
-  scale: 1.2;
 
   &:hover {
     cursor: pointer;
@@ -221,7 +219,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
                   value={inputKanbanName}
                   type="text"
                   placeholder="제목을 입력하세요"
-                  $dynamicFontSize=" 1.2rem"
+                  $dynamicFontSize=" 1.12rem"
                   $dynamicPadding="1rem 0.5rem"
                   style={{ fontWeight: "900" }}
                   onChange={(e) => setInputKanbanName(e.target.value)}
@@ -262,7 +260,7 @@ export default function KanbanModal({ isKanbanShow }: Props) {
                   }
                 />
               </KanbanProgress>
-              <p>
+              <p style={{ fontSize: "0.875rem" }}>
                 {progress[0]
                   ? Math.floor((progress[1] / progress[0]) * 100)
                   : 0}

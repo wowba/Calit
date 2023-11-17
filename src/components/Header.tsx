@@ -13,6 +13,7 @@ import { ReactComponent as tutorialIcon } from "../assets/headerIcon/tutorial.sv
 import bookmarkIcon from "../assets/headerIcon/bookmark.svg";
 import memberIcon from "../assets/headerIcon/member.svg";
 // import logIcon from "../assets/headerIcon/log.svg"
+import defaultProfileIcon from "../assets/images/defaultProjectImg2.jpg";
 
 // 모달
 import ProjectMember from "./modal/ProjectMemberModal";
@@ -202,8 +203,13 @@ export default function Header() {
                         height: "2rem",
                         objectFit: "cover",
                         borderRadius: "50%",
+                        border: "1px solid #DFDFDF",
                       }}
-                      src={userListData.get(loginEmail).profile_img_URL}
+                      src={
+                        userListData.get(loginEmail).profile_img_URL !== ""
+                          ? userListData.get(loginEmail).profile_img_URL
+                          : defaultProfileIcon
+                      }
                       alt="modalIcon"
                     />
                   ) : (

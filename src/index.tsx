@@ -16,18 +16,10 @@ const GlobalStyle = createGlobalStyle`
   button {background:none;border:0;cursor:pointer;}
   a {text-decoration:none}
   table {border-collapse:collapse;border-spacing:0}
-
-  /* font */
-  * {
-    @font-face {
-    font-family: 'Roboto';
-    src: url('https://fonts.cdnfonts.com/css/roboto') format('ttf');
-    font-weight: 400;
-    }
-  }
+  
   * {
       box-sizing: border-box;
-      font-family: 'Roboto';
+      font-family: 'Noto Sans KR', sans-serif;
   }
 `;
 
@@ -55,7 +47,7 @@ const theme = {
     sidebarTitle: "1.2rem",
     modalTitle: "1.12rem",
     tagTitle: "1.12rem",
-    default: "1rem",
+    default: "0.875rem",
 
     size28: "1.75rem",
     size24: "1.5rem",

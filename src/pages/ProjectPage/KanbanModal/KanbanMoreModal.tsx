@@ -5,7 +5,7 @@ const KanbanMoreModalLayout = styled.div<{ $isShow: boolean }>`
   position: absolute;
 
   top: 5rem;
-  right: 1rem;
+  right: 2.4rem;
 
   width: auto;
   background-color: ${(props) => props.theme.Color.mainWhite};
@@ -14,7 +14,7 @@ const KanbanMoreModalLayout = styled.div<{ $isShow: boolean }>`
   border-radius: ${(props) => props.theme.Br.default};
   box-shadow: ${(props) => props.theme.Bs.default};
 
-  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+  padding: 0.4rem 0.6rem;
 
   z-index: 999;
 
@@ -61,7 +61,16 @@ export default function KanbanMoreModal(props: Props) {
 
   return (
     <KanbanMoreModalLayout ref={wrapperRef} $isShow={isShow}>
-      <button type="button" onClick={handleDeleteKanban}>
+      <button
+        style={{
+          display: "inline-block",
+          width: "10rem",
+          textAlign: "start",
+          fontSize: "0.875rem",
+        }}
+        type="button"
+        onClick={handleDeleteKanban}
+      >
         칸반 삭제하기
       </button>
     </KanbanMoreModalLayout>

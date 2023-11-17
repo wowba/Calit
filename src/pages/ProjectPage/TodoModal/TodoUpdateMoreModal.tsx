@@ -20,6 +20,14 @@ const TodoUpdateMoreModalLayout = styled.div<{ $isShow: boolean }>`
     css`
       display: none;
     `}
+
+  > button:first-child {
+    border-radius: 10px 10px 0 0;
+  }
+  > button:last-child {
+    border-radius: 0 0 10px 10px;
+    border: none;
+  }
 `;
 
 const ModalInnerBtn = styled.button`
@@ -33,6 +41,8 @@ const ModalInnerBtn = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.Color.activeColor};
   }
+
+  font-size: ${(props) => props.theme.Fs.default};
 `;
 
 interface Props {

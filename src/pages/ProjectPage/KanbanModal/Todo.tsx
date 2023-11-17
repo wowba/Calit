@@ -58,7 +58,7 @@ const TodoNameBox = styled.div`
 `;
 
 const TodoNameParagraph = styled.p`
-  font-size: ${(props) => props.theme.Fs.size18};
+  font-size: ${(props) => props.theme.Fs.default};
   font-weight: 900;
 `;
 
