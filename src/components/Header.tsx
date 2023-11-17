@@ -67,9 +67,10 @@ const HeaderLogo = styled(headerLogo)`
   cursor: pointer;
 `;
 
-const TutorialBox = styled.div`
+const TutorialBox = styled.div<Props>`
   position: fixed;
   top: calc(100% - 3.3rem);
+  left: ${(props) => (props.$whichPage === "list" ? " 5rem" : "")};
   z-index: 3;
   width: 1.875rem;
   height: 1.875rem;
@@ -175,7 +176,7 @@ export default function Header() {
   return (
     <HeaderLayout $whichPage={currentHeaderState}>
       <HeaderLogo onClick={() => navigate("/")} />
-      <TutorialBox>
+      <TutorialBox $whichPage={currentHeaderState}>
         <TutorialImg
           onClick={() => setIsTutorialRestoreClick((prev) => !prev)}
         />
