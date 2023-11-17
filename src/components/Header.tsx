@@ -70,7 +70,8 @@ const HeaderLogo = styled(headerLogo)`
 const TutorialBox = styled.div<Props>`
   position: fixed;
   top: calc(100% - 3.3rem);
-  left: ${(props) => (props.$whichPage === "list" ? " 5rem" : "")};
+  left: ${(props) => (props.$whichPage === "list" ? " 5rem" : "1rem")};
+  transition: all 0.8s ease;
   z-index: 3;
   width: 1.875rem;
   height: 1.875rem;

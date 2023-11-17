@@ -32,12 +32,14 @@ const ProjectInfoBox = styled.div`
 const ProjectTitleParagraph = styled.p`
   font-size: 1.25rem;
   font-weight: 900;
-  margin-left: 0.25rem;
+  padding-left: 0.5rem;
+  display: table-cell;
 `;
 
 const ProjectTitleBox = styled.div`
   display: flex;
   margin: 0.5rem 0 1.5rem 0;
+  display: table;
 `;
 
 const ProjectTitleBoxLabel = styled.div`
@@ -45,7 +47,7 @@ const ProjectTitleBoxLabel = styled.div`
   height: 1.3rem;
   background-color: #7064ff;
   border-radius: 7px;
-  margin-right: 0.5rem;
+  display: table-cell;
 `;
 const ProjectProfileImg = styled.img`
   width: 100%;
