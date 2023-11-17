@@ -142,7 +142,10 @@ export default function ProjectMemberModal() {
   userListData.forEach((user) => {
     if (!user.is_kicked) {
       userData.push({
-        userImage: user.profile_img_URL,
+        userImage:
+          user.profile_img_URL !== ""
+            ? user.profile_img_URL
+            : defaultProfileIcon,
         userName: user.name,
         email: user.email,
       });

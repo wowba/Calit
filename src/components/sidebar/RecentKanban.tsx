@@ -13,7 +13,7 @@ import deleteIcon, {
 import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
 
 const RecentKanbanContainer = styled.div`
-  height: 20rem;
+  max-height: 20rem;
 `;
 const RecentKanbanTitle = styled.div`
   font-weight: 900;
