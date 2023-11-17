@@ -75,10 +75,11 @@ export default function ProjectCard({
         }}
       >
         <CommonInputLayout
-          $dynamicWidth="10rem"
+          $dynamicWidth="calc(100% - 2rem)"
           $dynamicHeight="2rem"
           $dynamicPadding="2px 4px"
           placeholder="제목을 입력해주세요"
+          maxLength={20}
           style={{
             fontWeight: "900",
           }}
