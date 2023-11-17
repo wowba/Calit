@@ -6,26 +6,26 @@ import { getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilValue } from "recoil";
 import dotsIcon from "../../../assets/icons/dots.svg";
 import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
-import trashIcon from "../../../assets/icons/trashIcon.svg";
-import pencilIcon from "../../../assets/icons/pencilIcon.svg";
-import reloadIcon from "../../../assets/icons/reloadIcon.svg";
 import CommonSettingModal from "../../../components/layout/CommonSettingModal";
 import userListState from "../../../recoil/atoms/userList/userListState";
 import TodoUpdateMoreModal from "./TodoUpdateMoreModal";
+import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
 
 const UpdateListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0.5rem;
+  height: 2rem;
 `;
 const ManagedUser = styled.div`
   display: flex;
   font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
 `;
 const SettingContainer = styled.div`
   display: flex;
+  align-items: center;
   position: relative;
 `;
 
@@ -36,16 +36,31 @@ const UpdateContent = styled.div`
   padding: 0.5rem 0;
 `;
 
-const ChangeUpdateModal = styled(CommonSettingModal)`
-  bottom: -2.5rem;
-  right: -0.2rem;
-  height: 2rem;
+const CustomMDEditor = styled.div`
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  .w-md-editor-preview {
+    padding: 10px;
+    p {
+      font-size: 14px !important;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+      line-height: 21px;
+    }
+  }
+  .w-md-editor-text {
+    line-height: unset;
+  }
+  .w-md-editor .title {
+    line-height: unset !important;
+    font-size: unset !important;
+    font-weight: unset !important;
+  }
 `;
 
 export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   const [markdownContent, setMarkdownContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [isSettingOpened, setIsSettingOpened] = useState(false);
+  const [areButtonsShown, setAreButtonsShown] = useState(false);
 
   const userListData = useRecoilValue(userListState);
   const creatorData = userListData.get(data.writer);
@@ -56,7 +71,8 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
   // 업데이트 컴포넌트 변경 취소
   const handleCancleClick = () => {
     setIsEditing(!isEditing);
-    setIsSettingOpened(!isSettingOpened);
+    setIsSettingOpened(false);
+    setAreButtonsShown(!areButtonsShown);
   };
   // 업데이트 컴포넌트 수정
   const handleModifyClick = async () => {
@@ -80,7 +96,9 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
       });
       setIsSettingOpened(!isSettingOpened);
     }
+    setIsSettingOpened(false);
     setIsEditing(!isEditing);
+    setAreButtonsShown(!areButtonsShown);
   };
   // 업데이트 컴포넌트 삭제
   const handleDeleteClick = async () => {
@@ -117,9 +135,34 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           {creatorData.name}
         </ManagedUser>
         <SettingContainer>
-          <span style={{ fontSize: "0.8rem", color: "gray" }}>
+          {areButtonsShown && (
+            <div>
+              <ConfirmBtn
+                type="submit"
+                onClick={handleModifyClick}
+                $dynamicWidth="3.5rem"
+                $dynamicHeight="2rem"
+                style={{ fontSize: "0.9rem" }}
+              >
+                <span>변경</span>
+              </ConfirmBtn>
+              <ConfirmBtn
+                type="submit"
+                onClick={handleCancleClick}
+                $dynamicWidth="3.5rem"
+                $dynamicHeight="2rem"
+                $dynamicMargin="0 0.7rem 0 0.3rem"
+                $dynamicColor="#F9F9F9"
+                $fontColor="#7064FF"
+                style={{ fontSize: "0.9rem", border: "1px solid #7064FF" }}
+              >
+                <span>취소</span>
+              </ConfirmBtn>
+            </div>
+          )}
+          <div style={{ fontSize: "0.8rem", color: "gray" }}>
             {yearMonthDayFormat(data.created_date.seconds)}
-          </span>
+          </div>
           <button
             type="button"
             onClick={() => setIsSettingOpened(!isSettingOpened)}
@@ -134,35 +177,9 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           <TodoUpdateMoreModal
             isShow={isSettingOpened}
             setIsShow={setIsSettingOpened}
-            handleModifyClick={handleModifyClick}
             handleDeleteClick={handleDeleteClick}
+            handleModifyClick={handleModifyClick}
           />
-          {/* {isSettingOpened && (
-            <ChangeUpdateModal $upArrow>
-              {isEditing ? (
-                <>
-                  <button type="button" onClick={handleButtonClick}>
-                    <img src={pencilIcon} alt="완료" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCancleClick}
-                    style={{ margin: "0 0.5rem 0 0" }}
-                  >
-                    <img src={reloadIcon} alt="취소" />
-                  </button>
-                </>
-              ) : (
-                <button type="button" onClick={handleButtonClick}>
-                  <img src={pencilIcon} alt="수정" />
-                </button>
-              )}
-
-              <button type="button" onClick={handleDeleteClick}>
-                <img src={trashIcon} alt="삭제" />
-              </button>
-            </ChangeUpdateModal>
-          )} */}
         </SettingContainer>
       </UpdateListHeader>
       {isEditing ? (
@@ -171,15 +188,19 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
           onChange={handleMarkdownChange}
           preview={isEditing ? "edit" : "preview"}
           hideToolbar={false}
+          style={{ height: "5rem" }}
         />
       ) : (
-        <MDEditor
-          value={markdownContent}
-          onChange={handleMarkdownChange}
-          preview={isEditing ? "edit" : "preview"}
-          // eslint-disable-next-line react/jsx-boolean-value
-          hideToolbar={true}
-        />
+        <CustomMDEditor>
+          <MDEditor
+            style={{ fontFamily: "Roboto" }}
+            value={markdownContent}
+            onChange={handleMarkdownChange}
+            preview={isEditing ? "edit" : "preview"}
+            // eslint-disable-next-line react/jsx-boolean-value
+            hideToolbar={true}
+          />
+        </CustomMDEditor>
       )}
     </UpdateContent>
   );

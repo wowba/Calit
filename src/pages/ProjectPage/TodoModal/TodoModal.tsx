@@ -41,9 +41,18 @@ const TodoContainer = styled(ProjectModalContentBox)<{
 const TodoTopContainer = styled.div`
   display: flex;
   gap: 0.5rem;
-  /* justify-content: space-between; */
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   margin: 0 0 0.6rem;
+`;
+const TodoTitlePointer = styled.div`
+  margin: 0.4rem 1rem 0 0;
+
+  width: 0.25rem;
+  height: 1.3rem;
+  background-color: ${(props) => props.theme.Color.mainColor};
+
+  border-radius: ${(props) => props.theme.Br.small};
 `;
 const TodoTitle = styled.div`
   display: inline-block;
@@ -87,7 +96,6 @@ const Contour = styled.div`
   background-color: #eaeaea;
   width: 100%;
   height: 0.1rem;
-  transform: translateY(-0.3rem);
   border-radius: 3px;
 `;
 
@@ -252,31 +260,29 @@ export default function TodoModal({ isTodoShow }: Props) {
     <ProjectModalLayout $isShow={isTodoShow}>
       <TodoContainer $isTodoShow={isTodoShow}>
         <div style={{ padding: "0 2rem 0 0" }}>
-          <TodoTopContainer
-            style={{
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-            }}
-          >
-            <TodoTitle>
-              <CommonInputLayout
-                ref={todoNameInputRef}
-                type="text"
-                placeholder="제목을 입력하세요"
-                value={inputTodoName}
-                $dynamicFontSize="1.12rem"
-                $dynamicPadding="1rem 0.5rem"
-                $dynamicWidth="auto"
-                onKeyDown={handleEnterPress}
-                onChange={(e) => setInputTodoName(e.target.value)}
-                onBlur={handleOnBlur}
-                onKeyUp={(e) => {
-                  if (e.key === "Enter") {
-                    todoNameInputRef.current!.blur();
-                  }
-                }}
-              />
-            </TodoTitle>
+          <TodoTopContainer>
+            <div style={{ display: "flex" }}>
+              <TodoTitlePointer />
+              <TodoTitle>
+                <CommonInputLayout
+                  ref={todoNameInputRef}
+                  type="text"
+                  placeholder="제목을 입력하세요"
+                  value={inputTodoName}
+                  $dynamicFontSize="1.12rem"
+                  $dynamicPadding="0.9rem 0.5rem"
+                  $dynamicWidth="auto"
+                  onKeyDown={handleEnterPress}
+                  onChange={(e) => setInputTodoName(e.target.value)}
+                  onBlur={handleOnBlur}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      todoNameInputRef.current!.blur();
+                    }
+                  }}
+                />
+              </TodoTitle>
+            </div>
             <div style={{ position: "relative" }}>
               <button
                 type="button"
@@ -292,8 +298,7 @@ export default function TodoModal({ isTodoShow }: Props) {
               />
             </div>
           </TodoTopContainer>
-
-          <div>
+          <div style={{ margin: "2.5rem 0 0" }}>
             <UserListContainer>
               <TodoSubtitle>담당자</TodoSubtitle>
               <CommonSelectMemberLayout
@@ -338,7 +343,7 @@ export default function TodoModal({ isTodoShow }: Props) {
           </div>
         </div>
         <div>
-          <TodoTopContainer>
+          <TodoTopContainer style={{ alignItems: "baseline" }}>
             <TodoTitle>업데이트</TodoTitle>
             <AddUpdateBtn
               type="button"

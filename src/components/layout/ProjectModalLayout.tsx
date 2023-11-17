@@ -36,8 +36,8 @@ const ProjectModalTabBox = styled.div<{
   transition: all 0.5s ease;
   z-index: 998;
 
-  width: 7.5rem;
-  height: 2rem;
+  width: 7rem;
+  /* height: 2rem; */
 
   border-radius: 2rem;
   background-color: ${(props) => `${props.$color}`};
@@ -47,7 +47,7 @@ const ProjectModalTabBox = styled.div<{
   top: 4rem;
 
   color: ${(props) => props.$textColor};
-  padding: 0.4rem 0;
+  padding: 0.2rem 0;
   text-align: center;
   font-size: ${(props) => props.theme.Fs.default};
   font-weight: 600;

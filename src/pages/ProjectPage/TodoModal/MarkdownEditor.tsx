@@ -109,7 +109,6 @@ export default function MarkdownEditor({
           onChange={setValue}
           value={value}
           preview="edit"
-          // style={{ margin: "1.5rem 0 0 0" }}
         />
       </NewMDEditor>
 
