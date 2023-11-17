@@ -245,7 +245,7 @@ export default function UserProfile() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                fontSize: "0.95rem",
+                fontSize: "0.875rem",
               }}
             >
               <span>프로젝트 나가기</span> <img src={rightArrow} alt="" />

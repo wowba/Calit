@@ -16,6 +16,7 @@ import userState from "../../recoil/atoms/login/userDataState";
 import CommonSelectMemberLayout from "../layout/CommonSelectMemberLayout";
 import CommonInputLayout from "../layout/CommonInputLayout";
 import userListState from "../../recoil/atoms/userList/userListState";
+import defaultProfileIcon from "../../assets/images/defaultProjectImg2.jpg";
 
 const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
   // 모달 컴포넌트 영역 클릭시 클릭 이벤트가 부모로 전달되어 컴포넌트가 닫히는 현상 수정
@@ -133,7 +134,7 @@ export default function ProjectMemberModal() {
   const [nameList, setNameList] = useState<any[]>([]);
 
   const userListData = useRecoilValue(userListState);
-  const userData: { userImage: string; userName: string }[] = [];
+  const userData: { userImage: string; userName: string; email: string }[] = [];
   const userList: string[] = [];
 
   // Key prop warning
@@ -143,6 +144,7 @@ export default function ProjectMemberModal() {
       userData.push({
         userImage: user.profile_img_URL,
         userName: user.name,
+        email: user.email,
       });
       userList.push(user.email);
     }
@@ -283,7 +285,13 @@ export default function ProjectMemberModal() {
         <ModalTeamMembers>
           {userData.map((user: any) => (
             <ModalMemberContainer key={user.userImage}>
-              <UserImage key={user.userImage} src={user.userImage} alt="사진" />
+              <UserImage
+                key={user.email}
+                src={
+                  user.userImage !== "" ? user.userImage : defaultProfileIcon
+                }
+                alt="사진"
+              />
               <UserName key={user.userName}>{user.userName}</UserName>
             </ModalMemberContainer>
           ))}
