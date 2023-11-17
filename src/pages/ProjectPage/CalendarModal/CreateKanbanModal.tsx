@@ -88,7 +88,7 @@ export default function CreateKanbanModal(props: Props) {
   const resetCreateKanbanModalState = () => {
     setUserList([]);
     setKanbanName("");
-    setColor("#3888d8");
+    setColor("#C7C4FF");
     setIsShow(false);
   };
 
