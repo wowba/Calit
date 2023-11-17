@@ -45,7 +45,8 @@ export default function CommonSelectMemberLayout(props: Props) {
   const selectedUserList = userList.map((userInfo: any) => {
     const user = userListData.get(userInfo.value);
     return {
-      image: user.profile_img_URL,
+      image:
+        user.profile_img_URL !== "" ? user.profile_img_URL : defaultProfileIcon,
       value: user.email,
       label: user.name,
     };
