@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 
 import projectState from "../../../recoil/atoms/project/projectState";
 import { db } from "../../../firebaseSDK";
-import update from "../../../assets/icons/update.svg";
+import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 
 const TrashBoxModalLayout = styled.div<{ $isShow: boolean }>`
@@ -84,6 +84,8 @@ const DeletedKanbanBox = styled.div<{ $color: string }>`
 
 const DeletedKanbanName = styled.p`
   width: 7rem;
+
+  font-size: 0.875rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -149,17 +151,24 @@ export default function TrashModal(props: Props) {
         {deletedKanbanInfoList.length === 0 ? "삭제된 칸반이 없습니다." : ""}
 
         {deletedKanbanInfoList.map(
-          (kanbanInfo: { id: string; name: string; color: string }) => (
-            <DeletedKanbanBox key={kanbanInfo.id} $color={kanbanInfo.color}>
-              <DeletedKanbanName>{kanbanInfo.name}</DeletedKanbanName>
-              <RestoreBtn
-                type="button"
-                onClick={() => handleRestoreCLick(kanbanInfo.id)}
-              >
-                <img style={{ margin: "0 0 0 1rem" }} src={update} alt="복구" />
-              </RestoreBtn>
-            </DeletedKanbanBox>
-          ),
+          (kanbanInfo: { id: string; name: string; color: string }) => {
+            const updateStyle = {
+              fill: getTextColorByBackgroundColor(kanbanInfo.color),
+            };
+
+            return (
+              <DeletedKanbanBox key={kanbanInfo.id} $color={kanbanInfo.color}>
+                <DeletedKanbanName>{kanbanInfo.name}</DeletedKanbanName>
+                <RestoreBtn
+                  type="button"
+                  onClick={() => handleRestoreCLick(kanbanInfo.id)}
+                >
+                  {/* <img style={{ margin: "0 0 0 1rem" }} src={update} alt="복구" /> */}
+                  <Update style={updateStyle} />
+                </RestoreBtn>
+              </DeletedKanbanBox>
+            );
+          },
         )}
       </DeletedListBox>
     </TrashBoxModalLayout>

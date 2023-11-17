@@ -106,7 +106,7 @@ export default function TodoModal({ isTodoShow }: Props) {
     const setLoaded = async () => {
       if (!isLoaded) {
         setLoadedState(false);
-        await asyncDelay(1000);
+        await asyncDelay(700);
         setLoadedState(true);
       }
     };

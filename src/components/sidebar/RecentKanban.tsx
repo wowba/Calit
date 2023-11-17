@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+
 import recentKanbanState from "../../recoil/atoms/sidebar/recentKanbanState";
 import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
-import deleteIcon from "../../assets/icons/Cross.svg";
+import deleteIcon, {
+  ReactComponent as DeleteIcon,
+} from "../../assets/icons/Cross.svg";
 import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
 
 const RecentKanbanContainer = styled.div`
@@ -27,7 +31,7 @@ const RecentKanbanList = styled.div`
 const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
   display: flex;
   justify-content: space-between;
-  border-radius: 5px;
+  border-radius: 3px;
   width: 100%;
   margin: 3px 0px;
   padding: 0px 10px;
@@ -46,16 +50,22 @@ const KanbanIdBox = styled.div<{ $backgroundColor: string }>`
     -webkit-box-orient: vertical;
   }
   button {
+    transition: all 0.5s ease;
+
     opacity: 0;
     visibility: hidden;
   }
   &:hover {
-    /* transform: scale(110%); */
     & button {
       opacity: 1;
       visibility: visible;
     }
   }
+`;
+
+const KanbanTitle = styled.span`
+  font-size: 0.875rem;
+  padding: 0.05rem 0.04rem 0 0.04rem;
 `;
 
 export default function RecentKanban() {
@@ -103,39 +113,51 @@ export default function RecentKanban() {
           : ""}
 
         {reversedIds
-          ? reversedIds.map((kanbanID: string) => (
-              <KanbanIdBox
-                $backgroundColor={
-                  kanbanData.has(kanbanID)
-                    ? kanbanData.get(kanbanID).color
-                    : "#B0B0B0"
-                }
-                key={kanbanID}
-                onClick={() => handleClick(kanbanID)}
-              >
-                <span
-                  style={
-                    kanbanData.get(kanbanID).color
-                      ? {
-                          color: getTextColorByBackgroundColor(
-                            kanbanData.get(kanbanID).color,
-                          ),
-                        }
-                      : { color: "white" }
+          ? reversedIds.map((kanbanID: string) => {
+              const deleteIconStyle = {
+                fill: kanbanData.has(kanbanID)
+                  ? getTextColorByBackgroundColor(
+                      kanbanData.get(kanbanID).color,
+                    )
+                  : getTextColorByBackgroundColor("#B0B0B0"),
+                width: "0.75rem",
+                height: "0.75rem",
+              };
+              return (
+                <KanbanIdBox
+                  $backgroundColor={
+                    kanbanData.has(kanbanID)
+                      ? kanbanData.get(kanbanID).color
+                      : "#B0B0B0"
                   }
+                  key={kanbanID}
+                  onClick={() => handleClick(kanbanID)}
                 >
-                  {kanbanData.has(kanbanID)
-                    ? kanbanData.get(kanbanID).name
-                    : "제거된 칸반입니다"}
-                </span>
-                <button
-                  type="button"
-                  onClick={(event) => handleDelete(event, kanbanID)}
-                >
-                  <img style={{ scale: "0.7" }} src={deleteIcon} alt="삭제" />
-                </button>
-              </KanbanIdBox>
-            ))
+                  <KanbanTitle
+                    style={
+                      kanbanData.get(kanbanID).color
+                        ? {
+                            color: getTextColorByBackgroundColor(
+                              kanbanData.get(kanbanID).color,
+                            ),
+                          }
+                        : { color: "white" }
+                    }
+                  >
+                    {kanbanData.has(kanbanID)
+                      ? kanbanData.get(kanbanID).name
+                      : "제거된 칸반입니다"}
+                  </KanbanTitle>
+                  <button
+                    type="button"
+                    onClick={(event) => handleDelete(event, kanbanID)}
+                  >
+                    {/* <img style={{ scale: "0.7" }} src={deleteIcon} alt="삭제" /> */}
+                    <DeleteIcon style={deleteIconStyle} />
+                  </button>
+                </KanbanIdBox>
+              );
+            })
           : null}
       </RecentKanbanList>
     </RecentKanbanContainer>
