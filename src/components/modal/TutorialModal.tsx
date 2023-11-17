@@ -182,27 +182,10 @@ export default function Tutorial({
 
   // 튜토리얼 다시 보기
   const handleRestoreTutorial = () => {
-    Swal.fire({
-      icon: "question",
-      title: `튜토리얼을 다시 보시겠습니까?`,
-      confirmButtonText: "다시 보기",
-      confirmButtonColor: "#7064FF",
-      cancelButtonText: "취소",
-      cancelButtonColor: "#B0B0B0",
-      showCancelButton: true,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      allowEnterKey: false,
-    }).then((result) => {
-      // 다시보기 버튼 선택
-      if (result.isConfirmed) {
-        setPage(1);
-        setIsTutorialDataShow(true);
-      }
-
-      // 다시보기 버튼 state 초기화
-      setIsTutorialRestoreClick(false);
-    });
+    setPage(1);
+    setIsTutorialDataShow(true);
+    // 다시보기 버튼 state 초기화
+    setIsTutorialRestoreClick(false);
   };
 
   // 나가기 버튼을 통한 튜토리얼 다시보지 않기 처리
