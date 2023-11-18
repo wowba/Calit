@@ -22,7 +22,36 @@ firebase의 onSnapshot 기능을 주로 이용하여 실시간으로 작업 상�
 
 ## Calit 기능 소개
 
-... GIF 추가할 예정...
+### 1. 로그인 페이지
+
+- firebase 구글 연동 로그인
+  ![로그인 페이지](https://github.com/wowba/Calit/assets/87873821/cf1b6223-a229-4f38-9d9b-105922bc0227)
+
+### 2. 프로젝트 리스트 페이지
+
+- 프로젝트 CRUD (이미지 및 제목 변경)
+  ![프로젝트 리스트 페이지](https://github.com/wowba/Calit/assets/87873821/1a220dbc-869a-4f07-81ad-fdd19acda4cf)
+
+### 3. 프로젝트 메인 페이지 헤더
+
+- 프로젝트 멤버 / 북마크 / 프로필 모달
+  ![헤더 기능 보여주기](https://github.com/wowba/Calit/assets/87873821/181a09a6-1b7a-43df-9157-dca5cfc66ba2)
+
+### 4. 프로젝트 메인 페이지 캘린더 모달
+
+- 드래그를 통한 칸반 생성 및 RUD
+  ![캘린더 모달 내 칸반 생성 및 드래그](https://github.com/wowba/Calit/assets/87873821/1df6d0a8-872e-43bd-8ef0-ad23fdb01724)
+  ![캘린더 모달 내 칸반 삭제](https://github.com/wowba/Calit/assets/87873821/384de0f7-a4ad-44df-b93d-1518399fe3e9)
+
+### 5. 프로젝트 메인 페이지 칸반 모달
+
+- 칸반 내 스테이지 및 투두 CRUD 및 드래그
+  ![칸반모달 기능 보여주기](https://github.com/wowba/Calit/assets/87873821/4c177bf2-c0d8-4695-8f87-25854f86548e)
+
+### 6. 프로젝트 메인 페이지 투두 모달
+
+- 투두 RUD 및 투두 내 업데이트 CRUD
+  ![투두모달 기능 보여주기](https://github.com/wowba/Calit/assets/87873821/4166b7dc-3414-4674-8705-e1aa17636066)
 
 ## ERD
 
