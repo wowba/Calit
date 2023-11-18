@@ -217,10 +217,12 @@ export default function KanbanModal({ isKanbanShow }: Props) {
                 <CommonInputLayout
                   ref={kanbanNameInputRef}
                   value={inputKanbanName}
+                  maxLength={24}
                   type="text"
                   placeholder="제목을 입력하세요"
                   $dynamicFontSize=" 1.12rem"
                   $dynamicPadding="1rem 0.5rem"
+                  $dynamicWidth="21rem"
                   style={{ fontWeight: "900" }}
                   onChange={(e) => setInputKanbanName(e.target.value)}
                   onBlur={handleKanbanInputBlur}
