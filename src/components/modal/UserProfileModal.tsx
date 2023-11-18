@@ -92,6 +92,8 @@ export default function UserProfile() {
   const [inputName, setInputName] = useState(name);
   const [inputIntro, setInputIntro] = useState(intro);
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputName(e.target.value);
   };
@@ -143,6 +145,24 @@ export default function UserProfile() {
       await updateDoc(projectUserRef, {
         intro: inputIntro,
       });
+    }
+  };
+
+  const handleTextAreaEnterPress = async (e: any) => {
+    if (e.nativeEvent.isComposing) {
+      return; // 조합 중일 땐 동작막기
+    }
+
+    if (e.key === "Enter" && e.shiftKey) {
+      return;
+    }
+
+    if (e.key === "Enter") {
+      if (inputIntro) {
+        await updateDoc(projectUserRef, {
+          intro: inputIntro,
+        });
+      }
     }
   };
 
@@ -219,11 +239,24 @@ export default function UserProfile() {
           }}
         />
         <CommonTextArea
+          ref={textareaRef}
           value={inputIntro}
           placeholder="자기소개를 입력해 주세요!"
           onChange={handleIntroChange}
           onBlur={handleIntroBlur}
           style={{ fontSize: "0.875rem" }}
+          onKeyDown={handleTextAreaEnterPress}
+          onKeyUp={(e) => {
+            if (e.nativeEvent.isComposing) {
+              return; // 조합 중일 땐 동작막기
+            }
+            if (e.key === "Enter" && e.shiftKey) {
+              return;
+            }
+            if (e.key === "Enter") {
+              textareaRef.current!.blur();
+            }
+          }}
         />
       </UserInfoBox>
 

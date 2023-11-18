@@ -114,6 +114,7 @@ export default function TodoModal({ isTodoShow }: Props) {
   }, [isLoaded]);
 
   const todoNameInputRef = useRef<HTMLInputElement>(null);
+  // const infoTextAreaRef = useRef<any>(null);
 
   const projectId = window.location.pathname.substring(1);
   const urlQueryString = new URLSearchParams(window.location.search);
@@ -164,7 +165,7 @@ export default function TodoModal({ isTodoShow }: Props) {
   useEffect(() => {
     if (textarea.current) {
       textarea.current.style.height = "auto";
-      textarea.current.style.height = `${textarea.current.scrollHeight + 5}px`;
+      textarea.current.style.height = `${textarea.current.scrollHeight + 7}px`;
     }
   }, [isTodoShow, inputTodoInfo]);
 
@@ -232,6 +233,26 @@ export default function TodoModal({ isTodoShow }: Props) {
         deadline: selectedDate,
         modified_date: serverTimestamp(),
       });
+    }
+  };
+
+  // TextArea
+  const handleTextAreaEnterPress = async (e: any) => {
+    if (e.nativeEvent.isComposing) {
+      return; // 조합 중일 땐 동작막기
+    }
+
+    if (e.key === "Enter" && e.shiftKey) {
+      return;
+    }
+
+    if (e.key === "Enter") {
+      if (inputTodoInfo) {
+        await updateDoc(todoRef, {
+          info: inputTodoInfo,
+          modified_date: serverTimestamp(),
+        });
+      }
     }
   };
 
@@ -342,6 +363,19 @@ export default function TodoModal({ isTodoShow }: Props) {
                 value={inputTodoInfo}
                 onChange={handleChange}
                 onBlur={handleOnBlur}
+                onKeyDown={handleTextAreaEnterPress}
+                onKeyUp={(e) => {
+                  if (e.nativeEvent.isComposing) {
+                    return; // 조합 중일 땐 동작막기
+                  }
+
+                  if (e.key === "Enter" && e.shiftKey) {
+                    return;
+                  }
+                  if (e.key === "Enter") {
+                    textarea.current!.blur();
+                  }
+                }}
               />
             </InfoContainer>
           </div>
