@@ -9,7 +9,7 @@ import kanbanState from "../../recoil/atoms/kanban/kanbanState";
 import todoLoaded from "../../recoil/atoms/sidebar/todoLoaded";
 import deleteIcon, {
   ReactComponent as DeleteIcon,
-} from "../../assets/icons/Cross.svg";
+} from "../../assets/icons/CrossNoFill.svg";
 import getTextColorByBackgroundColor from "../../utils/getTextColorByBgColor";
 
 const RecentKanbanContainer = styled.div`
