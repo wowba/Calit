@@ -21,21 +21,11 @@ const CommonTextArea = styled.textarea<Props>`
   outline: none;
   resize: none;
   transition: all 0.3s ease-in-out;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &:focus {
     border-color: #adadad;
-  }
-  &::-webkit-scrollbar {
-    width: 8px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-  }
-  &::-webkit-scrollbar-corner {
-    background: transparent;
   }
 `;
 
