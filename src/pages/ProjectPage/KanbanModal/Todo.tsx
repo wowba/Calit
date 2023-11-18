@@ -11,6 +11,7 @@ import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import { db } from "../../../firebaseSDK";
 import userListState from "../../../recoil/atoms/userList/userListState";
 import defaultProfileIcon from "../../../assets/images/defaultProjectImg2.jpg";
+import getTextColorByBackgroundColor from "../../../utils/getTextColorByBgColor";
 
 interface ContainerProps {
   $isDragging: boolean;
@@ -41,13 +42,14 @@ const TodoTagListBox = styled.div`
   transform: translateX(-0.1rem);
 `;
 
-const TodoTagList = styled.div`
+const TodoTagList = styled.div<{ $color: string }>`
   padding: 0.125rem 1rem;
 
   border-radius: 0.5rem;
 
   font-size: ${(props) => props.theme.Fs.size12};
   font-weight: 900;
+  color: ${(props) => props.$color};
 `;
 
 const TodoNameBox = styled.div`
@@ -172,6 +174,7 @@ function Todo({ todo, index }: TodoProps) {
               <TodoTagList
                 key={tag.label}
                 style={{ backgroundColor: `${tag.color}` }}
+                $color={getTextColorByBackgroundColor(tag.color)}
               >
                 {tag.label}
               </TodoTagList>

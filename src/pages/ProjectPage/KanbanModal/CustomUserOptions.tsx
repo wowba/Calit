@@ -18,6 +18,7 @@ const ManagedUser = styled.div`
 `;
 
 const ProfileImg = styled.img`
+  object-fit: cover;
   border-radius: 50%;
   width: 1.5rem;
   height: 1.5rem;

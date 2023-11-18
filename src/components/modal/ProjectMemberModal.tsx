@@ -179,7 +179,7 @@ export default function ProjectMemberModal() {
   // 이메일 입력 후 Enter 누를 시 동작
   const handleEnterPress = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (inputEmailValue.includes("@gmail.com")) {
+      if (inputEmailValue.includes("@")) {
         const curInvitedList = [...invitedList];
         if (
           userListData.get(inputEmailValue) ||
@@ -382,21 +382,6 @@ export default function ProjectMemberModal() {
                 width: "100%",
               }}
             >
-              {/* <SelectInput
-                style={{ height: "100%", display: "inline-block" }}
-                onChange={(e) => setSelectedUser(e.target.value)}
-                value={selectedUser}
-              >
-                <option value="">이메일을 선택해주세요</option>
-                {userList.map(
-                  (email: string) =>
-                    email !== userId && (
-                      <option key={email} value={email}>
-                        {email}
-                      </option>
-                    ),
-                )}
-              </SelectInput> */}
               <CommonSelectMemberLayout
                 userList={nameList}
                 setUserList={setNameList}
