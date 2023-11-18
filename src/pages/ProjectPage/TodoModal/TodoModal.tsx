@@ -292,7 +292,8 @@ export default function TodoModal({ isTodoShow }: Props) {
                   value={inputTodoName}
                   $dynamicFontSize="1.12rem"
                   $dynamicPadding="0.9rem 0.5rem"
-                  $dynamicWidth="auto"
+                  maxLength={24}
+                  $dynamicWidth="21rem"
                   onKeyDown={handleEnterPress}
                   onChange={(e) => setInputTodoName(e.target.value)}
                   onBlur={handleOnBlur}
