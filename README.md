@@ -25,19 +25,19 @@ firebase의 onSnapshot 기능을 주로 이용하여 실시간으로 작업 상�
 ### 1. 로그인 페이지
 
 - firebase 구글 연동 로그인
-  
+
 ![로그인 페이지](https://github.com/wowba/Calit/assets/87873821/cf1b6223-a229-4f38-9d9b-105922bc0227)
 
 ### 2. 프로젝트 리스트 페이지
 
-- 프로젝트 CRUD (이미지 및 제목 변경) 
+- 프로젝트 CRUD (이미지 및 제목 변경)
 
 ![프로젝트 리스트 페이지](https://github.com/wowba/Calit/assets/87873821/1a220dbc-869a-4f07-81ad-fdd19acda4cf)
 
 ### 3. 프로젝트 메인 페이지 헤더
 
 - 프로젝트 멤버 / 북마크 / 프로필 모달
-  
+
 ![헤더 기능 보여주기](https://github.com/wowba/Calit/assets/87873821/181a09a6-1b7a-43df-9157-dca5cfc66ba2)
 
 ### 4. 프로젝트 메인 페이지 캘린더 모달
@@ -50,13 +50,13 @@ firebase의 onSnapshot 기능을 주로 이용하여 실시간으로 작업 상�
 ### 5. 프로젝트 메인 페이지 칸반 모달
 
 - 칸반 내 스테이지 및 투두 CRUD 및 드래그
-  
+
 ![칸반모달 기능 보여주기](https://github.com/wowba/Calit/assets/87873821/4c177bf2-c0d8-4695-8f87-25854f86548e)
 
 ### 6. 프로젝트 메인 페이지 투두 모달
 
 - 투두 RUD 및 투두 내 업데이트 CRUD
-  
+
 ![투두모달 기능 보여주기](https://github.com/wowba/Calit/assets/87873821/4166b7dc-3414-4674-8705-e1aa17636066)
 
 ## ERD
@@ -135,24 +135,28 @@ firebase의 onSnapshot 기능을 주로 이용하여 실시간으로 작업 상�
   - 투두 모달 전체 레이아웃
   - react-select 라이브러리 디자인 커스텀
 - 기능
-  - 프로젝트 생성 기능
-  - DB 컬렉션 생성 API 제작
-  - Storage 내 이미지 삭제 utils
+  - 프로젝트 생성 및 수정 기능
+  - DB 컬렉션 생성 API 제작 (칸반, 투두 컬렉션)
+  - Storage 내 이미지 삭제 utils 제작
   - todoState를 recoil로 관리
-  - 링크 복사하기 기능
-  - 초대하기 및 내보내기 기능 구현
+  - 멤버 초대하기 및 내보내기 기능 구현
+    - 권한에 따른 기능 사용 제한
+    - 대기열 추가 및 삭제
   - 사이드바 최근 칸반 바로가기 기능
-    - recoilPersist를 통한 관
-    - local storage에 최근 접속한 칸반 저장
-    - local storage에 무한 저장되지 않도록 개수 제한
-    - 가장 최근에 접속한 칸반을 상단으로 이동
+    - recoilPersist를 통한 관리
+    - local storage에 최근 접속한 칸반 데이터 저장 및 개수 제한
+    - 가장 최근에 접속한 칸반을 상단으로 이동 / 삭제 /
   - 재활용 가능한 공통 컴포넌트 제작
-    - CommonTextArea 공통 컴포넌트 - 입력에 따른 height 조절 기능
+    - CommonTextArea 공통 컴포넌트 / 입력에 따른 height 조절 기능
+    - 링크 복사하기 기능
   - 투두 모달 세부 기능
     - 투두 삭제
-    - 업데이트 CRUD
-  - react-select 라이브러리를 활용한 컴포넌트 내 기능 제작 - 컬러 변경 버튼 - 옵션 삭제 기능
-  </details>
+    - 업데이트 RUD
+    - react-md-editor 라이브러리 활용
+  - react-select 라이브러리를 활용한 컴포넌트 내 기능 제작
+    - 컬러 변경 버튼
+    - 옵션 삭제 기능
+    </details>
 
 <details>
 <summary>남현준 작업 내역</summary>
