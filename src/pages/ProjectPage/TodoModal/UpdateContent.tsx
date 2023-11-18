@@ -8,6 +8,7 @@ import yearMonthDayFormat from "../../../utils/yearMonthDayFormat";
 import userListState from "../../../recoil/atoms/userList/userListState";
 import TodoUpdateMoreModal from "./TodoUpdateMoreModal";
 import ConfirmBtn from "../../../components/layout/ConfirmBtnLayout";
+import defaultProfileIcon from "../../../assets/images/defaultProjectImg2.jpg";
 
 const UpdateListHeader = styled.div`
   display: flex;
@@ -120,7 +121,11 @@ export default function UpdateContentBox({ todoRef, data, updateIndex }: any) {
       <UpdateListHeader>
         <ManagedUser>
           <img
-            src={creatorData.profile_img_URL}
+            src={
+              creatorData.profile_img_URL !== ""
+                ? creatorData.profile_img_URL
+                : defaultProfileIcon
+            }
             alt="프로필사진"
             style={{
               width: "1.5rem",

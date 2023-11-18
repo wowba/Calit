@@ -10,6 +10,7 @@ import trashIcon from "../../../assets/icons/trashIcon.svg";
 import kanbanState from "../../../recoil/atoms/kanban/kanbanState";
 import { db } from "../../../firebaseSDK";
 import userListState from "../../../recoil/atoms/userList/userListState";
+import defaultProfileIcon from "../../../assets/images/defaultProjectImg2.jpg";
 
 interface ContainerProps {
   $isDragging: boolean;
@@ -187,7 +188,11 @@ function Todo({ todo, index }: TodoProps) {
               return (
                 <TodoUserImage
                   key={userData.id}
-                  src={userData.profile_img_URL}
+                  src={
+                    userData.profile_img_URL !== ""
+                      ? userData.profile_img_URL
+                      : defaultProfileIcon
+                  }
                   alt={userData.label}
                 />
               );
