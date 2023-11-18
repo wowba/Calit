@@ -25,6 +25,7 @@ firebase의 onSnapshot 기능을 주로 이용하여 실시간으로 작업 상�
 ### 1. 로그인 페이지
 
 - firebase 구글 연동 로그인
+  
   ![로그인 페이지](https://github.com/wowba/Calit/assets/87873821/cf1b6223-a229-4f38-9d9b-105922bc0227)
 
 ### 2. 프로젝트 리스트 페이지
