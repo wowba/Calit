@@ -361,6 +361,7 @@ export default function TodoModal({ isTodoShow }: Props) {
                 ref={textarea}
                 placeholder="설명을 입력하세요"
                 value={inputTodoInfo}
+                $dynamicMaxHeight="18rem"
                 onChange={handleChange}
                 onBlur={handleOnBlur}
                 onKeyDown={handleTextAreaEnterPress}
