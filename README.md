@@ -94,6 +94,9 @@ firebase의 onSnapshot 기능을 주로 이용하여 실시간으로 작업 상�
 
 ## 개인별 작업 내역
 
+- 공통
+    - 기획 및 ERD, FireStore 공식 문서를 참고한 NoSQL에 맞는 Data Modeling
+
 <details>
 <summary>이영욱 작업 내역</summary>
 
