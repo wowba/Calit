@@ -1,8 +1,7 @@
 ---
-name: fix
-about: 트러블 슈팅 및 디버깅
+name: issue
+about: 새로운 이슈 추가
 title: ""
-labels: fix
 assignees: ""
 ---
 
